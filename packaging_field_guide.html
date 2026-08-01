@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Package Is the Product — AI Advanced Packaging &amp; a $100/Week Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A0D13;
+    --ink-2:#0C1017;
+    --band:#0E131C;
+    --panel:#141A24;
+    --panel-2:#1A212D;
+    --line:#232B39;
+    --line-2:#313B4B;
+    --copper:#C97A45;
+    --copper-lt:#E3A06A;
+    --copper-dk:#8A5330;
+    --signal:#57C7D4;
+    --signal-dk:#3C868F;
+    --gold:#E4A85E;
+    --slate:#8298C0;
+    --sand:#B7A08B;
+    --text:#ECEAE4;
+    --text-2:#C3C9D3;
+    --text-3:#8B95A3;
+    --pos:#6FCF9B;
+    --neg:#E28871;
+    --maxw:1180px;
+    --readw:720px;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text-2);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+    font-size:17px;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:rgba(201,122,69,.28);color:#fff}
+  a{color:var(--copper-lt);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* ---------- Typographic helpers ---------- */
+  .mono{font-family:"IBM Plex Mono",monospace}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--copper);font-weight:500;
+  }
+  h1,h2,h3,h4{font-family:"Archivo",sans-serif;color:var(--text);line-height:1.08;margin:0}
+  h2{font-size:clamp(1.85rem,3.6vw,2.9rem);font-weight:800;letter-spacing:-.02em}
+  h3{font-size:clamp(1.2rem,2vw,1.5rem);font-weight:700;letter-spacing:-.01em;line-height:1.2}
+  h4{font-size:1.02rem;font-weight:600;letter-spacing:.005em}
+  p{margin:0 0 1.1em}
+  strong{color:var(--text);font-weight:600}
+  .lede{font-size:1.18rem;line-height:1.62;color:var(--text)}
+  .muted{color:var(--text-3)}
+  .num{font-family:"Archivo",sans-serif;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+  /* ---------- Layout ---------- */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .read{max-width:var(--readw);margin-left:0}
+  section{position:relative;padding:clamp(72px,9vw,132px) 0;border-top:1px solid var(--line)}
+  section.alt{background:var(--band)}
+  .sec-head{margin-bottom:44px}
+  .sec-head .kicker{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+  .sec-num{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--copper);letter-spacing:.1em}
+  .sec-head p.intro{max-width:var(--readw);margin-top:16px;color:var(--text-2)}
+
+  /* ---------- Progress + Nav ---------- */
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--copper-dk),var(--copper),var(--copper-lt));z-index:120;transition:width .1s linear}
+  header.top{position:fixed;top:0;left:0;right:0;z-index:110;background:rgba(10,13,19,.72);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);transition:transform .3s ease}
+  header.top .bar{max-width:var(--maxw);margin:0 auto;padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.06em;color:var(--text);text-transform:uppercase}
+  .brand .dot{width:12px;height:12px;border-radius:3px;background:var(--copper);box-shadow:0 0 0 3px rgba(201,122,69,.18)}
+  .brand span{color:var(--text-3)}
+  .top-nav{display:flex;gap:4px;flex-wrap:wrap}
+  .top-nav a{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--text-3);padding:5px 9px;border-radius:7px;letter-spacing:.02em}
+  .top-nav a:hover{color:var(--text);background:var(--panel);text-decoration:none}
+  .top-nav a.active{color:var(--copper);background:rgba(201,122,69,.1)}
+  @media (max-width:1080px){.top-nav{display:none}}
+
+  /* side rail */
+  .rail{position:fixed;left:24px;top:50%;transform:translateY(-50%);z-index:90;display:flex;flex-direction:column;gap:2px}
+  .rail a{display:flex;align-items:center;gap:10px;color:var(--text-3);font-family:"IBM Plex Mono",monospace;font-size:.68rem;padding:3px 0;letter-spacing:.04em}
+  .rail a .tick{width:16px;height:2px;background:var(--line-2);transition:all .25s}
+  .rail a .lbl{opacity:0;transform:translateX(-4px);transition:all .25s;white-space:nowrap}
+  .rail a:hover{text-decoration:none;color:var(--text)}
+  .rail a:hover .lbl,.rail a.active .lbl{opacity:1;transform:none}
+  .rail a:hover .tick,.rail a.active .tick{background:var(--copper);width:26px}
+  .rail a.active{color:var(--copper)}
+  @media (max-width:1360px){.rail{display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:120px 0 70px;border-top:none;overflow:hidden}
+  .hero-grid{position:absolute;inset:0;z-index:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+    background-size:44px 44px;
+    -webkit-mask-image:radial-gradient(120% 90% at 78% 30%,#000 0%,transparent 72%);
+    mask-image:radial-gradient(120% 90% at 78% 30%,#000 0%,transparent 72%);
+  }
+  .hero-glow{position:absolute;z-index:0;width:60vw;height:60vw;max-width:760px;max-height:760px;right:-8vw;top:-12vw;
+    background:radial-gradient(circle,rgba(201,122,69,.16),transparent 62%);filter:blur(10px)}
+  .hero-glow.two{left:-14vw;bottom:-16vw;top:auto;right:auto;background:radial-gradient(circle,rgba(87,199,212,.09),transparent 60%)}
+  .hero .wrap{position:relative;z-index:2}
+  .hero h1{font-size:clamp(2.5rem,6.3vw,5.25rem);font-weight:800;letter-spacing:-.03em;line-height:1.02;max-width:14ch;color:var(--text)}
+  .hero h1 em{font-style:normal;color:var(--copper)}
+  .hero .sub{max-width:60ch;margin-top:26px;font-size:1.16rem;line-height:1.6;color:var(--text-2)}
+  .hero-stats{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+  .hstat{background:linear-gradient(180deg,rgba(20,26,36,.9),rgba(14,19,28,.9));border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;min-width:190px;flex:1 1 190px}
+  .hstat .v{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.7rem;color:var(--text);letter-spacing:-.02em;line-height:1}
+  .hstat .v .s{color:var(--copper)}
+  .hstat .k{font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-top:9px;line-height:1.4}
+  .disc-chip{display:inline-flex;align-items:center;gap:8px;margin-top:34px;padding:7px 13px;border:1px solid var(--line-2);border-radius:100px;font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--text-3);letter-spacing:.03em}
+  .disc-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--signal)}
+  .scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.2em;color:var(--text-3);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .scroll-cue .line{width:1px;height:30px;background:linear-gradient(var(--copper),transparent);animation:cue 2.2s ease-in-out infinite}
+  @keyframes cue{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+
+  /* ---------- Reusable pieces ---------- */
+  .grid{display:grid;gap:20px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:920px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:620px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px}
+  .card.hoverable{transition:transform .22s ease,border-color .22s ease,background .22s}
+  .card.hoverable:hover{transform:translateY(-3px);border-color:var(--line-2);background:var(--panel-2)}
+  .card h4{margin-bottom:8px}
+  .card p{font-size:.95rem;margin-bottom:0;color:var(--text-2)}
+  .tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid var(--line-2);color:var(--text-3)}
+  .tag.cu{color:var(--copper);border-color:rgba(201,122,69,.4);background:rgba(201,122,69,.08)}
+  .tag.cy{color:var(--signal);border-color:rgba(87,199,212,.35);background:rgba(87,199,212,.07)}
+
+  .callout{border-left:2px solid var(--copper);background:linear-gradient(90deg,rgba(201,122,69,.06),transparent);padding:16px 22px;border-radius:0 10px 10px 0;margin:26px 0}
+  .callout .lab{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);display:block;margin-bottom:5px}
+  .callout p{margin:0;font-size:.98rem}
+
+  /* ---------- Section 01: pitch scaling ---------- */
+  .pitch{margin-top:8px}
+  .pitch-track{position:relative;height:2px;background:var(--line-2);margin:64px 0 8px}
+  .pitch-node{position:absolute;top:-6px;transform:translateX(-50%);text-align:center}
+  .pitch-node .knob{width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--copper);margin:0 auto}
+  .pitch-node.hb .knob{border-color:var(--signal);box-shadow:0 0 0 4px rgba(87,199,212,.15)}
+  .pitch-node .cap{position:absolute;top:-58px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:"IBM Plex Mono",monospace;font-size:.72rem}
+  .pitch-node .cap .n{color:var(--text);display:block;font-size:1.1rem;font-weight:600}
+  .pitch-node .cap .t{color:var(--text-3);font-size:.66rem;letter-spacing:.04em}
+  .pitch-node .below{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:.7rem;color:var(--text-3);width:150px;line-height:1.35}
+  .pitch-scale-lab{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--text-3);margin-top:96px;letter-spacing:.06em}
+  @media (max-width:720px){.pitch-node .below{display:none}.pitch-scale-lab{margin-top:20px}}
+
+  /* dot density strip */
+  .density{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:40px 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .density .cell{padding:20px 18px;border-right:1px solid var(--line);text-align:center}
+  .density .cell:last-child{border-right:none}
+  .density .cell .dots{height:52px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--gap);margin-bottom:12px}
+  .density .cell .dots i{background:var(--copper);border-radius:50%;width:var(--sz);height:var(--sz);opacity:.85;display:block}
+  .density .cell.c1{--gap:9px;--sz:7px}
+  .density .cell.c2{--gap:5px;--sz:5px}
+  .density .cell.c3{--gap:2px;--sz:3px}
+  .density .cell.c3 .dots i{background:var(--signal)}
+  .density .cell .lab{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--text);letter-spacing:.02em}
+  .density .cell .p{font-size:.68rem;color:var(--text-3)}
+  @media (max-width:620px){.density{grid-template-columns:1fr}.density .cell{border-right:none;border-bottom:1px solid var(--line)}}
+
+  /* ---------- Cross-section signature ---------- */
+  .xsec-wrap{display:grid;grid-template-columns:1.35fr .9fr;gap:36px;align-items:center}
+  @media (max-width:960px){.xsec-wrap{grid-template-columns:1fr;gap:26px}}
+  .xsec-fig{background:linear-gradient(180deg,#0b0f16,#0d1219);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .xsec-fig svg{width:100%;height:auto;display:block}
+  .xsec-legend .row{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .xsec-legend .row:last-child{border-bottom:none}
+  .xsec-legend .sw{flex:0 0 12px;height:12px;border-radius:3px;margin-top:6px}
+  .xsec-legend h4{margin-bottom:2px}
+  .xsec-legend p{font-size:.86rem;margin:0;color:var(--text-3)}
+  .xsec-legend .co{font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--copper)}
+
+  /* ---------- Value chain ---------- */
+  .vc-list{display:flex;flex-direction:column;gap:12px}
+  .vc-item{display:grid;grid-template-columns:44px 1fr;gap:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;transition:border-color .2s,background .2s}
+  .vc-item:hover{border-color:var(--line-2);background:var(--panel-2)}
+  .vc-idx{font-family:"IBM Plex Mono",monospace;font-size:.9rem;color:var(--copper);padding-top:2px}
+  .vc-body h4{margin-bottom:5px}
+  .vc-body .who{font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--text);margin-bottom:6px;letter-spacing:.01em}
+  .vc-body .who .lead{color:var(--copper)}
+  .vc-body p{font-size:.9rem;margin:0;color:var(--text-3)}
+
+  /* ---------- Tables ---------- */
+  .tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;min-width:640px}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);text-align:left;padding:14px 16px;border-bottom:1px solid var(--line-2);white-space:nowrap;font-weight:500;background:var(--ink-2)}
+  tbody td{padding:14px 16px;border-bottom:1px solid var(--line);font-size:.92rem;vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover td{background:rgba(255,255,255,.015)}
+  td .co{font-family:"IBM Plex Mono",monospace;color:var(--copper);font-size:.78rem;display:block;letter-spacing:.02em}
+  td .nm{color:var(--text);font-weight:500}
+  td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
+  .pos{color:var(--pos)}.neg{color:var(--neg)}
+  .mbar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:6px;min-width:60px}
+  .mbar i{display:block;height:100%;background:var(--copper);border-radius:3px}
+
+  /* ---------- Roadmap ---------- */
+  .road{display:flex;flex-direction:column;gap:10px}
+  .road-row{display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
+  .road-row .plat{font-weight:600;color:var(--text);font-family:"Archivo",sans-serif}
+  .road-row .plat .lead{display:block;font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--copper);font-weight:400;margin-top:2px}
+  .road-meta{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+  .road-meta .pitch-v{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--signal)}
+  .road-meta .app{font-size:.85rem;color:var(--text-3)}
+  .status{font-family:"IBM Plex Mono",monospace;font-size:.64rem;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:5px;white-space:nowrap}
+  .status.hvm{color:var(--pos);background:rgba(111,207,155,.1);border:1px solid rgba(111,207,155,.25)}
+  .status.scale{color:var(--gold);background:rgba(228,168,94,.1);border:1px solid rgba(228,168,94,.25)}
+  .status.pilot{color:var(--signal);background:rgba(87,199,212,.1);border:1px solid rgba(87,199,212,.25)}
+  .status.rd{color:var(--text-3);background:rgba(139,149,163,.09);border:1px solid var(--line-2)}
+  @media (max-width:680px){.road-row{grid-template-columns:1fr;gap:10px}}
+
+  /* ---------- Customers ---------- */
+  .flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:28px}
+  .flow .col{padding:20px;border-right:1px solid var(--line)}
+  .flow .col:last-child{border-right:none}
+  .flow .col .h{font-family:"IBM Plex Mono",monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--copper);margin-bottom:14px}
+  .flow .chip2{display:block;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:8px;font-size:.85rem;color:var(--text)}
+  .flow .chip2 span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--text-3);margin-top:2px}
+  @media (max-width:760px){.flow{grid-template-columns:1fr}.flow .col{border-right:none;border-bottom:1px solid var(--line)}}
+
+  /* ---------- Geography bars ---------- */
+  .geo{display:flex;flex-direction:column;gap:18px;margin-top:8px}
+  .geo-row{display:grid;grid-template-columns:130px 1fr;gap:18px;align-items:center}
+  .geo-row .rlab{font-weight:600;color:var(--text);font-family:"Archivo",sans-serif}
+  .geo-row .rlab span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--text-3);font-weight:400;margin-top:2px}
+  .geo-bar{position:relative;height:38px;background:var(--panel);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .geo-bar .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--copper-dk),var(--copper));display:flex;align-items:center;padding:0 14px;border-radius:8px}
+  .geo-bar .fill.cy{background:linear-gradient(90deg,var(--signal-dk),var(--signal))}
+  .geo-bar .pct{font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:#0a0d13;font-weight:600}
+  .geo-row .note{grid-column:2;font-size:.8rem;color:var(--text-3);margin-top:-8px}
+  @media (max-width:620px){.geo-row{grid-template-columns:1fr;gap:8px}.geo-row .note{grid-column:1}}
+
+  /* ---------- Moats ---------- */
+  .moat-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px;position:relative;overflow:hidden}
+  .moat-card::before{content:attr(data-n);position:absolute;top:-14px;right:6px;font-family:"Archivo",sans-serif;font-weight:900;font-size:5rem;color:rgba(201,122,69,.07);letter-spacing:-.04em}
+  .moat-card h4{margin-bottom:12px;font-size:1.12rem}
+  .moat-card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+  .moat-card li{font-size:.9rem;color:var(--text-2);padding-left:16px;position:relative}
+  .moat-card li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--copper);border-radius:1px}
+  .moat-card li b{color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:.82rem}
+
+  /* ---------- Portfolio ---------- */
+  .port-top{display:grid;grid-template-columns:.95fr 1.05fr;gap:44px;align-items:center;margin-bottom:44px}
+  @media (max-width:900px){.port-top{grid-template-columns:1fr;gap:32px}}
+  .donut-box{position:relative;display:flex;align-items:center;justify-content:center}
+  .donut-box svg{width:100%;max-width:340px;height:auto;transform:rotate(-90deg)}
+  .donut-center{position:absolute;text-align:center}
+  .donut-center .v{font-family:"Archivo",sans-serif;font-weight:800;font-size:2.6rem;color:var(--text);line-height:1}
+  .donut-center .k{font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+  .rolegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .role{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+  .role .sw{width:11px;height:11px;border-radius:3px;flex:none}
+  .role .info{display:flex;flex-direction:column;line-height:1.2}
+  .role .rn{font-size:.82rem;color:var(--text)}
+  .role .rp{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--text-3)}
+
+  .alloc{display:flex;flex-direction:column;gap:9px}
+  .arow{display:grid;grid-template-columns:150px 1fr 74px;gap:14px;align-items:center}
+  .arow .co2{font-family:"IBM Plex Mono",monospace;font-size:.8rem}
+  .arow .co2 b{color:var(--text);display:block;font-family:"IBM Plex Sans",sans-serif;font-weight:500;font-size:.86rem}
+  .arow .co2 span{color:var(--copper)}
+  .abar{height:26px;background:var(--panel);border:1px solid var(--line);border-radius:7px;overflow:hidden;position:relative}
+  .abar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;display:block}
+  .arow .amt{font-family:"IBM Plex Mono",monospace;font-size:.86rem;color:var(--text);text-align:right}
+  .arow .amt small{color:var(--text-3);font-size:.72rem}
+  @media (max-width:620px){.arow{grid-template-columns:110px 1fr 60px;gap:10px}}
+
+  /* lifecycle */
+  .life{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:12px}
+  .life .ph{padding:24px;border-right:1px solid var(--line);position:relative}
+  .life .ph:last-child{border-right:none}
+  .life .ph .yr{font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--copper);letter-spacing:.06em;text-transform:uppercase}
+  .life .ph h4{margin:8px 0 12px;font-size:1.05rem}
+  .life .ph p{font-size:.86rem;color:var(--text-3);margin-bottom:14px}
+  .life .ph .shift{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--text-2);line-height:1.7}
+  .life .ph .shift .up{color:var(--pos)}
+  .life .ph .bar{height:4px;background:linear-gradient(90deg,var(--copper),transparent);border-radius:2px;margin-top:16px}
+  .life .ph:nth-child(2) .bar{background:linear-gradient(90deg,var(--gold),transparent)}
+  .life .ph:nth-child(3) .bar{background:linear-gradient(90deg,var(--signal),transparent)}
+  @media (max-width:760px){.life{grid-template-columns:1fr}.life .ph{border-right:none;border-bottom:1px solid var(--line)}}
+
+  /* triage */
+  .triage-col h4{font-size:.95rem;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  .triage-col h4::before{content:"";width:9px;height:9px;border-radius:2px}
+  .triage-col.buy h4::before{background:var(--pos)}
+  .triage-col.acc h4::before{background:var(--gold)}
+  .triage-col.val h4::before{background:var(--slate)}
+  .triage-col .t-item{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px 14px;margin-bottom:9px}
+  .triage-col .t-item .tk{font-family:"IBM Plex Mono",monospace;font-size:.74rem;color:var(--copper)}
+  .triage-col .t-item .tn{color:var(--text);font-size:.9rem;font-weight:500}
+  .triage-col .t-item p{font-size:.8rem;color:var(--text-3);margin:4px 0 0}
+
+  /* ---------- Scenarios ---------- */
+  .scn{display:flex;flex-direction:column;gap:14px}
+  .scn-card{display:grid;grid-template-columns:44px 1.1fr 1fr;gap:20px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:22px 24px;align-items:start}
+  .scn-card .badge{width:44px;height:44px;border-radius:10px;background:rgba(201,122,69,.1);border:1px solid rgba(201,122,69,.3);display:flex;align-items:center;justify-content:center;font-family:"Archivo",sans-serif;font-weight:800;font-size:1.3rem;color:var(--copper)}
+  .scn-card h4{margin-bottom:7px}
+  .scn-card .trig{font-size:.88rem;color:var(--text-3);margin:0}
+  .scn-card .shift-lab{font-family:"IBM Plex Mono",monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:8px}
+  .shift-pills{display:flex;flex-wrap:wrap;gap:7px}
+  .pill{font-family:"IBM Plex Mono",monospace;font-size:.76rem;padding:5px 10px;border-radius:7px;border:1px solid var(--line-2)}
+  .pill.up{color:var(--pos);border-color:rgba(111,207,155,.3);background:rgba(111,207,155,.07)}
+  .pill.dn{color:var(--neg);border-color:rgba(226,136,113,.3);background:rgba(226,136,113,.07)}
+  @media (max-width:820px){.scn-card{grid-template-columns:44px 1fr}.scn-card .shifts{grid-column:1 / -1}}
+
+  /* ---------- Thesis explorer ---------- */
+  .explorer{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+  .exp-tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--line);background:var(--ink-2)}
+  .exp-tabs button{flex:1 1 auto;min-width:88px;font-family:"IBM Plex Mono",monospace;font-size:.76rem;color:var(--text-3);background:none;border:none;border-right:1px solid var(--line);border-bottom:2px solid transparent;padding:14px 8px;cursor:pointer;letter-spacing:.02em;transition:all .18s}
+  .exp-tabs button:hover{color:var(--text);background:var(--panel)}
+  .exp-tabs button[aria-selected="true"]{color:var(--copper);background:var(--panel);border-bottom-color:var(--copper)}
+  .exp-panel{padding:30px}
+  .exp-panel[hidden]{display:none}
+  .exp-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:8px}
+  .exp-head .nm{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.5rem;color:var(--text);letter-spacing:-.01em}
+  .exp-head .tk{font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--copper)}
+  .exp-head .layer{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--text-3);border:1px solid var(--line-2);padding:3px 9px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+  .exp-alloc{font-size:.9rem;color:var(--text-3);margin-bottom:22px}
+  .exp-alloc b{color:var(--text);font-family:"IBM Plex Mono",monospace}
+  .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+  @media (max-width:760px){.cases{grid-template-columns:1fr}}
+  .case{border:1px solid var(--line);border-radius:11px;padding:18px;background:var(--ink-2)}
+  .case .cl{font-family:"IBM Plex Mono",monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .case .cl::before{content:"";width:8px;height:8px;border-radius:50%}
+  .case.bull .cl{color:var(--pos)}.case.bull .cl::before{background:var(--pos)}
+  .case.base .cl{color:var(--gold)}.case.base .cl::before{background:var(--gold)}
+  .case.bear .cl{color:var(--neg)}.case.bear .cl::before{background:var(--neg)}
+  .case p{font-size:.86rem;margin:0;color:var(--text-2)}
+  .invalid{border-left:2px solid var(--neg);background:linear-gradient(90deg,rgba(226,136,113,.06),transparent);padding:14px 18px;border-radius:0 9px 9px 0}
+  .invalid .il{font-family:"IBM Plex Mono",monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--neg);display:block;margin-bottom:4px}
+  .invalid p{margin:0;font-size:.86rem}
+
+  /* ---------- Close ---------- */
+  .synth{max-width:760px}
+  .disclaimer{border:1px solid var(--line-2);border-radius:14px;padding:26px 28px;margin-top:40px;background:linear-gradient(180deg,rgba(20,26,36,.6),rgba(14,19,28,.6))}
+  .disclaimer h4{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--signal);margin-bottom:12px}
+  .disclaimer p{font-size:.86rem;color:var(--text-3);margin-bottom:0}
+  footer{border-top:1px solid var(--line);padding:40px 0 60px;background:var(--ink-2)}
+  footer .fbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+  footer .mono{font-size:.72rem;color:var(--text-3);letter-spacing:.04em}
+
+  /* ---------- Reveal ---------- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    .scroll-cue .line{animation:none}
+  }
+  :focus-visible{outline:2px solid var(--copper);outline-offset:3px;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="top">
+  <div class="bar">
+    <div class="brand"><span class="dot"></span>ADVANCED&nbsp;PACKAGING&nbsp;<span>/ FIELD GUIDE</span></div>
+    <nav class="top-nav" aria-label="Sections">
+      <a href="#shift">01</a><a href="#package">02</a><a href="#valuechain">03</a><a href="#roadmap">04</a><a href="#customers">05</a><a href="#geography">06</a><a href="#moats">07</a><a href="#financials">08</a><a href="#portfolio">09</a><a href="#scenarios">10</a><a href="#playbook">11</a>
+    </nav>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Page navigation">
+  <a href="#shift"><span class="tick"></span><span class="lbl">The shift</span></a>
+  <a href="#package"><span class="tick"></span><span class="lbl">The package</span></a>
+  <a href="#valuechain"><span class="tick"></span><span class="lbl">Value chain</span></a>
+  <a href="#roadmap"><span class="tick"></span><span class="lbl">Roadmap</span></a>
+  <a href="#customers"><span class="tick"></span><span class="lbl">Customers</span></a>
+  <a href="#geography"><span class="tick"></span><span class="lbl">Geography</span></a>
+  <a href="#moats"><span class="tick"></span><span class="lbl">Moats</span></a>
+  <a href="#financials"><span class="tick"></span><span class="lbl">Financials</span></a>
+  <a href="#portfolio"><span class="tick"></span><span class="lbl">Portfolio</span></a>
+  <a href="#scenarios"><span class="tick"></span><span class="lbl">Scenarios</span></a>
+  <a href="#playbook"><span class="tick"></span><span class="lbl">Playbook</span></a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow two"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal">AI Semiconductor · Advanced Packaging Ecosystem</div>
+    <h1 class="reveal" style="margin-top:20px">When the transistor stopped shrinking, the <em>package</em> became the product.</h1>
+    <p class="sub reveal">Moore's-Law scaling is hitting physical and economic walls at sub-2-nanometer nodes. The action has moved to <strong>advanced packaging</strong> — stacking and stitching chiplets, memory, and interposers into a single AI accelerator. This is a field guide to that ecosystem, and to a disciplined <strong>$100-a-week portfolio</strong> built along its value chain.</p>
+    <div class="hero-stats reveal">
+      <div class="hstat"><div class="v"><span class="s">$46B</span> → $124B</div><div class="k">Advanced packaging market<br>2026 → 2036 · 10.4% CAGR</div></div>
+      <div class="hstat"><div class="v">&lt;1<span class="s">μm</span></div><div class="k">Where interconnects are heading<br>from ~100μm flip-chip solder</div></div>
+      <div class="hstat"><div class="v">10<span class="s">×</span></div><div class="k">Companies — one position for<br>each critical layer of the stack</div></div>
+    </div>
+    <div class="disc-chip reveal">Educational walkthrough of a research report — not investment advice</div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><span class="line"></span></div>
+</section>
+
+<!-- ============ 01 THE SHIFT ============ -->
+<section id="shift">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">01</span><span class="eyebrow">The structural shift</span></div>
+      <h2>Why packaging is now the bottleneck</h2>
+      <p class="intro">For fifty years, progress meant shrinking the transistor. That lever is running out of room. The industry's answer — <strong>heterogeneous integration</strong> — is to stop building one giant chip and instead assemble many specialized ones into a dense 3D package. The hard part, and the value, is now in the assembly.</p>
+    </div>
+    <div class="read reveal">
+      <p>Modern AI accelerators — NVIDIA's Blackwell, AMD's Instinct MI300, and custom hyperscaler silicon — are no longer monolithic. They combine multiple logic tiles, stacks of <strong>High-Bandwidth Memory (HBM)</strong>, and sub-micron silicon interposers into one package. Performance now depends less on any single die and more on how tightly those dies are wired together.</p>
+      <p>The single most important number in this whole story is <strong>interconnect pitch</strong> — the physical distance between the electrical contacts joining stacked dies. The tighter the pitch, the more signals, the less power lost, the faster the memory. The last decade of progress is a story of that distance collapsing from ~100 microns to below one micron.</p>
+    </div>
+
+    <div class="pitch reveal" role="img" aria-label="Interconnect pitch scaling from 100–150 microns (flip-chip) to 25–55 microns (2.5D interposer) to below 1 micron (direct hybrid bonding)">
+      <div class="pitch-track">
+        <div class="pitch-node" style="left:8%">
+          <div class="cap"><span class="n">100–150μm</span><span class="t">Flip-chip / C4 solder</span></div>
+          <div class="knob"></div>
+          <div class="below">High parasitics, thermal limits. The legacy baseline.</div>
+        </div>
+        <div class="pitch-node" style="left:46%">
+          <div class="cap"><span class="n">25–55μm</span><span class="t">2.5D interposer · CoWoS-S</span></div>
+          <div class="knob"></div>
+          <div class="below">Micro-bumps on a silicon interposer. Today's HVM standard.</div>
+        </div>
+        <div class="pitch-node hb" style="left:88%">
+          <div class="cap"><span class="n">&lt;1μm</span><span class="t">Direct hybrid bonding</span></div>
+          <div class="knob"></div>
+          <div class="below">Copper-to-copper atomic bonds. Near-monolithic speeds.</div>
+        </div>
+      </div>
+      <div class="pitch-scale-lab"><span>◀ WIDER PITCH · older, cheaper, slower</span><span>TIGHTER PITCH · newer, harder, faster ▶</span></div>
+    </div>
+
+    <div class="density reveal" aria-hidden="true">
+      <div class="cell c1"><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="lab">Solder bumps</div><div class="p">Few, coarse contacts</div></div>
+      <div class="cell c2"><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="lab">Micro-bumps</div><div class="p">Denser 2.5D routing</div></div>
+      <div class="cell c3"><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="lab">Hybrid bonds</div><div class="p">Orders-of-magnitude denser</div></div>
+    </div>
+
+    <div class="callout reveal">
+      <span class="lab">The investing translation</span>
+      <p>Every step tighter demands new tools, new materials, and near-perfect yield control. That's where durable margins live — and the map for the portfolio that follows. As pitch shrinks below 10μm, solder physically stops working, and <strong>hybrid bonding becomes mandatory</strong> rather than optional.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 THE PACKAGE ============ -->
+<section id="package" class="alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">02</span><span class="eyebrow">Anatomy of an AI accelerator</span></div>
+      <h2>The package, dissected</h2>
+      <p class="intro">One cross-section explains the entire investment thesis. Each layer of this stack is a distinct market with its own suppliers, its own moat, and its own line in the portfolio. Read it bottom-up: raw substrate at the base, compute and memory at the top.</p>
+    </div>
+
+    <div class="xsec-wrap reveal">
+      <div class="xsec-fig">
+        <svg viewBox="0 0 560 400" role="img" aria-labelledby="xsecTitle xsecDesc">
+          <title id="xsecTitle">Cross-section of a 2.5D/3D AI accelerator package</title>
+          <desc id="xsecDesc">A layered diagram showing, from bottom to top: PCB, organic ABF substrate, silicon interposer with through-silicon vias, a central logic die flanked by two stacked HBM memory towers, connected by micro-bumps and hybrid-bond interfaces.</desc>
+          <defs>
+            <linearGradient id="cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3A06A"/><stop offset="1" stop-color="#C97A45"/></linearGradient>
+            <linearGradient id="si" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A3444"/><stop offset="1" stop-color="#1E2836"/></linearGradient>
+          </defs>
+          <!-- PCB -->
+          <rect x="40" y="352" width="480" height="26" rx="3" fill="#151B24" stroke="#2b3444"/>
+          <text x="52" y="369" font-family="IBM Plex Mono" font-size="9" fill="#6c7686">PCB / SYSTEM BOARD</text>
+          <!-- ABF substrate -->
+          <rect x="70" y="312" width="420" height="34" rx="3" fill="#3a2c22" stroke="#5a4230"/>
+          <g stroke="#8a5330" stroke-width="1">
+            <line x1="90" y1="346" x2="90" y2="312"/><line x1="140" y1="346" x2="140" y2="312"/><line x1="190" y1="346" x2="190" y2="312"/><line x1="470" y1="346" x2="470" y2="312"/><line x1="420" y1="346" x2="420" y2="312"/><line x1="370" y1="346" x2="370" y2="312"/>
+          </g>
+          <text x="82" y="333" font-family="IBM Plex Mono" font-size="9" fill="#c99a78">ABF ORGANIC SUBSTRATE</text>
+          <!-- solder balls under substrate -->
+          <g fill="url(#cu)"><circle cx="100" cy="352" r="5"/><circle cx="160" cy="352" r="5"/><circle cx="220" cy="352" r="5"/><circle cx="280" cy="352" r="5"/><circle cx="340" cy="352" r="5"/><circle cx="400" cy="352" r="5"/><circle cx="460" cy="352" r="5"/></g>
+          <!-- Silicon interposer -->
+          <rect x="100" y="270" width="360" height="40" rx="2" fill="url(#si)" stroke="#3a4657"/>
+          <text x="112" y="294" font-family="IBM Plex Mono" font-size="9" fill="#8fd6de">SILICON INTERPOSER · TSVs</text>
+          <!-- TSVs -->
+          <g stroke="#57C7D4" stroke-width="1.4" opacity=".7"><line x1="130" y1="310" x2="130" y2="270"/><line x1="170" y1="310" x2="170" y2="270"/><line x1="300" y1="310" x2="300" y2="270"/><line x1="330" y1="310" x2="330" y2="270"/><line x1="420" y1="310" x2="420" y2="270"/></g>
+          <!-- micro-bumps between interposer and substrate -->
+          <g fill="#E3A06A"><circle cx="130" cy="270" r="3"/><circle cx="170" cy="270" r="3"/><circle cx="220" cy="270" r="3"/><circle cx="270" cy="270" r="3"/><circle cx="320" cy="270" r="3"/><circle cx="370" cy="270" r="3"/><circle cx="420" cy="270" r="3"/></g>
+          <!-- HBM stack left -->
+          <g>
+            <rect x="118" y="176" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="118" y="196" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="118" y="216" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="118" y="236" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="118" y="256" width="96" height="12" rx="2" fill="#2f3d52" stroke="#3a4657"/>
+            <text x="166" y="171" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="#9fb0c5">HBM STACK</text>
+          </g>
+          <!-- HBM stack right -->
+          <g>
+            <rect x="346" y="176" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="346" y="196" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="346" y="216" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="346" y="236" width="96" height="18" rx="2" fill="#243044" stroke="#3a4657"/>
+            <rect x="346" y="256" width="96" height="12" rx="2" fill="#2f3d52" stroke="#3a4657"/>
+            <text x="394" y="171" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="#9fb0c5">HBM STACK</text>
+          </g>
+          <!-- hybrid bond interfaces (thin copper lines between HBM layers) -->
+          <g stroke="#C97A45" stroke-width="1.2" opacity=".9">
+            <line x1="118" y1="194" x2="214" y2="194"/><line x1="118" y1="214" x2="214" y2="214"/><line x1="118" y1="234" x2="214" y2="234"/>
+            <line x1="346" y1="194" x2="442" y2="194"/><line x1="346" y1="214" x2="442" y2="214"/><line x1="346" y1="234" x2="442" y2="234"/>
+          </g>
+          <!-- Logic die center -->
+          <rect x="230" y="196" width="100" height="72" rx="3" fill="#3a2c22" stroke="url(#cu)" stroke-width="1.5"/>
+          <text x="280" y="230" text-anchor="middle" font-family="Archivo" font-weight="700" font-size="12" fill="#E3A06A">LOGIC</text>
+          <text x="280" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#c99a78">GPU / XPU DIE</text>
+          <text x="280" y="188" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="#9fb0c5">COMPUTE</text>
+        </svg>
+      </div>
+      <div class="xsec-legend">
+        <div class="row"><span class="sw" style="background:#E3A06A"></span><div><h4>Logic die + interposer</h4><p><span class="co">TSMC · CoWoS, SoIC</span> — the compute tile and the silicon interposer that carries every signal beneath it. The highest-margin turnkey step.</p></div></div>
+        <div class="row"><span class="sw" style="background:#2f3d52"></span><div><h4>HBM memory stacks</h4><p><span class="co">SK Hynix · Micron · Samsung</span> — stacked DRAM connected by through-silicon vias. Massive price premiums over commodity memory.</p></div></div>
+        <div class="row"><span class="sw" style="background:#C97A45"></span><div><h4>Micro-bumps &amp; hybrid bonds</h4><p><span class="co">BESI · Applied Materials</span> — the copper-to-copper interface itself, made by sub-micron bonding tools. The frontier moat.</p></div></div>
+        <div class="row"><span class="sw" style="background:#57C7D4"></span><div><h4>TSVs &amp; deposition</h4><p><span class="co">Applied Materials · DISCO</span> — the vertical vias, wafer thinning and dicing that make stacking physically possible.</p></div></div>
+        <div class="row"><span class="sw" style="background:#c99a78"></span><div><h4>Substrate &amp; assembly</h4><p><span class="co">Amkor · ASE · Resonac</span> — the organic substrate, final assembly, test, and the materials binding it all together.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 VALUE CHAIN ============ -->
+<section id="valuechain">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">03</span><span class="eyebrow">Who owns each layer</span></div>
+      <h2>The eight-layer value chain</h2>
+      <p class="intro">The physical stack maps onto eight distinct markets. Each has different economics — some are tool monopolies, some are consumable razor-and-blade models, some are scale-driven assembly. The portfolio's job is to own the layers with the deepest moats.</p>
+    </div>
+    <div class="vc-list reveal">
+      <div class="vc-item"><div class="vc-idx">01</div><div class="vc-body"><h4>Foundry packaging</h4><div class="who"><span class="lead">TSMC</span> · Samsung Foundry · Intel Foundry</div><p>Monopolizes front-end 2.5D/3D interposer fabrication and silicon die-stacking. High-margin turnkey manufacturing at the center of the ecosystem.</p></div></div>
+      <div class="vc-item"><div class="vc-idx">02</div><div class="vc-body"><h4>HBM memory vendors</h4><div class="who"><span class="lead">SK Hynix</span> · Micron · Samsung Electronics</div><p>Manufactures 3D-stacked DRAM connected by through-silicon vias, bonded directly onto AI compute substrates. Large price premiums, long-term supply deals.</p></div></div>
+      <div class="vc-item"><div class="vc-idx">03</div><div class="vc-body"><h4>Hybrid bonding tools</h4><div class="who"><span class="lead">BE Semiconductor (BESI)</span> · Applied Materials · SUSS · EV Group</div><p>Builds the sub-micron alignment and thermal bonding equipment for direct copper-to-copper interfaces. Monopolistic IP, ultra-high gross margins.</p></div></div>
+      <div class="vc-item"><div class="vc-idx">04</div><div class="vc-body"><h4>Wafer thinning &amp; dicing</h4><div class="who"><span class="lead">DISCO</span> · Tokyo Seimitsu (ACCRETECH)</div><p>Precision grinders, laser dicing, and diamond blades that thin DRAM and logic wafers below 30μm. Near-monopoly share (&gt;80%) in consumables.</p></div></div>
+      <div class="vc-item"><div class="vc-idx">05</div><div class="vc-body"><h4>Inspection &amp; metrology</h4><div class="who"><span class="lead">Onto Innovation · Camtek</span> · KLA</div><p>Automated optical inspection and 3D metrology that catch micro-bump and TSV defects. Mandatory quality gatekeeping at sub-micron pitches.</p></div></div>
+      <div class="vc-item"><div class="vc-idx">06</div><div class="vc-body"><h4>OSAT providers</h4><div class="who"><span class="lead">ASE · Amkor</span> · JCET · Tongfu</div><p>High-volume assembly, fan-out packaging, substrate attachment, and final test — the secondary packaging that foundries increasingly offload.</p></div></div>
+      <div class="vc-item"><div class="vc-idx">07</div><div class="vc-body"><h4>Material suppliers</h4><div class="who"><span class="lead">Resonac</span> · Dexerials · Fujimi · Kanto Chemical</div><p>Formulates non-conductive film, encapsulants, thermal interface materials, and ABF resins. Long qualification cycles create very sticky customers.</p></div></div>
+      <div class="vc-item"><div class="vc-idx">08</div><div class="vc-body"><h4>Substrate vendors</h4><div class="who"><span class="lead">Ibiden · Unimicron</span> · Shinko · AT&amp;S</div><p>Fabricates ABF build-up organic interposers and emerging glass-core panels. Complex multi-layer registration, heavy capex barriers to entry.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 ROADMAP ============ -->
+<section id="roadmap" class="alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">04</span><span class="eyebrow">Technology &amp; maturity</span></div>
+      <h2>The packaging roadmap</h2>
+      <p class="intro">Not every platform is at the same stage. Today's revenue comes from silicon interposers and MR-MUF memory; tomorrow's comes from hybrid bonding, glass-core substrates, and co-packaged optics. Knowing what's shipping versus what's in R&amp;D tells you which allocations to grow, and when.</p>
+    </div>
+    <div class="road reveal">
+      <div class="road-row"><div class="plat">CoWoS-S<span class="lead">TSMC</span></div><div class="road-meta"><span class="pitch-v">25–55μm</span><span class="app">NVIDIA H100/H200, AMD MI300</span><span class="status hvm">High-volume</span></div></div>
+      <div class="road-row"><div class="plat">CoWoS-L / R<span class="lead">TSMC</span></div><div class="road-meta"><span class="pitch-v">10–25μm</span><span class="app">NVIDIA GB200 / B200</span><span class="status hvm">High-volume</span></div></div>
+      <div class="road-row"><div class="plat">SoIC 3D stacking<span class="lead">TSMC</span></div><div class="road-meta"><span class="pitch-v">&lt;10μm</span><span class="app">AMD MI300, Apple Ultra</span><span class="status scale">Scaling</span></div></div>
+      <div class="road-row"><div class="plat">EMIB / Foveros<span class="lead">Intel Foundry</span></div><div class="road-meta"><span class="pitch-v">25–36μm</span><span class="app">Intel Gaudi 3, Xeon Max</span><span class="status hvm">High-volume</span></div></div>
+      <div class="road-row"><div class="plat">MR-MUF HBM3e<span class="lead">SK Hynix</span></div><div class="road-meta"><span class="pitch-v">25–35μm</span><span class="app">Blackwell HBM3e modules</span><span class="status hvm">High-volume</span></div></div>
+      <div class="road-row"><div class="plat">Direct hybrid bonding<span class="lead">BESI</span></div><div class="road-meta"><span class="pitch-v">&lt;1–3μm</span><span class="app">HBM4 base dies, 3D logic</span><span class="status scale">Early HVM</span></div></div>
+      <div class="road-row"><div class="plat">Panel-level (FOPLP)<span class="lead">ASE · Amkor · Samsung</span></div><div class="road-meta"><span class="pitch-v">10–20μm</span><span class="app">Edge AI, cost-reduced logic</span><span class="status pilot">Pilot / R&amp;D</span></div></div>
+      <div class="road-row"><div class="plat">Glass-core substrates<span class="lead">Resonac · Intel</span></div><div class="road-meta"><span class="pitch-v">Core layer</span><span class="app">Post-2027 hyperscale backplanes</span><span class="status pilot">Sampling</span></div></div>
+      <div class="road-row"><div class="plat">Co-packaged optics<span class="lead">TSMC · Broadcom · ASE</span></div><div class="road-meta"><span class="pitch-v">Optical</span><span class="app">Hyperscale optical switching</span><span class="status rd">R&amp;D</span></div></div>
+    </div>
+    <div class="callout reveal">
+      <span class="lab">Reading the timeline</span>
+      <p>The three <em>pilot / R&amp;D</em> platforms — panel-level packaging, glass-core substrates, and co-packaged optics — are the "years 8–10" bets. The portfolio holds early exposure through Onto (panel lithography), Resonac (glass consortium), and ASE (CPO assembly), then scales into them as they commercialize.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 CUSTOMERS ============ -->
+<section id="customers">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">05</span><span class="eyebrow">Demand &amp; interdependence</span></div>
+      <h2>Who buys what — and "Foundry 2.0"</h2>
+      <p class="intro">The demand side is a small set of hyperscalers and fabless designers, all routing through the same handful of packaging and memory suppliers. That concentration is exactly what gives the suppliers pricing power.</p>
+    </div>
+
+    <div class="flow reveal">
+      <div class="col">
+        <div class="h">End customer / accelerator</div>
+        <div class="chip2">NVIDIA — Hopper / Blackwell</div>
+        <div class="chip2">AMD — Instinct MI300</div>
+        <div class="chip2">Broadcom — custom AI ASICs</div>
+        <div class="chip2">Apple — M-series Ultra</div>
+        <div class="chip2">Google — TPU v5 / v6</div>
+        <div class="chip2">AWS — Trainium 2 / Inferentia</div>
+      </div>
+      <div class="col">
+        <div class="h">Foundry &amp; packaging</div>
+        <div class="chip2">TSMC <span>CoWoS-S · CoWoS-L · SoIC</span></div>
+        <div class="chip2">Intel Foundry <span>EMIB · Foveros</span></div>
+        <div class="chip2">Samsung Foundry <span>I-Cube</span></div>
+      </div>
+      <div class="col">
+        <div class="h">Memory &amp; OSAT partners</div>
+        <div class="chip2">SK Hynix <span>Lead HBM supplier</span></div>
+        <div class="chip2">Micron · Samsung <span>HBM3e / HBM4</span></div>
+        <div class="chip2">Amkor · ASE <span>Assembly &amp; test</span></div>
+      </div>
+    </div>
+
+    <div class="read reveal">
+      <h3 style="margin-bottom:14px">The "Foundry 2.0" shift</h3>
+      <p>Advanced 2.5D/3D packaging now requires the same cleanrooms, chemical-mechanical planarization, and stepper lithography as front-end wafer fabs. That blurred the old line between foundries and back-end assembly. TSMC responded by folding early-stage packaging directly into its foundry model — capturing gross margins above 60% on silicon interposers.</p>
+      <p>But demand for CoWoS capacity from NVIDIA, AMD, and Broadcom far exceeds what foundries can build. CoWoS wafer demand is projected to roughly double — from <strong>1.384 million wafers in 2026 to 2.682 million in 2027</strong>. So foundries keep the high-margin interposer and die-attach steps and offload final assembly and test. The landmark example: a <strong>10-year TSMC–Amkor agreement</strong> routing turnkey back-end work to Amkor's $7B Arizona campus. That's how a "commodity" OSAT becomes an essential partner.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 GEOGRAPHY ============ -->
+<section id="geography" class="alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">06</span><span class="eyebrow">Where value is captured</span></div>
+      <h2>The geography of the stack</h2>
+      <p class="intro">Advanced packaging is geographically concentrated — which is both a moat and a risk. Taiwan dominates interposers, Korea dominates HBM, Japan controls key materials and tools, and Europe holds the hybrid-bonding monopoly. The U.S. is racing to reshore.</p>
+    </div>
+    <div class="geo reveal" role="img" aria-label="Estimated packaging capacity share: Taiwan 55-60%, South Korea 20-25%, Japan 10-15%, United States 5% targeting 15% by 2030, Europe 3-5%">
+      <div class="geo-row">
+        <div class="rlab">Taiwan<span>TSMC · ASE · Unimicron</span></div>
+        <div class="geo-bar"><div class="fill" style="width:58%"><span class="pct">~55–60%</span></div></div>
+        <div class="note">Monopolizes 2.5D interposer production. Risk: cross-strait tension, seismic &amp; power/water limits.</div>
+      </div>
+      <div class="geo-row">
+        <div class="rlab">South Korea<span>SK Hynix · Samsung</span></div>
+        <div class="geo-bar"><div class="fill" style="width:23%"><span class="pct">~20–25%</span></div></div>
+        <div class="note">Dominates global HBM3e/HBM4 manufacturing and MR-MUF processing.</div>
+      </div>
+      <div class="geo-row">
+        <div class="rlab">Japan<span>DISCO · Resonac · Ibiden</span></div>
+        <div class="geo-bar"><div class="fill" style="width:13%"><span class="pct">~10–15%</span></div></div>
+        <div class="note">Controls core packaging materials (NCF, TIM) and wafer-dicing tools.</div>
+      </div>
+      <div class="geo-row">
+        <div class="rlab">United States<span>AMAT · Amkor · Intel · Onto</span></div>
+        <div class="geo-bar"><div class="fill cy" style="width:15%"><span class="pct">~5% → 15%</span></div></div>
+        <div class="note">Dominates inspection/metrology IP &amp; deposition. Targeting 15% capacity by 2030 via the CHIPS Act.</div>
+      </div>
+      <div class="geo-row">
+        <div class="rlab">Europe<span>BESI · ASML · SUSS</span></div>
+        <div class="geo-bar"><div class="fill cy" style="width:5%"><span class="pct">~3–5%</span></div></div>
+        <div class="note">Near-monopoly on sub-micron hybrid-bonding equipment and EUV tools.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 MOATS ============ -->
+<section id="moats">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">07</span><span class="eyebrow">Why these companies compound</span></div>
+      <h2>Three kinds of moat</h2>
+      <p class="intro">Outsized 10-year returns require structural protection from commoditization. The report groups the ecosystem's defensibility into three moat archetypes — and the portfolio deliberately owns companies from each.</p>
+    </div>
+    <div class="grid g3 reveal">
+      <div class="moat-card" data-n="1">
+        <h4>Process IP &amp; scale economics</h4>
+        <ul>
+          <li><b>TSMC</b> — a yield-curve lead plus $50B+ annual capex creates barriers rivals simply can't clear.</li>
+          <li><b>BESI</b> — an unrivaled patent portfolio in copper-to-copper hybrid bonding alignment, at &lt;100nm precision.</li>
+        </ul>
+      </div>
+      <div class="moat-card" data-n="2">
+        <h4>Consumables &amp; switching costs</h4>
+        <ul>
+          <li><b>DISCO</b> — &gt;80% share in dicing/grinding; proprietary blade-to-machine calibration locks in fab yields.</li>
+          <li><b>Resonac</b> — 2+ year material qualification cycles make chipmakers reluctant to ever switch NCF/TIM suppliers.</li>
+        </ul>
+      </div>
+      <div class="moat-card" data-n="3">
+        <h4>Yield gatekeeping &amp; algorithms</h4>
+        <ul>
+          <li><b>Onto &amp; Camtek</b> — proprietary optical algorithms for 3D micro-bump inspection, wired directly into fab yield loops.</li>
+          <li>Once embedded in a customer's yield process, inspection tools are extremely hard to displace.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout reveal">
+      <span class="lab">The core insight for investors</span>
+      <p>The supply-constrained bottlenecks — interposers, hybrid bonding, dicing consumables, and inspection — are exactly where pricing power concentrates. A broad semiconductor ETF dilutes that exposure with commoditized mature-node chips; a targeted portfolio concentrates on it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 FINANCIALS ============ -->
+<section id="financials" class="alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">08</span><span class="eyebrow">Fundamentals at a glance</span></div>
+      <h2>The financial dashboard</h2>
+      <p class="intro">A snapshot of the ten candidates on the metrics that matter for a long hold: revenue scale, growth, gross margin as a proxy for pricing power, AI-infrastructure exposure, and the forward multiple you're paying for it. Figures reflect the source report's stated estimates.</p>
+    </div>
+    <div class="tbl-scroll reveal">
+      <table>
+        <thead><tr><th>Company</th><th>Revenue</th><th>YoY growth</th><th>Gross margin</th><th>Fwd P/E</th><th>AI exposure</th></tr></thead>
+        <tbody>
+          <tr><td><span class="nm">Taiwan Semiconductor</span><span class="co">TSM</span></td><td class="n">$121.8B</td><td class="n pos">+35.9%</td><td class="n">59.9%<div class="mbar"><i style="width:60%"></i></div></td><td class="n">18.5×</td><td class="n">~50–60%</td></tr>
+          <tr><td><span class="nm">SK Hynix</span><span class="co">000660.KS</span></td><td class="n">~$48.0B</td><td class="n pos">+257%</td><td class="n">~68.0%<div class="mbar"><i style="width:68%"></i></div></td><td class="n">5.9×</td><td class="n">~45–55%</td></tr>
+          <tr><td><span class="nm">BE Semiconductor</span><span class="co">BESI.AS</span></td><td class="n">~$0.95B</td><td class="n pos">+28.5%</td><td class="n">64.5%<div class="mbar"><i style="width:65%"></i></div></td><td class="n">38×</td><td class="n">~40–50%</td></tr>
+          <tr><td><span class="nm">DISCO Corporation</span><span class="co">6146.T</span></td><td class="n">~$2.40B</td><td class="n pos">+32.0%</td><td class="n">62.0%<div class="mbar"><i style="width:62%"></i></div></td><td class="n">—</td><td class="n">~35–45%</td></tr>
+          <tr><td><span class="nm">Applied Materials</span><span class="co">AMAT</span></td><td class="n">$28.2B</td><td class="n pos">+12.5%</td><td class="n">49.0%<div class="mbar"><i style="width:49%"></i></div></td><td class="n">21×</td><td class="n">~30–40%</td></tr>
+          <tr><td><span class="nm">Amkor Technology</span><span class="co">AMKR</span></td><td class="n">$6.70B</td><td class="n pos">+27.0%</td><td class="n">14.2%<div class="mbar"><i style="width:14%"></i></div></td><td class="n">16.5×</td><td class="n">~25–35%</td></tr>
+          <tr><td><span class="nm">Onto Innovation</span><span class="co">ONTO</span></td><td class="n">$1.03B</td><td class="n pos">+21.0%</td><td class="n">54.2%<div class="mbar"><i style="width:54%"></i></div></td><td class="n">—</td><td class="n">~35–45%</td></tr>
+          <tr><td><span class="nm">Camtek</span><span class="co">CAMT</span></td><td class="n">$0.56B</td><td class="n pos">+18.0%</td><td class="n">51.0%<div class="mbar"><i style="width:51%"></i></div></td><td class="n">—</td><td class="n">~50%</td></tr>
+          <tr><td><span class="nm">Resonac Holdings</span><span class="co">4004.T</span></td><td class="n">~$9.10B</td><td class="n pos">+14.2%</td><td class="n">28.5%<div class="mbar"><i style="width:29%"></i></div></td><td class="n">18.2×</td><td class="n">~30–40%</td></tr>
+          <tr><td><span class="nm">ASE Technology</span><span class="co">ASX</span></td><td class="n">$19.80B</td><td class="n pos">+11.2%</td><td class="n">16.8%<div class="mbar"><i style="width:17%"></i></div></td><td class="n">15.2×</td><td class="n">~20–30%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted reveal" style="font-size:.82rem;margin-top:16px">Note the split: <strong>toolmakers and memory</strong> (BESI, DISCO, SK Hynix) carry 60–68% gross margins, while <strong>OSATs</strong> (Amkor, ASE) run thin 14–17% margins but on huge scale. That margin structure is why the portfolio weights toward the tool and foundry layers.</p>
+  </div>
+</section>
+
+<!-- ============ 09 PORTFOLIO ============ -->
+<section id="portfolio">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">09</span><span class="eyebrow">Putting it together</span></div>
+      <h2>The $100-a-week portfolio</h2>
+      <p class="intro">Capital is spread across ten companies, one for each critical layer, sized by conviction and moat depth. The design intent: dollar-cost average $100 every week over a 5–10 year horizon, tilting toward the supply-constrained bottlenecks rather than the whole semiconductor index.</p>
+    </div>
+
+    <div class="port-top reveal">
+      <div class="donut-box">
+        <svg viewBox="0 0 42 42" role="img" aria-label="Portfolio allocation donut: TSM 22%, SK Hynix 14%, BESI 12%, DISCO 11%, AMAT 10%, Amkor 8%, Onto 7%, Camtek 6%, Resonac 5%, ASE 5%">
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#151b24" stroke-width="7"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#C97A45" stroke-width="7" stroke-dasharray="22 100" stroke-dashoffset="0"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#E4A85E" stroke-width="7" stroke-dasharray="14 100" stroke-dashoffset="-22"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#57C7D4" stroke-width="7" stroke-dasharray="12 100" stroke-dashoffset="-36"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#49AAB6" stroke-width="7" stroke-dasharray="11 100" stroke-dashoffset="-48"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#6FD0DB" stroke-width="7" stroke-dasharray="10 100" stroke-dashoffset="-59"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#7C93BC" stroke-width="7" stroke-dasharray="8 100" stroke-dashoffset="-69"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#A7DEE6" stroke-width="7" stroke-dasharray="7 100" stroke-dashoffset="-77"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#8ECFD8" stroke-width="7" stroke-dasharray="6 100" stroke-dashoffset="-84"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#B7A08B" stroke-width="7" stroke-dasharray="5 100" stroke-dashoffset="-90"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="none" stroke="#94A8CC" stroke-width="7" stroke-dasharray="5 100" stroke-dashoffset="-95"></circle>
+        </svg>
+        <div class="donut-center"><div class="v">$100</div><div class="k">per week</div></div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:16px">Composition by ecosystem role</h3>
+        <div class="rolegrid">
+          <div class="role"><span class="sw" style="background:#C97A45"></span><div class="info"><span class="rn">Foundry</span><span class="rp">TSM · 22%</span></div></div>
+          <div class="role"><span class="sw" style="background:#E4A85E"></span><div class="info"><span class="rn">HBM memory</span><span class="rp">SK Hynix · 14%</span></div></div>
+          <div class="role"><span class="sw" style="background:#57C7D4"></span><div class="info"><span class="rn">Equipment / tools</span><span class="rp">BESI+DISCO+AMAT · 33%</span></div></div>
+          <div class="role"><span class="sw" style="background:#A7DEE6"></span><div class="info"><span class="rn">Inspection</span><span class="rp">Onto+Camtek · 13%</span></div></div>
+          <div class="role"><span class="sw" style="background:#7C93BC"></span><div class="info"><span class="rn">OSAT assembly</span><span class="rp">Amkor+ASE · 13%</span></div></div>
+          <div class="role"><span class="sw" style="background:#B7A08B"></span><div class="info"><span class="rn">Materials</span><span class="rp">Resonac · 5%</span></div></div>
+        </div>
+        <p class="muted" style="font-size:.86rem;margin-top:16px;margin-bottom:0">Two-thirds of the book sits in high-margin tools, foundry, and memory; the remaining third captures assembly, inspection, and materials scale.</p>
+      </div>
+    </div>
+
+    <div class="alloc reveal">
+      <div class="arow"><div class="co2"><b>Taiwan Semiconductor</b><span>TSM · Foundry</span></div><div class="abar"><i style="width:100%;background:#C97A45"></i></div><div class="amt">$22 <small>22%</small></div></div>
+      <div class="arow"><div class="co2"><b>SK Hynix</b><span>000660.KS · HBM</span></div><div class="abar"><i style="width:63.6%;background:#E4A85E"></i></div><div class="amt">$14 <small>14%</small></div></div>
+      <div class="arow"><div class="co2"><b>BE Semiconductor</b><span>BESI.AS · Bonding</span></div><div class="abar"><i style="width:54.5%;background:#57C7D4"></i></div><div class="amt">$12 <small>12%</small></div></div>
+      <div class="arow"><div class="co2"><b>DISCO Corporation</b><span>6146.T · Dicing</span></div><div class="abar"><i style="width:50%;background:#49AAB6"></i></div><div class="amt">$11 <small>11%</small></div></div>
+      <div class="arow"><div class="co2"><b>Applied Materials</b><span>AMAT · Equipment</span></div><div class="abar"><i style="width:45.5%;background:#6FD0DB"></i></div><div class="amt">$10 <small>10%</small></div></div>
+      <div class="arow"><div class="co2"><b>Amkor Technology</b><span>AMKR · OSAT</span></div><div class="abar"><i style="width:36.4%;background:#7C93BC"></i></div><div class="amt">$8 <small>8%</small></div></div>
+      <div class="arow"><div class="co2"><b>Onto Innovation</b><span>ONTO · Metrology</span></div><div class="abar"><i style="width:31.8%;background:#A7DEE6"></i></div><div class="amt">$7 <small>7%</small></div></div>
+      <div class="arow"><div class="co2"><b>Camtek</b><span>CAMT · Metrology</span></div><div class="abar"><i style="width:27.3%;background:#8ECFD8"></i></div><div class="amt">$6 <small>6%</small></div></div>
+      <div class="arow"><div class="co2"><b>Resonac Holdings</b><span>4004.T · Materials</span></div><div class="abar"><i style="width:22.7%;background:#B7A08B"></i></div><div class="amt">$5 <small>5%</small></div></div>
+      <div class="arow"><div class="co2"><b>ASE Technology</b><span>ASX · OSAT</span></div><div class="abar"><i style="width:22.7%;background:#94A8CC"></i></div><div class="amt">$5 <small>5%</small></div></div>
+    </div>
+
+    <h3 class="reveal" style="margin:56px 0 18px">A portfolio that evolves with the technology</h3>
+    <div class="life reveal">
+      <div class="ph">
+        <div class="yr">Years 1–3</div>
+        <h4>Equipment build-out</h4>
+        <p>Capture the initial wave of tool backlogs and fab installations as capacity is built.</p>
+        <div class="shift">Heavy on <span class="up">TSM $22 · BESI $12 · DISCO $11 · AMAT $10</span></div>
+        <div class="bar"></div>
+      </div>
+      <div class="ph">
+        <div class="yr">Years 4–7</div>
+        <h4>High-volume manufacturing</h4>
+        <p>Shift ~$3/week from toolmakers toward assembly and consumable materials as volume scales.</p>
+        <div class="shift">Grow <span class="up">AMKR → $10 · ASE → $7 · Resonac → $7</span></div>
+        <div class="bar"></div>
+      </div>
+      <div class="ph">
+        <div class="yr">Years 8–10</div>
+        <h4>Next-gen interconnect</h4>
+        <p>Tilt toward the leaders in glass-core substrates, panel-level packaging, and co-packaged optics.</p>
+        <div class="shift">Expand into <span class="up">glass-core &amp; CPO platform leaders</span></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+
+    <h3 class="reveal" style="margin:56px 0 18px">How to act on it — triage</h3>
+    <div class="grid g3 reveal">
+      <div class="triage-col buy">
+        <h4>Buy today · core bottlenecks</h4>
+        <div class="t-item"><span class="tk">TSM</span> <span class="tn">Taiwan Semiconductor</span><p>Unrivaled AI foundry hub; reasonable ~18.5× P/E.</p></div>
+        <div class="t-item"><span class="tk">000660.KS</span> <span class="tn">SK Hynix</span><p>Very cheap ~5.9× P/E vs. peak margins.</p></div>
+        <div class="t-item"><span class="tk">AMAT</span> <span class="tn">Applied Materials</span><p>Broad tool moat at a reasonable ~21× P/E.</p></div>
+        <div class="t-item"><span class="tk">6146.T</span> <span class="tn">DISCO</span><p>Irreplaceable consumable moat, steady cash flow.</p></div>
+      </div>
+      <div class="triage-col acc">
+        <h4>Accumulate · premium growth</h4>
+        <div class="t-item"><span class="tk">BESI.AS</span> <span class="tn">BE Semiconductor</span><p>Monopolistic moat; add aggressively on pullbacks.</p></div>
+        <div class="t-item"><span class="tk">ONTO</span> <span class="tn">Onto Innovation</span><p>Accumulate as JetStep panel tools scale.</p></div>
+        <div class="t-item"><span class="tk">CAMT</span> <span class="tn">Camtek</span><p>High HBM backlog; watch margin recovery.</p></div>
+        <div class="t-item"><span class="tk">AMKR</span> <span class="tn">Amkor</span><p>Add as Arizona &amp; Vietnam ramp utilization.</p></div>
+      </div>
+      <div class="triage-col val">
+        <h4>Value buffer · scale &amp; yield</h4>
+        <div class="t-item"><span class="tk">4004.T</span> <span class="tn">Resonac</span><p>Low-P/E consumable play; glass-substrate leader.</p></div>
+        <div class="t-item"><span class="tk">ASX</span> <span class="tn">ASE Technology</span><p>~15× P/E valuation floor; broad OSAT capture.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 SCENARIOS ============ -->
+<section id="scenarios" class="alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">10</span><span class="eyebrow">Stress-testing the book</span></div>
+      <h2>Five scenarios, five re-allocations</h2>
+      <p class="intro">A static portfolio ignores how the industry actually moves. The report pre-defines how weekly dollars shift under five plausible futures — a simple rules-based way to stay positioned without over-trading.</p>
+    </div>
+    <div class="scn reveal">
+      <div class="scn-card"><div class="badge">A</div><div><h4>Accelerated AI capex</h4><p class="trig">Hyperscaler AI spend accelerates &gt;50% YoY and CoWoS bottlenecks intensify.</p></div><div class="shifts"><div class="shift-lab">Allocation shift</div><div class="shift-pills"><span class="pill up">TSM +$3</span><span class="pill up">BESI +$2</span><span class="pill dn">ASE −$3</span><span class="pill dn">Resonac −$2</span></div></div></div>
+      <div class="scn-card"><div class="badge">B</div><div><h4>HBM demand surge</h4><p class="trig">Next-gen LLMs need 10× memory bandwidth; HBM3e/HBM4 demand exceeds capacity.</p></div><div class="shifts"><div class="shift-lab">Allocation shift</div><div class="shift-pills"><span class="pill up">SK Hynix +$3</span><span class="pill up">CAMT +$2</span><span class="pill dn">AMKR −$3</span><span class="pill dn">AMAT −$2</span></div></div></div>
+      <div class="scn-card"><div class="badge">C</div><div><h4>Rapid packaging expansion</h4><p class="trig">Aggressive fab expansion causes localized OSAT assembly overcapacity.</p></div><div class="shifts"><div class="shift-lab">Allocation shift</div><div class="shift-pills"><span class="pill up">DISCO +$2</span><span class="pill up">BESI +$2</span><span class="pill dn">AMKR −$2</span><span class="pill dn">ASX −$2</span></div></div></div>
+      <div class="scn-card"><div class="badge">D</div><div><h4>Geopolitical disruption in Taiwan</h4><p class="trig">Regional instability disrupts Taiwan shipping routes.</p></div><div class="shifts"><div class="shift-lab">Allocation shift</div><div class="shift-pills"><span class="pill dn">TSM −$10</span><span class="pill up">AMKR +$5</span><span class="pill up">AMAT +$3</span><span class="pill up">SK Hynix +$2</span></div></div></div>
+      <div class="scn-card"><div class="badge">E</div><div><h4>In-sourcing shift by foundries</h4><p class="trig">Foundries absorb 80%+ of packaging, bypassing traditional OSATs.</p></div><div class="shifts"><div class="shift-lab">Allocation shift</div><div class="shift-pills"><span class="pill dn">AMKR −$3</span><span class="pill dn">ASX −$3</span><span class="pill up">TSM +$4</span><span class="pill up">AMAT +$2</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 PLAYBOOK ============ -->
+<section id="playbook">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">11</span><span class="eyebrow">Per-company playbook</span></div>
+      <h2>Thesis, cases &amp; what breaks it</h2>
+      <p class="intro">Pick a holding to see the bull, base, and bear case — and the specific event that would invalidate the thesis. A disciplined investor decides what would make them wrong <em>before</em> buying.</p>
+    </div>
+
+    <div class="explorer reveal">
+      <div class="exp-tabs" role="tablist" aria-label="Company thesis">
+        <button role="tab" aria-selected="true" aria-controls="p-tsm" id="t-tsm">TSM</button>
+        <button role="tab" aria-selected="false" aria-controls="p-skh" id="t-skh">SK Hynix</button>
+        <button role="tab" aria-selected="false" aria-controls="p-besi" id="t-besi">BESI</button>
+        <button role="tab" aria-selected="false" aria-controls="p-disco" id="t-disco">DISCO</button>
+        <button role="tab" aria-selected="false" aria-controls="p-amat" id="t-amat">AMAT</button>
+        <button role="tab" aria-selected="false" aria-controls="p-amkr" id="t-amkr">AMKR</button>
+        <button role="tab" aria-selected="false" aria-controls="p-onto" id="t-onto">ONTO</button>
+        <button role="tab" aria-selected="false" aria-controls="p-camt" id="t-camt">CAMT</button>
+        <button role="tab" aria-selected="false" aria-controls="p-reso" id="t-reso">Resonac</button>
+        <button role="tab" aria-selected="false" aria-controls="p-ase" id="t-ase">ASE</button>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-tsm" aria-labelledby="t-tsm">
+        <div class="exp-head"><span class="nm">Taiwan Semiconductor</span><span class="tk">TSM</span><span class="layer">Foundry</span></div>
+        <div class="exp-alloc">Allocation <b>$22 / week · 22%</b> — the anchor position and central hub of AI compute.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>Advanced-packaging revenue doubles yearly; N2/A16 hold &gt;90% of the AI-accelerator market; gross margin clears 62%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>~25% revenue CAGR to 2029; CoWoS scales on plan; the multiple re-rates toward 22× forward earnings.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>A cross-strait shock stalls exports; overseas fabs drag gross margin below 50%.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>&gt;15% share loss in sub-3nm to Intel/Samsung, or persistent yield failures on CoWoS-L / SoIC mass-production lines.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-skh" aria-labelledby="t-skh" hidden>
+        <div class="exp-head"><span class="nm">SK Hynix</span><span class="tk">000660.KS</span><span class="layer">HBM memory</span></div>
+        <div class="exp-alloc">Allocation <b>$14 / week · 14%</b> — HBM leader with industry-leading operating margins.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>Holds &gt;50% HBM share through HBM4; MR-MUF edge blocks rivals; operating margin stays above 60%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>HBM revenue compounds ~35%; stays NVIDIA's lead HBM supplier; multiple re-rates toward 10×.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>HBM overcapacity crushes prices; rivals capture the HBM4 design wins.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>Loses NVIDIA lead-supplier status, or fails to commercialize hybrid-bonded HBM4 base dies.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-besi" aria-labelledby="t-besi" hidden>
+        <div class="exp-head"><span class="nm">BE Semiconductor</span><span class="tk">BESI.AS</span><span class="layer">Hybrid bonding</span></div>
+        <div class="exp-alloc">Allocation <b>$12 / week · 12%</b> — ~70% share in the frontier bonding tool.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>Hybrid bonding goes mandatory across HBM4 and logic; BESI keeps &gt;75% share; operating margin tops 45%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>Hybrid bonding spreads steadily into high-end servers; equipment backlog compounds ~25%.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>Solder micro-bumps get extended, delaying hybrid bonding in volume consumer devices.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>Hybrid-bond die-attach share falls below 50% to ASMPT or Applied Materials.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-disco" aria-labelledby="t-disco" hidden>
+        <div class="exp-head"><span class="nm">DISCO Corporation</span><span class="tk">6146.T</span><span class="layer">Dicing &amp; grinding</span></div>
+        <div class="exp-alloc">Allocation <b>$11 / week · 11%</b> — &gt;80% share razor-and-blade consumable model.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>HBM stacks climb to 16-/20-high, multiplying grinder and blade demand; operating margin tops 42%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>Diamond-blade consumables give steady recurring revenue; sales compound ~18%.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>Non-contact laser singulation displaces mechanical dicing without DISCO owning the laser IP.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>Structural decline in blade-revenue growth, or &gt;20% loss of wafer-grinding share.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-amat" aria-labelledby="t-amat" hidden>
+        <div class="exp-head"><span class="nm">Applied Materials</span><span class="tk">AMAT</span><span class="layer">Equipment</span></div>
+        <div class="exp-alloc">Allocation <b>$10 / week · 10%</b> — broad front-end and back-end toolmaker; holds a 9% stake in BESI.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>The BESI hybrid-bonding JV wins big; TSV-etch and CMP sales accelerate; free cash flow tops $9B.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>Packaging-equipment revenue compounds ~15%; gross margin holds ~49%.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>Tighter U.S. export controls cut advanced shipments to mainland China.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>Meaningful TSV deposition/etch share is lost to Lam Research or Tokyo Electron.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-amkr" aria-labelledby="t-amkr" hidden>
+        <div class="exp-head"><span class="nm">Amkor Technology</span><span class="tk">AMKR</span><span class="layer">OSAT</span></div>
+        <div class="exp-alloc">Allocation <b>$8 / week · 8%</b> — lead North American OSAT; TSMC Arizona offload partner.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>The Peoria, Arizona campus runs full with TSMC offload; gross margin expands toward 18%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>Advanced-packaging revenue compounds ~20%; Vietnam and Arizona ramps lift utilization.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>Arizona hits delays or cost overruns; utilization drops below 60%.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>The TSMC Arizona partnership is cancelled, or gross margin stays below 10%.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-onto" aria-labelledby="t-onto" hidden>
+        <div class="exp-head"><span class="nm">Onto Innovation</span><span class="tk">ONTO</span><span class="layer">Metrology</span></div>
+        <div class="exp-alloc">Allocation <b>$7 / week · 7%</b> — Dragonfly inspection + JetStep panel lithography; zero-debt balance sheet.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>JetStep becomes the FOPLP lithography standard; Dragonfly takes 60%+ of HBM inspection.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>Advanced-packaging revenue compounds ~22%; non-GAAP operating margin stays above 28%.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>KLA pushes hard into back-end optical inspection and erodes pricing.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>Tool backlog declines three consecutive quarters during an AI capex up-cycle.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-camt" aria-labelledby="t-camt" hidden>
+        <div class="exp-head"><span class="nm">Camtek</span><span class="tk">CAMT</span><span class="layer">Metrology</span></div>
+        <div class="exp-alloc">Allocation <b>$6 / week · 6%</b> — pure-play HBM micro-bump inspection; ~$260M order backlog.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>Hawk and Eagle G5 systems double sales; Camtek takes majority sub-micron micro-bump metrology; operating margin tops 32%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>HBM inspection backlog converts to revenue; full-year sales compound ~20%.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>Memory makers pause HBM capex and cancel orders.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>A tier-1 memory inspection order is cancelled (&gt;$50M), or operating margin falls below 18%.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-reso" aria-labelledby="t-reso" hidden>
+        <div class="exp-head"><span class="nm">Resonac Holdings</span><span class="tk">4004.T</span><span class="layer">Materials</span></div>
+        <div class="exp-alloc">Allocation <b>$5 / week · 5%</b> — NCF/TIM leader; heads the glass-core substrate consortium.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>The JOINT consortium sets the global glass-core standard; NCF and TIM sales double; operating margin reaches 15%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>Advanced-packaging materials compound ~14%, offsetting cyclical legacy chemicals.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>Raw-material inflation squeezes margin; glass-substrate commercialization slips past 2030.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>Loses primary NCF supplier status at SK Hynix or Samsung.</p></div>
+      </div>
+
+      <div class="exp-panel" role="tabpanel" id="p-ase" aria-labelledby="t-ase" hidden>
+        <div class="exp-head"><span class="nm">ASE Technology</span><span class="tk">ASX</span><span class="layer">OSAT</span></div>
+        <div class="exp-alloc">Allocation <b>$5 / week · 5%</b> — world's largest independent OSAT; CPO co-development partner.</div>
+        <div class="cases">
+          <div class="case bull"><div class="cl">Bull</div><p>CPO and VIPack win mainstream hyperscaler adoption; OSAT gross margin tops 20%.</p></div>
+          <div class="case base"><div class="cl">Base</div><p>Turnkey packaging and test revenue compounds ~12%; dividend holds.</p></div>
+          <div class="case bear"><div class="cl">Bear</div><p>Foundries in-source back-end test, cutting OSAT value-add.</p></div>
+        </div>
+        <div class="invalid"><span class="il">Thesis breaks if</span><p>Advanced-packaging revenue drops below 15% of total revenue.</p></div>
+      </div>
+    </div>
+
+    <h3 class="reveal" style="margin:56px 0 18px">Quarterly KPI dashboard</h3>
+    <p class="read reveal" style="margin-bottom:22px">Each earnings season, the thesis is re-validated against a single growth metric, a single profitability metric, and a hard warning threshold. If the warning trips, the position gets re-assessed — not held on hope.</p>
+    <div class="tbl-scroll reveal">
+      <table>
+        <thead><tr><th>Company</th><th>Growth signal</th><th>Profitability check</th><th>Warning threshold</th></tr></thead>
+        <tbody>
+          <tr><td><span class="nm">TSMC</span></td><td>Adv. packaging capex as % of total</td><td>Gross margin &gt;58%</td><td class="neg">GM below 52% for two quarters</td></tr>
+          <tr><td><span class="nm">SK Hynix</span></td><td>HBM as % of DRAM sales</td><td>Operating margin &gt;50% at peak</td><td class="neg">Op margin below 25%</td></tr>
+          <tr><td><span class="nm">BESI</span></td><td>Hybrid-bond bookings &amp; backlog</td><td>Gross margin &gt;62%</td><td class="neg">Tool shipments down YoY, two quarters</td></tr>
+          <tr><td><span class="nm">DISCO</span></td><td>Consumable blade revenue growth</td><td>Operating margin &gt;35%</td><td class="neg">Op margin below 28%</td></tr>
+          <tr><td><span class="nm">Applied Materials</span></td><td>Adv. packaging system revenue YoY</td><td>Free-cash-flow margin</td><td class="neg">TSV etch/plating share loss</td></tr>
+          <tr><td><span class="nm">Amkor</span></td><td>Adv. packaging segment revenue YoY</td><td>Capacity utilization &gt;80%</td><td class="neg">Gross margin below 10% sustained</td></tr>
+          <tr><td><span class="nm">Onto Innovation</span></td><td>Dragonfly + 3Di backlog ($M)</td><td>Non-GAAP GM &gt;54%</td><td class="neg">Backlog down &gt;20% sequentially</td></tr>
+          <tr><td><span class="nm">Camtek</span></td><td>HBM/3D metrology order intake</td><td>Op margin recovering toward 30%</td><td class="neg">Op margin below 20% on cost creep</td></tr>
+          <tr><td><span class="nm">Resonac</span></td><td>Semi-material segment income</td><td>Consolidated op-margin expansion</td><td class="neg">Semi revenue falls as volumes rise</td></tr>
+          <tr><td><span class="nm">ASE Technology</span></td><td>VIPack platform revenue</td><td>Back-end packaging GM</td><td class="neg">Back-end GM below 12%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSE ============ -->
+<section id="close" class="alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker"><span class="sec-num">→</span><span class="eyebrow">The one-sentence version</span></div>
+      <h2>The package is the product</h2>
+    </div>
+    <div class="synth reveal">
+      <p class="lede">As transistor scaling fades, the value in AI hardware has migrated into how chips are stacked, bonded, and inspected. The companies that control the supply-constrained layers of that physical stack — interposers, hybrid bonding, dicing consumables, memory, and yield inspection — are where durable pricing power lives.</p>
+      <p style="margin-top:20px">The teaching arc of this guide follows a deliberate order: understand the <strong>physical shift</strong> (why pitch matters), read the <strong>package</strong> as a map, learn the <strong>eight layers</strong> and who owns them, place them on a <strong>roadmap</strong> of maturity, see the <strong>demand and geography</strong> that create scarcity, identify the <strong>moats</strong>, check the <strong>financials</strong>, and only then construct a <strong>portfolio</strong> — stress-tested across scenarios and governed by per-company invalidation criteria.</p>
+      <div class="disclaimer">
+        <h4>How to use this &amp; important note</h4>
+        <p>This page is an educational summary of a single research report, built as a teaching aid — not investment advice or a recommendation to buy or sell any security. Company figures, valuations, and market forecasts reflect the source report's stated estimates as of its writing and will drift with time; verify current numbers before acting. Concentrated, single-theme portfolios carry meaningful risk. Anyone making real allocation decisions should do independent research and consult a licensed financial professional. Reference sources for the underlying data appear in the original report's works-cited list.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap fbar">
+    <div class="brand"><span class="dot"></span>ADVANCED&nbsp;PACKAGING&nbsp;<span>/ FIELD GUIDE</span></div>
+    <div class="mono">Educational teaching resource · 11 sections · Source: AI Semiconductor Advanced Packaging Portfolio Strategy</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Scroll progress bar */
+  var prog = document.getElementById("progress");
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop || document.body.scrollTop) / max * 100 : 0;
+    prog.style.width = pct + "%";
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+
+  /* Reveal on scroll */
+  var reveals = [].slice.call(document.querySelectorAll(".reveal"));
+  if (reduce || !("IntersectionObserver" in window)){
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var ro = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); ro.unobserve(e.target); }
+      });
+    }, {threshold:0.12, rootMargin:"0px 0px -8% 0px"});
+    reveals.forEach(function(el){ ro.observe(el); });
+  }
+
+  /* Active section highlighting (top nav + rail) */
+  var sections = [].slice.call(document.querySelectorAll("section[id]"));
+  var navLinks = [].slice.call(document.querySelectorAll(".top-nav a, .rail a"));
+  function setActive(id){
+    navLinks.forEach(function(a){
+      var match = a.getAttribute("href") === "#" + id;
+      a.classList.toggle("active", match);
+    });
+  }
+  if ("IntersectionObserver" in window){
+    var so = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ setActive(e.target.id); }
+      });
+    }, {rootMargin:"-45% 0px -50% 0px"});
+    sections.forEach(function(s){ so.observe(s); });
+  }
+
+  /* Thesis explorer tabs */
+  var tablist = document.querySelector(".exp-tabs");
+  if (tablist){
+    var tabs = [].slice.call(tablist.querySelectorAll('[role="tab"]'));
+    function selectTab(tab){
+      tabs.forEach(function(t){
+        var selected = t === tab;
+        t.setAttribute("aria-selected", selected ? "true" : "false");
+        var panel = document.getElementById(t.getAttribute("aria-controls"));
+        if (panel){ panel.hidden = !selected; }
+      });
+    }
+    tabs.forEach(function(tab, i){
+      tab.addEventListener("click", function(){ selectTab(tab); });
+      tab.addEventListener("keydown", function(ev){
+        var idx = null;
+        if (ev.key === "ArrowRight" || ev.key === "ArrowDown") idx = (i + 1) % tabs.length;
+        else if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") idx = (i - 1 + tabs.length) % tabs.length;
+        else if (ev.key === "Home") idx = 0;
+        else if (ev.key === "End") idx = tabs.length - 1;
+        if (idx !== null){ ev.preventDefault(); tabs[idx].focus(); selectTab(tabs[idx]); }
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
