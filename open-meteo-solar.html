@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Can Open-Meteo Predict Solar Power? · Field Notes</title>
+<style>
+  /* =========================================================================
+     Open-Meteo design system - ported from the provided app.css
+     shadcn-svelte "slate" foundation · OKLCH · Tailwind v4 scale
+     Sans + mono are the system stacks (no custom web font), per the brief.
+     ========================================================================= */
+  :root {
+    --radius: 0.625rem;
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.129 0.042 264.695);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.129 0.042 264.695);
+    --muted: oklch(0.968 0.007 247.896);
+    --muted-foreground: oklch(0.554 0.046 257.417);
+    --border: oklch(0.929 0.013 255.508);
+    --input: oklch(0.929 0.013 255.508);
+    --ring: oklch(0.704 0.04 256.788);
+    --primary: oklch(0.208 0.042 265.755);
+    --primary-foreground: oklch(0.984 0.003 247.858);
+    --secondary: oklch(0.968 0.007 247.896);
+    --secondary-foreground: oklch(0.208 0.042 265.755);
+    --accent: oklch(0.968 0.007 247.896);
+    --destructive: oklch(0.577 0.245 27.325);
+
+    --brand: oklch(0.546 0.245 262.881);
+    --brand-foreground: oklch(0.984 0.003 247.858);
+    --brand-hover: oklch(0.488 0.243 264.376);
+
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+
+    /* The one expressive accent: warm "solar" gradient. Held constant across
+       modes so the sun reads the same on white and on navy. */
+    --solar-1: oklch(0.86 0.15 88);
+    --solar-2: oklch(0.78 0.18 66);
+    --solar-3: oklch(0.68 0.21 41);
+
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+      "Liberation Mono", monospace;
+
+    --glow: oklch(0.78 0.18 66 / 0.35);
+  }
+
+  .dark {
+    --background: oklch(0.129 0.042 264.695);
+    --foreground: oklch(0.984 0.003 247.858);
+    --card: oklch(0.208 0.042 265.755);
+    --card-foreground: oklch(0.984 0.003 247.858);
+    --muted: oklch(0.279 0.041 260.031);
+    --muted-foreground: oklch(0.704 0.04 256.788);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.551 0.027 264.364);
+    --primary: oklch(0.929 0.013 255.508);
+    --primary-foreground: oklch(0.208 0.042 265.755);
+    --secondary: oklch(0.279 0.041 260.031);
+    --secondary-foreground: oklch(0.984 0.003 247.858);
+    --accent: oklch(0.279 0.041 260.031);
+    --destructive: oklch(0.704 0.191 22.216);
+    --brand: oklch(0.623 0.214 259.815);
+    --brand-hover: oklch(0.707 0.165 254.624);
+
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / .4), 0 1px 2px -1px rgb(0 0 0 / .4);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / .45), 0 2px 4px -2px rgb(0 0 0 / .45);
+    --shadow-lg: 0 10px 20px -3px rgb(0 0 0 / .5), 0 4px 6px -4px rgb(0 0 0 / .5);
+
+    --glow: oklch(0.8 0.16 70 / 0.28);
+  }
+
+  /* ---------- reset / base ------------------------------------------------ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  a { color: var(--brand); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--brand-hover); }
+  ::selection { background: var(--glow); }
+  svg text { font-family: var(--font-mono); }
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ---------- deck shell -------------------------------------------------- */
+  .deck {
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px clamp(16px, 4vw, 40px);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--background) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(6px);
+    z-index: 5;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand-mark {
+    width: 22px; height: 22px; flex: none;
+    color: var(--solar-3);
+  }
+  .brand-name {
+    font-weight: 700; letter-spacing: -0.02em; font-size: 15px; white-space: nowrap;
+  }
+  .brand-sep { width: 1px; height: 18px; background: var(--border); flex: none; }
+  .brand-kicker {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted-foreground); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .bar-tools { display: flex; align-items: center; gap: 12px; flex: none; }
+  .counter {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+    color: var(--muted-foreground); font-variant-numeric: tabular-nums;
+  }
+  .counter b { color: var(--foreground); font-weight: 600; }
+
+  .icon-btn {
+    display: inline-grid; place-items: center;
+    width: 36px; height: 36px; border-radius: 9999px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--foreground); transition: background .15s, border-color .15s, transform .15s;
+  }
+  .icon-btn:hover { background: var(--accent); }
+  .icon-btn:active { transform: scale(0.94); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .icon-btn .i-sun { display: none; }
+  .dark .icon-btn .i-sun { display: block; }
+  .dark .icon-btn .i-moon { display: none; }
+
+  /* ---------- stage / slides --------------------------------------------- */
+  .stage { position: relative; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0;
+    padding: clamp(16px, 3.4vh, 44px) clamp(20px, 6vw, 88px);
+    overflow-y: auto;
+    display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; visibility: hidden; transform: translateY(8px);
+    transition: opacity .5s ease, transform .5s ease, visibility 0s linear .5s;
+  }
+  .slide.active {
+    opacity: 1; visibility: visible; transform: none; z-index: 2;
+    transition: opacity .5s ease, transform .5s ease, visibility 0s;
+  }
+  .wrap { width: 100%; max-width: 1080px; margin: 0 auto; }
+
+  /* staggered reveal - animation starts the moment .active begins matching */
+  .slide [data-reveal] { opacity: 0; }
+  .slide.active [data-reveal] {
+    animation: revealUp .58s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  @keyframes revealUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---------- typography helpers ----------------------------------------- */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted-foreground);
+    margin: 0 0 18px;
+  }
+  .eyebrow::before {
+    content: ""; width: 22px; height: 1px; background: currentColor; opacity: .5;
+  }
+  .eyebrow.warn { color: var(--destructive); }
+  .eyebrow.solar { color: var(--solar-3); }
+
+  h1.title {
+    font-size: clamp(2.05rem, 4.8vw, 3.35rem);
+    line-height: 1.04; letter-spacing: -0.028em; font-weight: 700;
+    margin: 0 0 20px;
+  }
+  h2.head {
+    font-size: clamp(1.55rem, 3.4vw, 2.35rem);
+    line-height: 1.1; letter-spacing: -0.022em; font-weight: 700;
+    margin: 0 0 18px; max-width: 20ch;
+  }
+  .lead {
+    font-size: clamp(1.05rem, 1.7vw, 1.28rem);
+    line-height: 1.55; color: var(--muted-foreground);
+    max-width: 62ch; margin: 0 0 8px;
+  }
+  .body { font-size: 1rem; line-height: 1.6; margin: 0 0 14px; max-width: 64ch; }
+  .body strong, .lead strong { color: var(--foreground); font-weight: 650; }
+  .muted { color: var(--muted-foreground); }
+  .kbd {
+    font-family: var(--font-mono); font-size: 0.82em;
+    padding: 2px 7px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--muted); color: var(--foreground);
+  }
+  code.inline {
+    font-family: var(--font-mono); font-size: 0.88em;
+    background: var(--muted); padding: 2px 6px; border-radius: var(--radius-sm);
+    color: var(--foreground); border: 1px solid var(--border);
+  }
+  .warm-underline { box-shadow: inset 0 -0.5em 0 var(--glow); }
+
+  /* ---------- layout utilities ------------------------------------------- */
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .stack-lg { display: flex; flex-direction: column; gap: 22px; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .mt-s { margin-top: 12px; } .mt-m { margin-top: 20px; } .mt-l { margin-top: 30px; }
+  .center { text-align: center; }
+
+  /* ---------- cards ------------------------------------------------------- */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: clamp(16px, 2vw, 22px);
+    transition: box-shadow .2s, border-color .2s, transform .2s;
+  }
+  .card.raise:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .card .card-ico {
+    width: 38px; height: 38px; border-radius: var(--radius-md);
+    display: grid; place-items: center; margin-bottom: 14px;
+    background: var(--muted); color: var(--foreground);
+  }
+  .card .card-ico svg { width: 20px; height: 20px; }
+  .card h3 { font-size: 1.05rem; font-weight: 650; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .card p { margin: 0; font-size: 0.94rem; line-height: 1.5; color: var(--muted-foreground); }
+
+  .stat .num {
+    font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 700; letter-spacing: -0.02em;
+    line-height: 1; margin-bottom: 8px;
+  }
+  .stat .num .unit { font-size: 0.5em; color: var(--muted-foreground); font-weight: 600; margin-left: 4px; }
+  .stat .lbl { font-size: 0.9rem; color: var(--muted-foreground); line-height: 1.45; }
+  .stat.solar .num { color: var(--solar-3); }
+
+  /* accent hairline on top of a card */
+  .card.tab { position: relative; overflow: hidden; }
+  .card.tab::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent-bar, var(--brand));
+  }
+
+  /* ---------- badges / pills --------------------------------------------- */
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 0.82rem; font-weight: 500;
+    padding: 5px 11px; border-radius: 9999px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--muted-foreground);
+  }
+  .pill svg { width: 14px; height: 14px; }
+  .pill .dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--muted-foreground); }
+
+  /* ---------- API list ---------------------------------------------------- */
+  .apis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+  .api {
+    display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: baseline;
+    padding: 11px 4px; border-bottom: 1px solid var(--border);
+  }
+  .api .name {
+    font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600;
+    color: var(--foreground); white-space: nowrap;
+  }
+  .api .desc { font-size: 0.9rem; color: var(--muted-foreground); line-height: 1.4; }
+  .api .tick { width: 7px; height: 7px; border-radius: 9999px; background: var(--brand); transform: translateY(-2px); }
+
+  /* ---------- steps ------------------------------------------------------- */
+  .steps { display: grid; gap: 14px; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; }
+  .step .n {
+    font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700;
+    width: 34px; height: 34px; border-radius: 9999px; flex: none;
+    display: grid; place-items: center;
+    color: var(--brand); border: 1.5px solid color-mix(in srgb, var(--brand) 40%, var(--border));
+  }
+  .step h3 { margin: 4px 0 3px; font-size: 1.02rem; font-weight: 650; }
+  .step p { margin: 0; font-size: 0.94rem; color: var(--muted-foreground); line-height: 1.5; }
+
+  /* ---------- callout ----------------------------------------------------- */
+  .callout {
+    border: 1px solid var(--border); border-left: 3px solid var(--accent-bar, var(--solar-3));
+    background: color-mix(in srgb, var(--muted) 55%, transparent);
+    border-radius: var(--radius-md); padding: 16px 18px;
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
+  }
+  .callout.warn { --accent-bar: var(--destructive); }
+  .callout .co-ico { width: 22px; height: 22px; color: var(--accent-bar, var(--solar-3)); flex: none; margin-top: 1px; }
+  .callout .co-t { font-weight: 650; margin: 0 0 3px; font-size: 0.98rem; }
+  .callout p { margin: 0; font-size: 0.93rem; line-height: 1.5; color: var(--muted-foreground); }
+
+  /* ---------- trap / fix -------------------------------------------------- */
+  .traps { display: grid; gap: 12px; }
+  .trap {
+    display: grid; grid-template-columns: auto 1fr; gap: 13px; align-items: start;
+    padding: 13px 15px; border: 1px solid var(--border); border-radius: var(--radius-md);
+    background: var(--card);
+  }
+  .trap .tx { width: 20px; height: 20px; color: var(--destructive); flex: none; margin-top: 1px; }
+  .trap .tt { font-weight: 640; margin: 0 0 2px; font-size: 0.95rem; }
+  .trap p { margin: 0; font-size: 0.9rem; color: var(--muted-foreground); line-height: 1.45; }
+  .fix {
+    display: grid; grid-template-columns: auto 1fr; gap: 13px; align-items: start;
+    padding: 14px 16px; border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--brand) 9%, var(--card));
+    border: 1px solid color-mix(in srgb, var(--brand) 28%, var(--border));
+  }
+  .fix .fx { width: 22px; height: 22px; color: var(--brand); flex: none; margin-top: 1px; }
+  .fix .ft { font-weight: 650; margin: 0 0 3px; font-size: 0.98rem; }
+  .fix p { margin: 0; font-size: 0.93rem; color: var(--muted-foreground); line-height: 1.5; }
+
+  /* ---------- indicator strength bars ------------------------------------ */
+  .bars { display: grid; gap: 14px; }
+  .barrow { display: grid; grid-template-columns: minmax(0,1fr); gap: 6px; }
+  .barrow .bh { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .barrow .bn { font-weight: 620; font-size: 0.97rem; }
+  .barrow .bd { font-size: 0.86rem; color: var(--muted-foreground); }
+  .track { height: 10px; border-radius: 9999px; background: var(--muted); overflow: hidden; }
+  .track > i {
+    display: block; height: 100%; border-radius: 9999px; width: 0;
+    transition: width 1s cubic-bezier(.2,.7,.2,1);
+  }
+  .slide.active .track > i { width: var(--w, 50%); }
+
+  /* ---------- resolution squares ----------------------------------------- */
+  .cells { display: flex; align-items: flex-end; gap: clamp(18px, 4vw, 46px); flex-wrap: wrap; }
+  .cell { text-align: center; }
+  .cell .sq {
+    margin: 0 auto 12px; border-radius: 8px;
+    border: 2px dashed color-mix(in srgb, var(--accent-bar) 70%, var(--border));
+    background: color-mix(in srgb, var(--accent-bar) 12%, transparent);
+    display: grid; place-items: center;
+  }
+  .cell .sq b { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-bar); }
+  .cell .ct { font-weight: 640; font-size: 0.95rem; margin-bottom: 2px; }
+  .cell .cd { font-size: 0.82rem; color: var(--muted-foreground); line-height: 1.4; max-width: 20ch; margin: 0 auto; }
+
+  /* ---------- code block -------------------------------------------------- */
+  .codewrap { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--card); }
+  .codebar {
+    display: flex; align-items: center; gap: 8px; padding: 9px 14px;
+    border-bottom: 1px solid var(--border); background: var(--muted);
+  }
+  .codebar .dot3 { display: flex; gap: 6px; }
+  .codebar .dot3 span { width: 10px; height: 10px; border-radius: 9999px; background: var(--border); }
+  .codebar .fname { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted-foreground); margin-left: 4px; }
+  pre.code {
+    margin: 0; padding: 16px 18px; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.84rem; line-height: 1.65;
+    color: var(--foreground); tab-size: 4;
+  }
+  .tok-com { color: var(--muted-foreground); font-style: italic; }
+  .tok-str { color: var(--chart-2); }
+  .tok-key { color: var(--brand); }
+  .tok-pun { color: var(--muted-foreground); }
+  .tok-hi  { color: var(--solar-3); font-weight: 600; }
+
+  /* ---------- two-source columns ----------------------------------------- */
+  .src-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .src-head .si {
+    width: 40px; height: 40px; border-radius: var(--radius-md); flex: none;
+    display: grid; place-items: center; color: #fff;
+  }
+  .src-head .si svg { width: 22px; height: 22px; }
+  .src-head h3 { margin: 0; font-size: 1.12rem; font-weight: 680; }
+  .src-head .st { font-size: 0.82rem; color: var(--muted-foreground); font-family: var(--font-mono); }
+  .src-list { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 8px; }
+  .src-list li { display: grid; grid-template-columns: auto 1fr; gap: 10px; font-size: 0.92rem; line-height: 1.45; color: var(--muted-foreground); }
+  .src-list li b { color: var(--foreground); font-weight: 620; }
+  .src-list .lm { width: 6px; height: 6px; border-radius: 9999px; background: var(--muted-foreground); margin-top: 8px; }
+
+  /* ---------- hero -------------------------------------------------------- */
+  .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
+  .hero-copy { min-width: 0; }
+  .hero-meta {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    margin-top: 26px; font-size: 0.9rem; color: var(--muted-foreground);
+  }
+  .hero-hint {
+    margin-top: 30px; font-size: 0.86rem; color: var(--muted-foreground);
+    display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .hero-art { position: relative; }
+  .hero-art .glowbg {
+    position: absolute; inset: -10% -6% 6% -6%; z-index: 0; pointer-events: none;
+    background: radial-gradient(60% 60% at 50% 30%, var(--glow), transparent 70%);
+    filter: blur(6px);
+  }
+  .hero-svg { width: 100%; height: auto; position: relative; z-index: 1; overflow: visible; }
+  .hero-rays { opacity: 0; transform-origin: center; }
+  .hero-rays.pulsing { animation: raysPulse 3.6s ease-in-out infinite; }
+  @keyframes raysPulse {
+    0%, 100% { opacity: .9; transform: scale(1); }
+    50% { opacity: .55; transform: scale(1.06); }
+  }
+
+  /* ---------- nav / progress (sun crossing the sky) ---------------------- */
+  .nav {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+    padding: 12px clamp(16px, 4vw, 40px);
+    border-top: 1px solid var(--border);
+    background: color-mix(in srgb, var(--background) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(6px);
+    z-index: 5;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 38px; padding: 0 16px; border-radius: var(--radius-md);
+    font-size: 0.9rem; font-weight: 550; border: 1px solid transparent;
+    transition: background .15s, border-color .15s, transform .1s, opacity .15s;
+    white-space: nowrap;
+  }
+  .btn svg { width: 16px; height: 16px; }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--brand); color: var(--brand-foreground); }
+  .btn-primary:hover { background: var(--brand-hover); }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--foreground); }
+  .btn-ghost:hover { background: var(--accent); }
+  .btn:disabled { opacity: .38; cursor: not-allowed; transform: none; }
+
+  .progress { position: relative; height: 38px; display: flex; align-items: center; }
+  .p-track {
+    position: relative; width: 100%; height: 3px; border-radius: 9999px;
+    background: var(--border);
+  }
+  .p-fill {
+    position: absolute; left: 0; top: 0; height: 100%; border-radius: 9999px;
+    background: linear-gradient(90deg, var(--brand), color-mix(in srgb, var(--brand) 70%, var(--solar-2)));
+    width: 0; transition: width .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .p-ticks { position: absolute; inset: 0; }
+  .p-tick {
+    position: absolute; top: 50%; width: 16px; height: 16px; padding: 0;
+    transform: translate(-50%, -50%); border-radius: 9999px;
+    background: transparent; border: none;
+  }
+  .p-tick::after {
+    content: ""; display: block; width: 6px; height: 6px; margin: 5px auto; border-radius: 9999px;
+    background: var(--border); transition: background .2s, transform .2s;
+  }
+  .p-tick:hover::after { background: var(--muted-foreground); transform: scale(1.25); }
+  .p-tick.done::after { background: color-mix(in srgb, var(--brand) 60%, var(--border)); }
+  .p-sun {
+    position: absolute; top: 50%; left: 0; width: 16px; height: 16px;
+    transform: translate(-50%, -50%); border-radius: 9999px;
+    background: radial-gradient(circle at 35% 35%, var(--solar-1), var(--solar-3));
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--solar-2) 22%, transparent),
+                0 0 14px 2px var(--glow);
+    transition: left .5s cubic-bezier(.2,.7,.2,1);
+    z-index: 2; pointer-events: none;
+  }
+
+  /* ---------- footer note on last slide ---------------------------------- */
+  .final-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 26px; }
+
+  /* ---------- responsive ------------------------------------------------- */
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-art { order: -1; max-width: 460px; margin: 0 auto; width: 100%; }
+    .g4 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: 1fr; }
+    .apis { grid-template-columns: 1fr; gap: 0 22px; }
+  }
+  @media (max-width: 560px) {
+    .g2, .g4 { grid-template-columns: 1fr; }
+    .brand-kicker, .brand-sep { display: none; }
+    .btn span.lbl { display: none; }
+    .btn { padding: 0 12px; }
+    .slide { justify-content: flex-start; }
+    h2.head { max-width: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide, .slide.active { transition: opacity .2s ease; transform: none; }
+    .slide.active [data-reveal] { animation: none; opacity: 1; }
+    .slide [data-reveal] { opacity: 1; }
+    .p-fill, .p-sun, .track > i, .card, .btn, .icon-btn { transition: none; }
+    .hero-rays.pulsing { animation: none; opacity: .9; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================= icon sprite ======================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="i-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g>
+    <g id="i-moon"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></g>
+    <g id="i-cloud"><path d="M17.5 19a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.6 1.5A4 4 0 0 0 6 19z"/></g>
+    <g id="i-sat"><path d="M4 20a16 16 0 0 1 16-16"/><path d="M4 20a10 10 0 0 1 10-10"/><circle cx="6" cy="18" r="2"/><path d="M12 12l3.5-3.5"/></g>
+    <g id="i-db"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></g>
+    <g id="i-grid"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></g>
+    <g id="i-clock"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g>
+    <g id="i-alert"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></g>
+    <g id="i-check"><circle cx="12" cy="12" r="9"/><path d="m8.4 12 2.6 2.6L15.6 9"/></g>
+    <g id="i-code"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></g>
+    <g id="i-layers"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></g>
+    <g id="i-drop"><path d="M7 16.3c2.2 0 4-1.8 4-4 0-1.7-1.3-3.5-4-6.3-2.7 2.8-4 4.6-4 6.3 0 2.2 1.8 4 4 4Z"/><path d="M12.6 8.3c.9-1.2 2-2.5 3.4-4 3 3 4 5 4 6.7a4 4 0 0 1-6.9 2.7"/></g>
+    <g id="i-activity"><path d="M3 12h4l3 8 4-16 3 8h4"/></g>
+    <g id="i-globe"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18Z"/></g>
+    <g id="i-gauge"><path d="M12 14 15.5 9"/><path d="M3.6 17.5a9 9 0 1 1 16.8 0"/><circle cx="12" cy="14" r="1.4" fill="currentColor" stroke="none"/></g>
+    <g id="i-list"><path d="m3 5 2 2 3.5-3.5"/><path d="M11 6h9"/><path d="m3 13 2 2 3.5-3.5"/><path d="M11 14h9"/><path d="M11 21h9"/><path d="M3.5 20h.01"/></g>
+    <g id="i-history"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 8v4l3 2"/></g>
+    <g id="i-arrow"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></g>
+    <g id="i-arrow-l"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></g>
+    <g id="i-target"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></g>
+    <g id="i-key"><circle cx="7.5" cy="15.5" r="3.5"/><path d="m10 13 8.5-8.5"/><path d="m15 6 2.5 2.5"/><path d="m18 3 2.5 2.5"/></g>
+    <g id="i-thermo"><path d="M14 14.8V4a2 2 0 1 0-4 0v10.8a4 4 0 1 0 4 0Z"/></g>
+    <g id="i-restart"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></g>
+    <g id="i-doc"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></g>
+  </defs>
+</svg>
+
+<div class="deck" id="deck">
+
+  <!-- ============================ TOP BAR ============================ -->
+  <header class="bar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-sun"/></svg>
+      <span class="brand-name">Open-Meteo</span>
+      <span class="brand-sep"></span>
+      <span class="brand-kicker">Solar Forecasting · Field Notes</span>
+    </div>
+    <div class="bar-tools">
+      <span class="counter"><b id="cur">01</b> / <span id="tot">14</span></span>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle theme">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================ STAGE ============================ -->
+  <main class="stage" id="stage">
+
+    <!-- ---------- SLIDE 1 - TITLE ---------- -->
+    <section class="slide active" aria-label="Title">
+      <div class="wrap">
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow solar" data-reveal style="--i:0">Field notes · Solar forecasting</p>
+            <h1 class="title" data-reveal style="--i:1">Can Open-Meteo<br>predict solar power?</h1>
+            <p class="lead" data-reveal style="--i:2">What we found after digging into its forecasts, satellite data, and historical runs: the practical lessons, minus the project-specific numbers.</p>
+            <div class="hero-meta" data-reveal style="--i:3">
+              <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-doc"/></svg>Adapted from FluidComposer</span>
+              <span class="pill"><span class="dot" style="background:var(--solar-3)"></span>open-meteo.com</span>
+            </div>
+            <p class="hero-hint" data-reveal style="--i:4">
+              <span class="kbd">←</span><span class="kbd">→</span> to move through the deck · <span class="kbd">Space</span> for next
+            </p>
+          </div>
+          <div class="hero-art" data-reveal style="--i:2">
+            <div class="glowbg"></div>
+            <svg class="hero-svg" id="heroSvg" viewBox="0 0 640 300" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" style="stop-color:var(--solar-1)"/>
+                  <stop offset="0.5" style="stop-color:var(--solar-2)"/>
+                  <stop offset="1" style="stop-color:var(--solar-3)"/>
+                </linearGradient>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-opacity="0.28" style="stop-color:var(--solar-2)"/>
+                  <stop offset="1" stop-opacity="0" style="stop-color:var(--solar-2)"/>
+                </linearGradient>
+                <radialGradient id="sunGrad" cx="0.35" cy="0.3" r="0.75">
+                  <stop offset="0" style="stop-color:var(--solar-1)"/>
+                  <stop offset="1" style="stop-color:var(--solar-3)"/>
+                </radialGradient>
+              </defs>
+
+              <!-- filled irradiance area -->
+              <path id="heroArea" d="M60 240 Q320 -100 580 240 Z" fill="url(#areaGrad)" opacity="0"/>
+              <!-- horizon -->
+              <line x1="34" y1="240" x2="606" y2="240" stroke-width="2" style="stroke:var(--border)"/>
+              <!-- baseline ticks (hours) -->
+              <g stroke-width="2" style="stroke:var(--border)">
+                <line x1="120" y1="240" x2="120" y2="248"/>
+                <line x1="200" y1="240" x2="200" y2="248"/>
+                <line x1="280" y1="240" x2="280" y2="248"/>
+                <line x1="360" y1="240" x2="360" y2="248"/>
+                <line x1="440" y1="240" x2="440" y2="248"/>
+                <line x1="520" y1="240" x2="520" y2="248"/>
+              </g>
+              <!-- the day arc -->
+              <path id="heroArc" d="M60 240 Q320 -100 580 240" stroke="url(#arcGrad)" stroke-width="4" stroke-linecap="round"/>
+              <!-- axis labels -->
+              <text x="60" y="266" font-size="13" font-family="var(--font-mono)" text-anchor="middle" style="fill:var(--muted-foreground)">sunrise</text>
+              <text x="580" y="266" font-size="13" font-family="var(--font-mono)" text-anchor="middle" style="fill:var(--muted-foreground)">sunset</text>
+              <text x="320" y="292" font-size="12.5" font-family="var(--font-mono)" text-anchor="middle" letter-spacing="0.08em" style="fill:var(--muted-foreground)">shortwave_radiation · one day</text>
+
+              <!-- the sun (translated along the arc by JS) -->
+              <g id="heroSun" transform="translate(60 240)">
+                <g class="hero-rays" id="heroRays" stroke-width="3" stroke-linecap="round" style="stroke:var(--solar-2)">
+                  <line x1="0" y1="-26" x2="0" y2="-34"/>
+                  <line x1="18.4" y1="-18.4" x2="24" y2="-24"/>
+                  <line x1="26" y1="0" x2="34" y2="0"/>
+                  <line x1="18.4" y1="18.4" x2="24" y2="24"/>
+                  <line x1="-18.4" y1="-18.4" x2="-24" y2="-24"/>
+                  <line x1="-26" y1="0" x2="-34" y2="0"/>
+                  <line x1="-18.4" y1="18.4" x2="-24" y2="24"/>
+                </g>
+                <circle r="17" fill="url(#sunGrad)"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 2 - THE PROBLEM ---------- -->
+    <section class="slide" aria-label="The problem" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">The problem</p>
+        <h2 class="head" data-reveal style="--i:1">Solar output chases the sun, and clouds move fast</h2>
+        <p class="lead" data-reveal style="--i:2">A passing cloud can swing a plant's output within minutes. That makes the forecasting window unusually tight.</p>
+        <div class="grid g3 mt-m">
+          <div class="card raise" data-reveal style="--i:3">
+            <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cloud"/></svg></div>
+            <h3>Fast, cloud-driven swings</h3>
+            <p>Because power tracks sunlight, cover that rolls in and out reshapes output on a scale of minutes.</p>
+          </div>
+          <div class="card raise" data-reveal style="--i:4">
+            <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-gauge"/></svg></div>
+            <h3>Deviations cost money</h3>
+            <p>Grid operators need your output committed in advance. Missing what you promised carries a real penalty.</p>
+          </div>
+          <div class="card raise" data-reveal style="--i:5">
+            <div class="card-ico" style="color:var(--solar-3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clock"/></svg></div>
+            <h3>The next few hours</h3>
+            <p>Not tomorrow. The useful question is what the sky over <em>this</em> site will do later today.</p>
+          </div>
+        </div>
+        <div class="callout mt-m" data-reveal style="--i:6">
+          <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-target"/></svg>
+          <div><p class="co-t">The awkward middle window</p><p>Conditions shift too quickly for a comfortable answer, yet day-ahead forecasts are too broad to help. The value sits in that gap.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 3 - WHAT IT IS ---------- -->
+    <section class="slide" aria-label="What is Open-Meteo" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">What it is</p>
+        <h2 class="head" data-reveal style="--i:1">One query interface over ~30 weather models</h2>
+        <p class="lead" data-reveal style="--i:2">Open-Meteo is a free weather API that puts national providers (ECMWF, NOAA, Germany's DWD, Météo-France and others) behind a single interface. Pick a model, or let it choose one for your location.</p>
+        <div class="grid g4 mt-m">
+          <div class="card stat solar tab" data-reveal style="--i:3;--accent-bar:var(--solar-3)">
+            <div class="num">~30<span class="unit">models</span></div>
+            <div class="lbl">National agencies, unified behind one API.</div>
+          </div>
+          <div class="card stat tab" data-reveal style="--i:4;--accent-bar:var(--brand)">
+            <div class="num">10k<span class="unit">/ day</span></div>
+            <div class="lbl">Free-tier call ceiling. Paid plans lift it.</div>
+          </div>
+          <div class="card stat tab" data-reveal style="--i:5;--accent-bar:var(--chart-2)">
+            <div class="num">CC-BY<span class="unit">4.0</span></div>
+            <div class="lbl">Free tier is non-commercial use only.</div>
+          </div>
+          <div class="card stat tab" data-reveal style="--i:6;--accent-bar:var(--solar-2)">
+            <div class="num">5<span class="unit">irradiance</span></div>
+            <div class="lbl">GHI, direct, diffuse, DNI &amp; global tilted.</div>
+          </div>
+        </div>
+        <div class="callout mt-m" data-reveal style="--i:7;--accent-bar:var(--solar-3)">
+          <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sun"/></svg>
+          <div><p class="co-t">Unusually well-equipped for solar</p><p>Beyond standard meteorology it exposes the irradiance components you actually need, with parameters for panel tilt and azimuth built in.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 4 - NOT ONE API ---------- -->
+    <section class="slide" aria-label="Not one API" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">Mental model</p>
+        <h2 class="head" data-reveal style="--i:1">It isn't one API: it's a family of them</h2>
+        <p class="lead" data-reveal style="--i:2">Sixteen products share a look and a query format, but they behave differently, and those differences matter. Only a handful touch solar work.</p>
+        <div class="apis mt-m" data-reveal style="--i:3">
+          <div class="api"><span class="tick"></span><div><span class="name">Forecast</span></div><div class="desc">Live weather forecasts.</div></div>
+          <div class="api"><span class="tick"></span><div><span class="name">Previous Runs</span></div><div class="desc">Backtest forecasts at a fixed lead time.</div></div>
+          <div class="api"><span class="tick"></span><div><span class="name">Single Runs</span></div><div class="desc">Retrieve one specific historical model run.</div></div>
+          <div class="api"><span class="tick"></span><div><span class="name">Satellite Radiation</span></div><div class="desc">Measured irradiance from satellites.</div></div>
+          <div class="api"><span class="tick"></span><div><span class="name">Air Quality (CAMS)</span></div><div class="desc">Dust &amp; aerosols, useful in hazy regions.</div></div>
+          <div class="api"><span class="tick"></span><div><span class="name">Ensemble</span></div><div class="desc">Understand forecast uncertainty.</div></div>
+          <div class="api"><span class="tick"></span><div><span class="name">Historical / ERA5</span></div><div class="desc">Long, consistent historical weather.</div></div>
+        </div>
+        <div class="callout mt-m" data-reveal style="--i:4">
+          <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-layers"/></svg>
+          <div><p class="co-t">Safe to ignore for solar</p><p>Marine, flood, seasonal, climate projections, geocoding and elevation have no direct bearing on solar output.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 5 - TWO SOURCES ---------- -->
+    <section class="slide" aria-label="Two sources of truth" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">Where the data comes from</p>
+        <h2 class="head" data-reveal style="--i:1">Two very different sources</h2>
+        <p class="lead" data-reveal style="--i:2">One predicts the sky; the other measures the light that already arrived. Knowing which you're holding is half the battle.</p>
+        <div class="grid g2 mt-m">
+          <div class="card" data-reveal style="--i:3">
+            <div class="src-head">
+              <div class="si" style="background:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cloud"/></svg></div>
+              <div><h3>Weather models</h3><div class="st">~30 · forecast</div></div>
+            </div>
+            <p class="body" style="margin:0">Run by national agencies, they forecast what the sky <strong>will</strong> do: the predictive side of the pipeline.</p>
+          </div>
+          <div class="card" data-reveal style="--i:4">
+            <div class="src-head">
+              <div class="si" style="background:var(--solar-3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sat"/></svg></div>
+              <div><h3>Satellites</h3><div class="st">7 datasets · measured</div></div>
+            </div>
+            <ul class="src-list">
+              <li><span class="lm"></span><span>Measure the irradiance that <b>has already</b> arrived, including a blended product.</span></li>
+              <li><span class="lm"></span><span><b>Himawari</b> (Asia-Pacific), <b>EUMETSAT MSG &amp; IODC</b> (Europe, Africa, India), <b>DWD MTG</b>, and <b>SARAH3</b>, whose record runs back to 1983.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout warn mt-m" data-reveal style="--i:5">
+          <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+          <div><p class="co-t">North America is the gap</p><p>The GOES satellites aren't integrated yet, so satellite irradiance coverage there is missing for now.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 6 - METHOD ---------- -->
+    <section class="slide" aria-label="Our approach" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">Method</p>
+        <h2 class="head" data-reveal style="--i:1">How we tested which variables actually help</h2>
+        <p class="lead" data-reveal style="--i:2">The goal: find which weather variables measurably improve a solar-power forecast a few hours ahead.</p>
+        <div class="steps mt-m">
+          <div class="step" data-reveal style="--i:3">
+            <span class="n">1</span>
+            <div><h3>Inventory</h3><p>Check every model and variable: whether it returns data for the sites in question, and how far back that data actually goes.</p></div>
+          </div>
+          <div class="step" data-reveal style="--i:4">
+            <span class="n">2</span>
+            <div><h3>Reconstruct</h3><p>Pull each forecast <em>as it was issued</em> ahead of time: the value that was genuinely known then, not a later revision.</p></div>
+          </div>
+          <div class="step" data-reveal style="--i:5">
+            <span class="n">3</span>
+            <div><h3>Correlate</h3><p>Join those forecasts to measured power output and measure which variables actually track it.</p></div>
+          </div>
+        </div>
+        <div class="callout warn mt-m" data-reveal style="--i:6">
+          <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-alert"/></svg>
+          <div><p class="co-t">Daytime hours only: easy to get wrong</p><p>Output is zero at night by definition. Leave night in and every sun-related variable looks predictive, because both sides sit at zero together for half the day. It inflates results and means nothing.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 7 - PREVIOUS RUNS API ---------- -->
+    <section class="slide" aria-label="Previous Runs API" hidden>
+      <div class="wrap">
+        <p class="eyebrow solar" data-reveal style="--i:0">The key insight</p>
+        <h2 class="head" data-reveal style="--i:1">Reconstruct the forecast that was actually available</h2>
+        <div class="grid g2 mt-s" style="align-items:center">
+          <div data-reveal style="--i:2">
+            <p class="body">Append <code class="inline">_previous_dayN</code> to any variable and you get its value <strong>as predicted N days before it was valid</strong>, for N from one to seven.</p>
+            <p class="body">That makes an honest backtest possible: each training point reflects what was genuinely known at the time, rather than a later revision.</p>
+            <div class="callout" style="--accent-bar:var(--solar-3)">
+              <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-history"/></svg>
+              <div><p class="co-t">Rare among weather APIs</p><p>Many providers simply don't expose this kind of historical-forecast data at all.</p></div>
+            </div>
+          </div>
+          <div class="codewrap" data-reveal style="--i:3">
+            <div class="codebar"><span class="dot3"><span></span><span></span><span></span></span><span class="fname">previous_runs.py</span></div>
+<pre class="code"><span class="tok-key">params</span> <span class="tok-pun">= {</span>
+    <span class="tok-str">"latitude"</span><span class="tok-pun">:</span> lat<span class="tok-pun">,</span>
+    <span class="tok-str">"longitude"</span><span class="tok-pun">:</span> lon<span class="tok-pun">,</span>
+    <span class="tok-com"># forecast as issued a day earlier</span>
+    <span class="tok-com"># not a later revision</span>
+    <span class="tok-str">"hourly"</span><span class="tok-pun">:</span> <span class="tok-str">"shortwave_radiation<span class="tok-hi">_previous_day1</span>"</span><span class="tok-pun">,</span>
+    <span class="tok-str">"start_date"</span><span class="tok-pun">:</span> start<span class="tok-pun">,</span>
+    <span class="tok-str">"end_date"</span><span class="tok-pun">:</span> end<span class="tok-pun">,</span>
+    <span class="tok-str">"timezone"</span><span class="tok-pun">:</span> <span class="tok-str">"UTC"</span><span class="tok-pun">,</span>
+<span class="tok-pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 8 - RESOLUTION ---------- -->
+    <section class="slide" aria-label="Resolution and cadence" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">Resolution &amp; cadence</p>
+        <h2 class="head" data-reveal style="--i:1">How fine is the data, really?</h2>
+        <p class="lead" data-reveal style="--i:2">A smaller grid cell means more spatial detail. Where a regional model exists, resolution jumps sharply.</p>
+        <div class="cells mt-m" data-reveal style="--i:3">
+          <div class="cell" style="--accent-bar:var(--chart-3)">
+            <div class="sq" style="width:96px;height:96px"><b>10–25 km</b></div>
+            <div class="ct">Global models</div>
+            <div class="cd">IFS 0.25°, ICON Global 11 km, GFS 13 km.</div>
+          </div>
+          <div class="cell" style="--accent-bar:var(--solar-2)">
+            <div class="sq" style="width:52px;height:52px"><b>~5 km</b></div>
+            <div class="ct">Satellite</div>
+            <div class="cd">Mostly 0.05°; DWD MTG at 0.025°. Steps 10–30 min.</div>
+          </div>
+          <div class="cell" style="--accent-bar:var(--brand)">
+            <div class="sq" style="width:30px;height:30px"><b>2–3 km</b></div>
+            <div class="ct">Regional models</div>
+            <div class="cd">ICON-D2 ~2 km (DE), HRRR 3 km (US), AROME 2.5 km (FR).</div>
+          </div>
+        </div>
+        <div class="grid g2 mt-m">
+          <div class="callout" data-reveal style="--i:4">
+            <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clock"/></svg>
+            <div><p class="co-t">Hourly by default</p><p>A <code class="inline">minutely_15</code> option exists, but it only adds real detail where a regional model is available; elsewhere it's just interpolated hourly data.</p></div>
+          </div>
+          <div class="callout" data-reveal style="--i:5">
+            <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-globe"/></svg>
+            <div><p class="co-t">Outside regional domains</p><p>Across much of Asia, Africa, South America, the Middle East and Australia, you generally rely on global models.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 9 - INDICATORS ---------- -->
+    <section class="slide" aria-label="Which indicators helped" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">Results</p>
+        <h2 class="head" data-reveal style="--i:1">Irradiance leads. Then a few others.</h2>
+        <p class="lead" data-reveal style="--i:2">Each variable was tested individually against solar output: relative strength, in one climate.</p>
+        <div class="bars mt-m">
+          <div class="barrow" data-reveal style="--i:3">
+            <div class="bh"><span class="bn">Irradiance: GHI, GTI, direct, diffuse, DNI</span><span class="bd">core signal · strongest</span></div>
+            <div class="track"><i style="--w:100%;background:linear-gradient(90deg,var(--solar-2),var(--solar-3))"></i></div>
+          </div>
+          <div class="barrow" data-reveal style="--i:4">
+            <div class="bh"><span class="bn">Sunshine duration</span><span class="bd">how much of the hour was sunny</span></div>
+            <div class="track"><i style="--w:74%;background:var(--solar-2)"></i></div>
+          </div>
+          <div class="barrow" data-reveal style="--i:5">
+            <div class="bh"><span class="bn">Humidity &amp; vapor-pressure deficit</span><span class="bd">strongest non-radiation signal</span></div>
+            <div class="track"><i style="--w:60%;background:var(--chart-2)"></i></div>
+          </div>
+          <div class="barrow" data-reveal style="--i:6">
+            <div class="bh"><span class="bn">Reference evapotranspiration</span><span class="bd">surprising, but derived from radiation</span></div>
+            <div class="track"><i style="--w:52%;background:var(--chart-3)"></i></div>
+          </div>
+        </div>
+        <div class="callout warn mt-m" data-reveal style="--i:7">
+          <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-alert"/></svg>
+          <div><p class="co-t">The method travels; the results may not</p><p>Higher humidity generally meant lower output (likely cloudier). Evapotranspiration is built from radiation, temp and humidity, so it may just carry the solar signal. Tested one climate, one variable at a time. <strong>Always test with your own data, and start with irradiance.</strong></p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 10 - PITFALL 1 ---------- -->
+    <section class="slide" aria-label="Pitfall one" hidden>
+      <div class="wrap">
+        <p class="eyebrow warn" data-reveal style="--i:0">Pitfall 01</p>
+        <h2 class="head" data-reveal style="--i:1">The archive that isn't a forecast</h2>
+        <p class="lead" data-reveal style="--i:2">For training, you need the forecast that <em>would have been available then</em>, not a better estimate assembled with hindsight. Three common traps:</p>
+        <div class="traps mt-m">
+          <div class="trap" data-reveal style="--i:3">
+            <svg class="tx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-db"/></svg>
+            <div><p class="tt">Reanalysis (e.g. ERA5)</p><p>Built from observations collected after the fact, not what a forecast model would have known at the time.</p></div>
+          </div>
+          <div class="trap" data-reveal style="--i:4">
+            <svg class="tx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-layers"/></svg>
+            <div><p class="tt">"Historical Forecast" API</p><p>Looks the part, but stitches early hours from different runs, closer to actual conditions than a true forecast.</p></div>
+          </div>
+          <div class="trap" data-reveal style="--i:5">
+            <svg class="tx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clock"/></svg>
+            <div><p class="tt">Current-only forecasts</p><p>Asking for a past date returns the latest run, not the forecast that was available on that date.</p></div>
+          </div>
+        </div>
+        <div class="fix mt-m" data-reveal style="--i:6">
+          <svg class="fx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+          <div><p class="ft">The fix</p><p>Open-Meteo's <strong>Single Runs API</strong> is built for backtesting without look-ahead bias. Always ask: does this reflect what was actually known at the time?</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 11 - PITFALL 2 ---------- -->
+    <section class="slide" aria-label="Pitfall two" hidden>
+      <div class="wrap">
+        <p class="eyebrow warn" data-reveal style="--i:0">Pitfall 02</p>
+        <h2 class="head" data-reveal style="--i:1">Averaged is not the same as instantaneous</h2>
+        <p class="lead" data-reveal style="--i:2">Some variables are an average over the previous hour; others are the value at that exact instant. Mix them up and features quietly shift by 30 minutes.</p>
+
+        <div class="card mt-m" data-reveal style="--i:3;padding:22px 22px 10px">
+          <svg viewBox="0 0 640 196" style="width:100%;max-width:720px;height:auto;display:block;margin:0 auto" fill="none" aria-hidden="true">
+            <!-- legend -->
+            <rect x="62" y="10" width="13" height="13" rx="3" stroke-width="1.5" style="fill:color-mix(in srgb, var(--solar-2) 22%, transparent);stroke:var(--solar-3)"/>
+            <text x="84" y="20" font-size="13" text-anchor="start" style="fill:var(--solar-3)">shortwave_radiation: average 11:00–12:00</text>
+            <circle cx="68" cy="43" r="6.5" style="fill:var(--brand)"/>
+            <text x="84" y="47" font-size="13" text-anchor="start" style="fill:var(--brand)">shortwave_radiation_instant: value at 12:00</text>
+
+            <!-- timeline axis -->
+            <line x1="70" y1="150" x2="600" y2="150" stroke-width="2" style="stroke:var(--border)"/>
+            <!-- averaged band spanning 11:00 → 12:00 -->
+            <rect x="150" y="100" width="450" height="40" rx="8" stroke-width="1.5" style="fill:color-mix(in srgb, var(--solar-2) 16%, transparent);stroke:var(--solar-3)"/>
+            <!-- centre of the hour = 11:30 -->
+            <line x1="375" y1="100" x2="375" y2="150" stroke-width="2" stroke-dasharray="4 4" style="stroke:var(--solar-3)"/>
+            <circle cx="375" cy="120" r="5.5" style="fill:var(--solar-3)"/>
+            <text x="375" y="92" font-size="12" text-anchor="middle" style="fill:var(--muted-foreground)">effectively centred at 11:30</text>
+            <!-- instantaneous value sits at 12:00 -->
+            <circle cx="600" cy="120" r="6.5" style="fill:var(--brand)"/>
+            <!-- ticks + hour labels -->
+            <g stroke-width="2" style="stroke:var(--border)">
+              <line x1="150" y1="150" x2="150" y2="158"/>
+              <line x1="375" y1="150" x2="375" y2="158"/>
+              <line x1="600" y1="150" x2="600" y2="158"/>
+            </g>
+            <g font-size="13" text-anchor="middle" style="fill:var(--muted-foreground)">
+              <text x="150" y="177">11:00</text>
+              <text x="375" y="177">11:30</text>
+              <text x="600" y="177">12:00</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="grid g2 mt-m">
+          <div class="callout" data-reveal style="--i:4;--accent-bar:var(--solar-3)">
+            <svg class="co-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-activity"/></svg>
+            <div><p class="co-t">The consequence</p><p>Apply the same time adjustment to both types and some features end up shifted by half an hour.</p></div>
+          </div>
+          <div class="fix" data-reveal style="--i:5">
+            <svg class="fx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+            <div><p class="ft">The fix</p><p>Check whether each variable is an hourly average or an instantaneous value before aligning it to your target.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 12 - PITFALL 3 ---------- -->
+    <section class="slide" aria-label="Pitfall three" hidden>
+      <div class="wrap">
+        <p class="eyebrow warn" data-reveal style="--i:0">Pitfall 03</p>
+        <h2 class="head" data-reveal style="--i:1">Documented coverage is a hypothesis</h2>
+        <p class="lead" data-reveal style="--i:2">The published archive dates didn't always match what the API returned, and coverage varied by variable, not just by model.</p>
+        <div class="grid g2 mt-m">
+          <div class="trap" data-reveal style="--i:3">
+            <svg class="tx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-db"/></svg>
+            <div><p class="tt">Coverage varies by variable</p><p>A model might carry temperature from an earlier date but radiation only from much later. Don't assume one start date covers everything.</p></div>
+          </div>
+          <div class="trap" data-reveal style="--i:4;border-color:color-mix(in srgb,var(--brand) 28%, var(--border))">
+            <svg class="tx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand)"><use href="#i-activity"/></svg>
+            <div><p class="tt">A sanity check that paid off</p><p>Radiation and output should track each other closely. Our first run showed almost none. Code ran fine, data looked valid. The culprit was a timezone bug.</p></div>
+          </div>
+        </div>
+        <div class="fix mt-m" data-reveal style="--i:5">
+          <svg class="fx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg>
+          <div><p class="ft">The fix</p><p>Verify the actual coverage for the variables you need. And don't just check that data <em>looks</em> valid; check that it <strong>makes sense</strong>.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 13 - STARTING NOW ---------- -->
+    <section class="slide" aria-label="If you are starting now" hidden>
+      <div class="wrap">
+        <p class="eyebrow" data-reveal style="--i:0">Takeaways</p>
+        <h2 class="head" data-reveal style="--i:1">Five checks before you build</h2>
+        <div class="grid g2 mt-m">
+          <div class="step" data-reveal style="--i:2">
+            <span class="n"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-history"/></svg></span>
+            <div><h3>Reconstruct, don't just fetch</h3><p>Confirm you can rebuild past forecasts as they were issued, not only access current ones.</p></div>
+          </div>
+          <div class="step" data-reveal style="--i:3">
+            <span class="n"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-db"/></svg></span>
+            <div><h3>Verify coverage</h3><p>Treat documented dates as a starting point, then check what the API actually returns.</p></div>
+          </div>
+          <div class="step" data-reveal style="--i:4">
+            <span class="n"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clock"/></svg></span>
+            <div><h3>Average or instant?</h3><p>Know which each variable is, and align them to your target accordingly.</p></div>
+          </div>
+          <div class="step" data-reveal style="--i:5">
+            <span class="n"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-activity"/></svg></span>
+            <div><h3>Keep a sanity check</h3><p>Hold onto a relationship you expect to be true, and re-run it after every pipeline change.</p></div>
+          </div>
+          <div class="step" data-reveal style="--i:6">
+            <span class="n" style="color:var(--solar-3);border-color:color-mix(in srgb,var(--solar-3) 45%,var(--border))"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sun"/></svg></span>
+            <div><h3>Start with irradiance</h3><p>It's the strongest signal. Add other variables only once your own data shows they help.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SLIDE 14 - CLOSING ---------- -->
+    <section class="slide" aria-label="Bottom line" hidden>
+      <div class="wrap center">
+        <p class="eyebrow solar" data-reveal style="--i:0;justify-content:center">Bottom line</p>
+        <h2 class="head" data-reveal style="--i:1;max-width:none;margin-left:auto;margin-right:auto">A great free tool for prototyping, if you read carefully</h2>
+        <p class="lead" data-reveal style="--i:2;margin-left:auto;margin-right:auto">Most of the friction we hit wasn't bugs. The information was usually documented, just scattered across different pages. Know what to check going in, and Open-Meteo is a genuinely useful starting point for solar work.</p>
+        <div class="final-actions" data-reveal style="--i:3;justify-content:center">
+          <a class="btn btn-primary" href="https://fluidcomposer.substack.com/p/open-meteo-data-and-solar-forecasting" target="_blank" rel="noopener">Read the full article<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost" href="https://open-meteo.com/" target="_blank" rel="noopener">Explore Open-Meteo</a>
+          <button class="btn btn-ghost" id="restartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-restart"/></svg>Restart</button>
+        </div>
+        <p class="hero-hint" data-reveal style="--i:4;justify-content:center">Adapted from the FluidComposer article · shown in the Open-Meteo design system</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================ NAV ============================ -->
+  <footer class="nav">
+    <button class="btn btn-ghost" id="prevBtn" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-arrow-l"/></svg><span class="lbl">Prev</span></button>
+    <div class="progress" role="group" aria-label="Slide progress">
+      <div class="p-track">
+        <div class="p-fill" id="pFill"></div>
+        <div class="p-ticks" id="pTicks"></div>
+        <div class="p-sun" id="pSun"></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="nextBtn" aria-label="Next slide"><span class="lbl">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-arrow"/></svg></button>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var N = slides.length;
+  var current = 0;
+
+  var elCur = document.getElementById('cur');
+  var elTot = document.getElementById('tot');
+  var pFill = document.getElementById('pFill');
+  var pSun  = document.getElementById('pSun');
+  var pTicks = document.getElementById('pTicks');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+
+  elTot.textContent = String(N).padStart(2, '0');
+
+  // build progress ticks
+  for (var i = 0; i < N; i++) {
+    (function (idx) {
+      var b = document.createElement('button');
+      b.className = 'p-tick';
+      b.style.left = (N === 1 ? 50 : (idx / (N - 1)) * 100) + '%';
+      b.setAttribute('aria-label', 'Go to slide ' + (idx + 1));
+      b.addEventListener('click', function () { go(idx); });
+      pTicks.appendChild(b);
+    })(i);
+  }
+  var ticks = Array.prototype.slice.call(pTicks.children);
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function go(n) {
+    n = Math.max(0, Math.min(N - 1, n));
+    if (n === current) { /* still refresh visuals */ }
+    slides[current].classList.remove('active');
+    slides[current].setAttribute('hidden', '');
+    slides[current].setAttribute('aria-hidden', 'true');
+    current = n;
+    slides[current].removeAttribute('hidden');
+    slides[current].classList.add('active');
+    slides[current].setAttribute('aria-hidden', 'false');
+    slides[current].scrollTop = 0;
+
+    var frac = N === 1 ? 0 : current / (N - 1);
+    pFill.style.width = (frac * 100) + '%';
+    pSun.style.left = (frac * 100) + '%';
+    elCur.textContent = String(current + 1).padStart(2, '0');
+
+    ticks.forEach(function (t, idx) { t.classList.toggle('done', idx <= current); });
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === N - 1;
+
+    if (current === 0) runHero(); else cancelHero();
+  }
+
+  function next() { if (current < N - 1) go(current + 1); }
+  function prev() { if (current > 0) go(current - 1); }
+
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+  var rb = document.getElementById('restartBtn');
+  if (rb) rb.addEventListener('click', function () { go(0); });
+
+  // keyboard
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': next(); e.preventDefault(); break;
+      case 'ArrowLeft':  case 'PageUp':   prev(); e.preventDefault(); break;
+      case ' ': next(); e.preventDefault(); break;
+      case 'Home': go(0); e.preventDefault(); break;
+      case 'End':  go(N - 1); e.preventDefault(); break;
+    }
+  });
+
+  // touch swipe
+  var tsx = 0, tsy = 0;
+  var stage = document.getElementById('stage');
+  stage.addEventListener('touchstart', function (e) {
+    tsx = e.changedTouches[0].clientX; tsy = e.changedTouches[0].clientY;
+  }, { passive: true });
+  stage.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].clientX - tsx;
+    var dy = e.changedTouches[0].clientY - tsy;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  // theme toggle
+  var themeBtn = document.getElementById('themeBtn');
+  var prefDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (prefDark) document.documentElement.classList.add('dark');
+  themeBtn.addEventListener('click', function () {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  // hero sun animation (along the arc via getPointAtLength)
+  var heroRAF = null;
+  function cancelHero() { if (heroRAF) { cancelAnimationFrame(heroRAF); heroRAF = null; } }
+  function runHero() {
+    var arc = document.getElementById('heroArc');
+    var sun = document.getElementById('heroSun');
+    var area = document.getElementById('heroArea');
+    var rays = document.getElementById('heroRays');
+    if (!arc || !sun) return;
+    cancelHero();
+
+    var len = arc.getTotalLength();
+    function put(frac) {
+      var p = arc.getPointAtLength(len * frac);
+      sun.setAttribute('transform', 'translate(' + p.x + ' ' + p.y + ')');
+    }
+
+    if (reduce) {
+      put(0.5);
+      arc.style.strokeDasharray = 'none';
+      area.style.opacity = 1;
+      rays.style.opacity = 0.9;
+      rays.classList.add('pulsing');
+      return;
+    }
+
+    // draw the arc
+    arc.style.strokeDasharray = len;
+    arc.style.strokeDashoffset = len;
+    arc.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+      { duration: 1500, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+    // fade the area
+    area.style.opacity = 0;
+    area.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1400, delay: 300, fill: 'forwards' });
+    // rays fade + pulse after the sun settles
+    rays.style.opacity = 0;
+    rays.classList.remove('pulsing');
+
+    var dur = 1650, start = null;
+    function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    put(0);
+    function frame(now) {
+      if (start === null) start = now;
+      var t = Math.min(1, (now - start) / dur);
+      put(0.5 * ease(t));           // sunrise -> noon (apex)
+      if (t < 1) { heroRAF = requestAnimationFrame(frame); }
+      else {
+        heroRAF = null;
+        rays.animate([{ opacity: 0 }, { opacity: 0.9 }], { duration: 500, fill: 'forwards' });
+        setTimeout(function () { rays.classList.add('pulsing'); }, 480);
+      }
+    }
+    heroRAF = requestAnimationFrame(frame);
+  }
+
+  // init
+  slides.forEach(function (s, idx) {
+    if (idx !== 0) { s.setAttribute('hidden', ''); s.setAttribute('aria-hidden', 'true'); }
+    else s.setAttribute('aria-hidden', 'false');
+  });
+  go(0);
+})();
+</script>
+</body>
+</html>

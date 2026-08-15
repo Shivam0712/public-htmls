@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Solar Power Forecasting: An interactive explainer</title>
+<style>
+  /* ============================================================
+     Apple.com Light: design tokens
+     ============================================================ */
+  :root{
+    /* Color */
+    --near-black:#1d1d1f;
+    --pure-black:#000000;
+    --nav-secondary:#333336;
+    --apple-blue:#0071e3;
+    --link-blue:#0066cc;
+    --surface-light:#f5f5f7;
+    --surface-white:#ffffff;
+    --muted-gray:#6e6e73;
+    --divider-gray:#e8e8ed;
+    --nav-open-bg:#fafafc;
+
+    /* Spacing (8-based; 11 & 22 dominant) */
+    --sp-4:4px; --sp-6:6px; --sp-8:8px; --sp-11:11px; --sp-12:12px;
+    --sp-15:15px; --sp-19:19px; --sp-20:20px; --sp-22:22px;
+    --sp-40:40px; --sp-44:44px; --sp-48:48px; --sp-84:84px; --sp-88:88px; --sp-128:128px;
+
+    /* Radius */
+    --r-pill:980px; --r-full:999px; --r-dropdown:11px; --r-card:8px; --r-small:5px;
+
+    /* Type stacks: real SF Pro on Apple devices, graceful fallback elsewhere */
+    --font-display:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --font-text:"SF Pro Text",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+
+    /* One validated shadow token (used only for flyout-style overlays) */
+    --shadow-overlay:3px 5px 30px 0 rgba(0,0,0,.22);
+
+    --topbar-h:44px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  html,body{height:100%}
+  body{
+    font-family:var(--font-text);
+    color:var(--near-black);
+    background:var(--surface-white);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow:hidden;
+  }
+
+  /* ============================================================
+     Top bar: mimics Apple's fixed 44px frosted global nav
+     ============================================================ */
+  .progress-line{
+    position:fixed; top:0; left:0; height:2px; width:0%;
+    background:var(--apple-blue); z-index:60;
+    transition:width .5s var(--ease);
+  }
+  .topbar{
+    position:fixed; top:0; left:0; right:0; height:var(--topbar-h);
+    display:flex; align-items:center; gap:var(--sp-8);
+    padding:0 var(--sp-22);
+    background:rgba(255,255,255,.72);
+    backdrop-filter:saturate(1.8) blur(20px);
+    -webkit-backdrop-filter:saturate(1.8) blur(20px);
+    border-bottom:1px solid var(--divider-gray);
+    z-index:50;
+  }
+  .brand{display:flex; align-items:center; gap:var(--sp-8);
+    font-family:var(--font-text); font-size:12px; font-weight:600;
+    letter-spacing:-.12px; color:var(--near-black);}
+  .brand svg{display:block}
+  .brand .sep{color:var(--divider-gray)}
+  .brand .muted{color:var(--muted-gray); font-weight:400}
+
+  /* ============================================================
+     Deck & slides: soft cross-fade
+     ============================================================ */
+  .deck{position:relative; height:100dvh; width:100%}
+  .slide{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    padding:var(--sp-88) var(--sp-40) var(--sp-128);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .6s var(--ease), visibility .6s var(--ease);
+    overflow-y:auto;
+  }
+  .slide.active{opacity:1; visibility:visible; pointer-events:auto}
+  .slide.bg-light{background:var(--surface-light)}
+  .slide.bg-white{background:var(--surface-white)}
+  .slide.bg-nav{background:var(--nav-open-bg)}
+
+  .inner{width:100%; max-width:980px; margin:auto;
+    transform:translateY(14px); opacity:0;
+    transition:transform .6s var(--ease) .08s, opacity .6s var(--ease) .08s;}
+  .slide.active .inner{transform:translateY(0); opacity:1}
+
+  /* Type scale (from tokens) */
+  .eyebrow{font-family:var(--font-text); font-size:12px; font-weight:600;
+    line-height:16px; letter-spacing:-.12px; color:var(--muted-gray);
+    text-transform:uppercase; letter-spacing:.6px; margin-bottom:var(--sp-15)}
+  .hero{font-family:var(--font-display); font-weight:600;
+    font-size:clamp(38px,7vw,56px); line-height:1.05; letter-spacing:-.5px;
+    color:var(--near-black)}
+  .h-large{font-family:var(--font-display); font-weight:600;
+    font-size:clamp(30px,5vw,40px); line-height:1.08; letter-spacing:-.2px;
+    color:var(--near-black)}
+  .h-medium{font-family:var(--font-display); font-weight:400;
+    font-size:clamp(22px,3.2vw,28px); line-height:1.14; letter-spacing:.196px;
+    color:var(--near-black)}
+  .card-h{font-family:var(--font-display); font-weight:600;
+    font-size:20px; line-height:24px; letter-spacing:.2px; color:var(--near-black)}
+  .body{font-family:var(--font-text); font-size:clamp(16px,1.7vw,19px);
+    font-weight:400; line-height:1.5; letter-spacing:-.374px; color:var(--near-black)}
+  .body strong{font-weight:600}
+  .small{font-family:var(--font-text); font-size:14px; font-weight:400;
+    line-height:18px; letter-spacing:-.224px; color:var(--muted-gray)}
+  .caption{font-family:var(--font-text); font-size:12px; font-weight:400;
+    line-height:16px; letter-spacing:-.12px; color:var(--muted-gray)}
+
+  .lede{max-width:660px; margin-top:var(--sp-22)}
+  .measure{max-width:640px}
+  a{color:var(--link-blue); text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* Pill button (Apple CTA) */
+  .btn{
+    display:inline-flex; align-items:center; gap:var(--sp-8);
+    font-family:var(--font-text); font-size:17px; font-weight:400;
+    letter-spacing:-.374px; line-height:1;
+    padding:12px 22px; border:none; cursor:pointer;
+    border-radius:var(--r-pill);
+    background:var(--apple-blue); color:var(--surface-white);
+    transition:background .25s var(--ease), transform .25s var(--ease);
+  }
+  .btn:hover{background:#0077ed}
+  .btn:active{transform:scale(.98)}
+  .btn.ghost{background:transparent; color:var(--link-blue);
+    padding:12px 4px}
+  .btn.ghost:hover{background:transparent; text-decoration:underline}
+
+  /* ============================================================
+     Slide 1: hero + signature solar curve
+     ============================================================ */
+  .hero-wrap{display:grid; grid-template-columns:1.05fr .95fr; gap:var(--sp-48);
+    align-items:center}
+  .hero-copy .cta-row{display:flex; align-items:center; gap:var(--sp-22);
+    margin-top:var(--sp-40); flex-wrap:wrap}
+
+  .curve-card{
+    position:relative; background:var(--surface-light);
+    border-radius:var(--r-dropdown); padding:var(--sp-22);
+    border:1px solid var(--divider-gray);
+  }
+  .curve-card svg{display:block; width:100%; height:auto}
+  .curve-labels{display:flex; justify-content:space-between;
+    margin-top:var(--sp-11); padding:0 var(--sp-4)}
+
+  /* sun that arcs across the curve */
+  .sun-dot{
+    offset-path:path("M 60 240 C 180 240 220 80 300 80 C 380 80 420 240 540 240");
+    offset-rotate:0deg;
+    animation:sun-travel 9s var(--ease) infinite alternate;
+  }
+  @keyframes sun-travel{
+    0%{offset-distance:0%}
+    50%{offset-distance:50%}
+    100%{offset-distance:100%}
+  }
+  .curve-path{
+    stroke-dasharray:1200; stroke-dashoffset:1200;
+    animation:draw 2.2s var(--ease) .2s forwards;
+  }
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .band{opacity:0; animation:fade-in 1.2s var(--ease) 1.2s forwards}
+  @keyframes fade-in{to{opacity:1}}
+
+  .hint{display:inline-flex; align-items:center; gap:var(--sp-8);
+    margin-top:var(--sp-40); color:var(--muted-gray)}
+  .kbd{display:inline-grid; place-items:center; min-width:22px; height:22px;
+    padding:0 6px; border:1px solid var(--divider-gray); border-radius:var(--r-small);
+    font-size:12px; color:var(--nav-secondary); background:var(--surface-white)}
+
+  /* ============================================================
+     Cards / grids
+     ============================================================ */
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-22)}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-22)}
+  .stack{margin-top:var(--sp-44)}
+
+  .card{
+    background:var(--surface-white); border:1px solid var(--divider-gray);
+    border-radius:var(--r-dropdown); padding:var(--sp-22);
+  }
+  .slide.bg-white .card{background:var(--nav-open-bg); border-color:var(--divider-gray)}
+  .card .ic{width:34px; height:34px; color:var(--near-black); margin-bottom:var(--sp-15)}
+  .card .card-h{margin-bottom:var(--sp-8)}
+  .card p{font-family:var(--font-text); font-size:15px; line-height:1.47;
+    letter-spacing:-.2px; color:var(--muted-gray)}
+
+  .tag{display:inline-block; font-size:12px; font-weight:600; letter-spacing:-.12px;
+    color:var(--apple-blue); background:rgba(0,113,227,.08);
+    padding:3px 10px; border-radius:var(--r-full); margin-bottom:var(--sp-12)}
+
+  /* Accordion method cards (slide 4) */
+  .method{
+    background:var(--surface-white); border:1px solid var(--divider-gray);
+    border-radius:var(--r-dropdown); overflow:hidden;
+    transition:background .25s var(--ease);
+  }
+  .slide.bg-white .method{background:var(--surface-light)}
+  .method-btn{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:var(--sp-22); display:flex; align-items:flex-start; gap:var(--sp-15);
+    font-family:var(--font-text); color:var(--near-black);
+  }
+  .method .ic{flex:0 0 auto; width:32px; height:32px; color:var(--near-black); margin:0}
+  .method .m-title{font-family:var(--font-display); font-weight:600; font-size:19px;
+    letter-spacing:.1px}
+  .method .m-lead{font-size:14px; color:var(--muted-gray); margin-top:2px; letter-spacing:-.2px}
+  .method .chev{margin-left:auto; flex:0 0 auto; color:var(--muted-gray);
+    transition:transform .3s var(--ease)}
+  .method[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .method-detail{
+    max-height:0; overflow:hidden; transition:max-height .35s var(--ease);
+  }
+  .method-detail .inner-pad{padding:0 var(--sp-22) var(--sp-22) 69px}
+  .method-detail p{font-size:15px; line-height:1.5; color:var(--nav-secondary); letter-spacing:-.2px}
+
+  /* ============================================================
+     Slide 5: signature interactive timeline
+     ============================================================ */
+  .timeline{position:relative; margin-top:var(--sp-44)}
+  .timeline-arc{position:absolute; inset:0 0 auto 0; width:100%; height:120px;
+    pointer-events:none; opacity:.5}
+  .track{position:relative; display:flex; justify-content:space-between;
+    align-items:flex-end; padding:96px 0 6px}
+  .track::before{content:""; position:absolute; left:8px; right:8px; bottom:12px;
+    height:2px; background:var(--divider-gray)}
+  .node{position:relative; z-index:2; display:flex; flex-direction:column;
+    align-items:center; gap:var(--sp-8); background:none; border:none; cursor:pointer;
+    flex:1; font-family:var(--font-text)}
+  .node .dot{width:14px; height:14px; border-radius:var(--r-full);
+    background:var(--surface-white); border:2px solid var(--muted-gray);
+    transition:all .25s var(--ease)}
+  .slide.bg-white .node .dot{background:var(--surface-light)}
+  .node .n-label{font-size:13px; font-weight:600; letter-spacing:-.2px;
+    color:var(--muted-gray); transition:color .25s var(--ease); text-align:center; line-height:1.2}
+  .node[aria-selected="true"] .dot{background:var(--apple-blue); border-color:var(--apple-blue);
+    transform:scale(1.25)}
+  .node[aria-selected="true"] .n-label{color:var(--near-black)}
+  .node:hover .n-label{color:var(--near-black)}
+
+  .horizon-detail{
+    margin-top:var(--sp-40); background:var(--surface-white);
+    border:1px solid var(--divider-gray); border-radius:var(--r-dropdown);
+    padding:var(--sp-40); box-shadow:var(--shadow-overlay);
+    display:grid; grid-template-columns:auto 1fr; gap:var(--sp-40); align-items:start;
+  }
+  .slide.bg-white .horizon-detail{background:var(--nav-open-bg)}
+  .horizon-detail .range{font-family:var(--font-display); font-weight:600;
+    font-size:clamp(24px,3vw,32px); letter-spacing:-.2px; color:var(--apple-blue);
+    white-space:nowrap}
+  .horizon-detail .hd-name{font-family:var(--font-display); font-weight:600;
+    font-size:24px; letter-spacing:.1px; margin-bottom:var(--sp-8)}
+  .horizon-detail .hd-desc{font-size:16px; line-height:1.5; color:var(--nav-secondary);
+    letter-spacing:-.3px}
+  .horizon-detail .hd-use{margin-top:var(--sp-15); font-size:13px; color:var(--muted-gray);
+    display:flex; align-items:center; gap:var(--sp-8)}
+  .horizon-detail .hd-use b{color:var(--near-black); font-weight:600}
+
+  /* sub-type chips row */
+  .chips{display:flex; flex-wrap:wrap; gap:var(--sp-11); margin-top:var(--sp-22)}
+  .chip{font-size:14px; letter-spacing:-.2px; color:var(--nav-secondary);
+    background:var(--surface-white); border:1px solid var(--divider-gray);
+    padding:8px 15px; border-radius:var(--r-full)}
+  .slide.bg-white .chip{background:var(--surface-light)}
+
+  /* two-column split for deep-dive slides */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-48); align-items:start}
+  .benefit{display:flex; gap:var(--sp-15); margin-top:var(--sp-22)}
+  .benefit .ic{width:26px; height:26px; color:var(--apple-blue); flex:0 0 auto; margin:0}
+  .benefit h4{font-size:16px; font-weight:600; letter-spacing:-.3px; margin-bottom:2px}
+  .benefit p{font-size:15px; color:var(--nav-secondary); line-height:1.45; letter-spacing:-.2px}
+
+  /* Quote slide */
+  .quote{font-family:var(--font-display); font-weight:600;
+    font-size:clamp(24px,3.4vw,34px); line-height:1.24; letter-spacing:-.3px;
+    color:var(--near-black); max-width:820px}
+  .quote .accent{color:var(--apple-blue)}
+  .attribution{margin-top:var(--sp-40); display:flex; align-items:center; gap:var(--sp-15)}
+  .attribution .avatar{width:44px; height:44px; border-radius:var(--r-full);
+    background:var(--divider-gray); display:grid; place-items:center;
+    font-family:var(--font-display); font-weight:600; color:var(--nav-secondary); font-size:16px}
+  .attribution .who b{display:block; font-size:15px; font-weight:600; letter-spacing:-.2px}
+  .attribution .who span{font-size:13px; color:var(--muted-gray)}
+
+  /* closing recap */
+  .recap{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-22); margin-top:var(--sp-44)}
+  .recap .r-item{border-top:2px solid var(--near-black); padding-top:var(--sp-15)}
+  .recap .r-item b{display:block; font-family:var(--font-display); font-size:18px;
+    font-weight:600; letter-spacing:-.2px; margin-bottom:var(--sp-6)}
+  .recap .r-item p{font-size:14px; color:var(--muted-gray); line-height:1.45; letter-spacing:-.2px}
+  .source-note{margin-top:var(--sp-48); padding-top:var(--sp-22);
+    border-top:1px solid var(--divider-gray)}
+
+  /* ============================================================
+     Bottom controls
+     ============================================================ */
+  .controls{
+    position:fixed; left:0; right:0; bottom:0; height:72px;
+    display:flex; align-items:center; justify-content:center; gap:var(--sp-22);
+    padding:0 var(--sp-22);
+    background:rgba(255,255,255,.72);
+    backdrop-filter:saturate(1.8) blur(20px);
+    -webkit-backdrop-filter:saturate(1.8) blur(20px);
+    border-top:1px solid var(--divider-gray);
+    z-index:50;
+  }
+  .nav-btn{
+    width:40px; height:40px; border-radius:var(--r-full);
+    border:none; cursor:pointer; background:var(--surface-light);
+    color:var(--near-black); display:grid; place-items:center;
+    transition:background .2s var(--ease), opacity .2s var(--ease);
+  }
+  .nav-btn:hover{background:var(--divider-gray)}
+  .nav-btn:disabled{opacity:.35; cursor:default}
+  .dots{display:flex; align-items:center; gap:var(--sp-8)}
+  .dot-nav{width:8px; height:8px; border-radius:var(--r-full); border:none; cursor:pointer;
+    background:var(--divider-gray); padding:0; transition:all .25s var(--ease)}
+  .dot-nav.active{background:var(--apple-blue); transform:scale(1.35)}
+  .dot-nav:hover{background:var(--muted-gray)}
+  .counter{font-family:var(--font-text); font-size:13px; letter-spacing:-.2px;
+    color:var(--muted-gray); min-width:56px; text-align:right;
+    font-variant-numeric:tabular-nums}
+
+  /* ============================================================
+     Focus + reduced motion
+     ============================================================ */
+  :focus-visible{outline:3px solid #2997ff; outline-offset:2px; border-radius:var(--r-small)}
+  .node:focus-visible, .method-btn:focus-visible{outline-offset:-3px}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important;
+      transition-duration:.001ms !important}
+    .sun-dot{offset-distance:50%}
+    .curve-path{stroke-dashoffset:0}
+    .band{opacity:1}
+    .inner{transform:none; opacity:1}
+  }
+
+  /* ============================================================
+     Responsive
+     ============================================================ */
+  @media (max-width:833px){
+    .slide{padding:var(--sp-84) var(--sp-22) 96px}
+    .hero-wrap{grid-template-columns:1fr; gap:var(--sp-40)}
+    .split{grid-template-columns:1fr; gap:var(--sp-40)}
+    .horizon-detail{grid-template-columns:1fr; gap:var(--sp-15); padding:var(--sp-22)}
+    .grid-3{grid-template-columns:1fr}
+    .recap{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .grid-2{grid-template-columns:1fr}
+    .brand .knowledge{display:none}
+    .dots{display:none}
+    .track{padding:64px 0 6px}
+    .timeline-arc{height:80px}
+    .track::before{bottom:12px}
+    .node .n-label{font-size:11px}
+    .method .ic{display:none}
+    .method-detail .inner-pad{padding:0 var(--sp-22) var(--sp-22)}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-line" id="progress"></div>
+
+<!-- Top bar -->
+<header class="topbar">
+  <span class="brand">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.5" stroke="#0071e3" stroke-width="1.6"/>
+      <g stroke="#0071e3" stroke-width="1.6" stroke-linecap="round">
+        <path d="M12 2.5v2.6M12 18.9v2.6M21.5 12h-2.6M5.1 12H2.5M18.7 5.3l-1.8 1.8M7.1 16.9l-1.8 1.8M18.7 18.7l-1.8-1.8M7.1 7.1 5.3 5.3"/>
+      </g>
+    </svg>
+    Solar Power Forecasting
+    <span class="sep knowledge">&nbsp;·&nbsp;</span>
+    <span class="muted knowledge">An interactive explainer</span>
+  </span>
+</header>
+
+<!-- Deck -->
+<main class="deck" id="deck" aria-live="polite">
+
+  <!-- 1 · Title -->
+  <section class="slide bg-white active" aria-label="Slide 1: Title">
+    <div class="inner">
+      <div class="hero-wrap">
+        <div class="hero-copy">
+          <p class="eyebrow">Renewable energy, explained</p>
+          <h1 class="hero">Predicting<br>the power<br>of the sun.</h1>
+          <p class="body lede">Solar power forecasting estimates how much electricity a solar panel will make, whether hours, days, or a year ahead. It's how the grid stays balanced as clouds roll through.</p>
+          <div class="cta-row">
+            <button class="btn" data-go="next">Start<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <span class="hint caption"><span class="kbd">→</span> or swipe to explore</span>
+          </div>
+        </div>
+        <div class="curve-card" aria-hidden="true">
+          <svg viewBox="0 0 600 300" role="img" aria-label="A solar generation curve peaking at midday, with a forecast confidence band">
+            <!-- baseline -->
+            <line x1="60" y1="240" x2="540" y2="240" stroke="#e8e8ed" stroke-width="1.5"/>
+            <!-- forecast band -->
+            <path class="band" d="M 60 240 C 175 240 215 55 300 55 C 385 55 425 240 540 240 L 540 240 C 425 240 385 120 300 120 C 215 120 175 240 60 240 Z" fill="rgba(0,113,227,.12)"/>
+            <!-- main curve -->
+            <path class="curve-path" d="M 60 240 C 180 240 220 80 300 80 C 380 80 420 240 540 240" fill="none" stroke="#0071e3" stroke-width="3" stroke-linecap="round"/>
+            <!-- now marker -->
+            <line x1="300" y1="80" x2="300" y2="240" stroke="#0071e3" stroke-width="1" stroke-dasharray="3 4" opacity=".4"/>
+            <!-- traveling sun -->
+            <circle class="sun-dot" r="9" fill="#0071e3"/>
+            <circle class="sun-dot" r="16" fill="rgba(0,113,227,.18)"/>
+          </svg>
+          <div class="curve-labels">
+            <span class="caption">Dawn</span>
+            <span class="caption">Midday peak</span>
+            <span class="caption">Dusk</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · What it is -->
+  <section class="slide bg-light" aria-label="Slide 2: What it is">
+    <div class="inner">
+      <p class="eyebrow">The basics</p>
+      <h2 class="h-large">What is solar power forecasting?</h2>
+      <p class="body lede">It's the process of predicting a photovoltaic (PV) system's future electricity generation. Forecasts also guide how a battery charges, matching expected solar output against household demand so less clean power goes to waste.</p>
+      <div class="grid-2 stack">
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 17l5-6 4 4 5-8 4 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 21h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <h3 class="card-h">Predict generation</h3>
+          <p>Estimate how many kilowatt-hours the panels will produce across a chosen time horizon.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="4" width="10" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M10 3h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9.5 12.5l1.8 1.8 3.2-3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 class="card-h">Optimize storage</h3>
+          <p>Adjust battery capacity ahead of time so surplus solar is stored, not curtailed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Why it matters -->
+  <section class="slide bg-white" aria-label="Slide 3: Why it matters">
+    <div class="inner">
+      <p class="eyebrow">The stakes</p>
+      <h2 class="h-large measure">Why forecasting matters</h2>
+      <p class="body lede">Pairing PV with battery storage only pays off if you know what's coming. Accurate forecasts are the backbone of intelligent energy management, especially where prices move with the clock.</p>
+      <div class="grid-3 stack">
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M6 8h12M6 16h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="8" r="2.4" fill="currentColor"/><circle cx="12" cy="16" r="2.4" fill="currentColor"/></svg>
+          <h3 class="card-h">Smarter energy use</h3>
+          <p>Combining solar with storage enables the most efficient, intelligent use of every ray.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 class="card-h">Time-of-Use pricing</h3>
+          <p>Precise PV forecasts are crucial for dynamic pricing and Time-of-Use optimization.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l4 4 8-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 15l3 3 3-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/></svg>
+          <h3 class="card-h">Reliable systems</h3>
+          <p>Good predictions raise the overall reliability and efficiency of the whole energy system.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Three foundations (accordion) -->
+  <section class="slide bg-light" aria-label="Slide 4: Forecasting methods">
+    <div class="inner">
+      <p class="eyebrow">Methods</p>
+      <h2 class="h-large">Three ways to forecast the sun</h2>
+      <p class="body lede">Every technique traces back to one of three foundations. Often the best results come from blending them. Tap a method to learn more.</p>
+      <div class="stack" style="display:flex; flex-direction:column; gap:var(--sp-15)">
+
+        <div class="method" aria-expanded="false">
+          <button class="method-btn" aria-controls="m1">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="9" ry="3.6" stroke="currentColor" stroke-width="1.5" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" stroke="currentColor" stroke-width="1.5" transform="rotate(120 12 12)"/></svg>
+            <span>
+              <span class="m-title">Physical</span>
+              <span class="m-lead">Simulating the atmosphere itself</span>
+            </span>
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="method-detail" id="m1"><div class="inner-pad"><p>Physical methods rely on numerical weather prediction (NWP) models, sky imaging and satellite imaging. By simulating how the atmosphere, sunlight and cloud cover behave, they estimate PV output from the real physical characteristics of the environment.</p></div></div>
+        </div>
+
+        <div class="method" aria-expanded="false">
+          <button class="method-btn" aria-controls="m2">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20V4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="7" y="12" width="3" height="5" fill="currentColor"/><rect x="12" y="8" width="3" height="9" fill="currentColor"/><rect x="17" y="5" width="3" height="12" fill="currentColor"/></svg>
+            <span>
+              <span class="m-title">Statistical</span>
+              <span class="m-lead">Learning from historical data</span>
+            </span>
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="method-detail" id="m2"><div class="inner-pad"><p>Statistical methods use techniques like persistence forecasting, adjusting NWP predictions with historical and real-time generation data. Persistence assumes current output will hold in the very near future, a simple baseline for judging more sophisticated models against.</p></div></div>
+        </div>
+
+        <div class="method" aria-expanded="false">
+          <button class="method-btn" aria-controls="m3">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="5" r="2.4" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="18" r="2.4" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="18" r="2.4" stroke="currentColor" stroke-width="1.5"/><path d="M12 7.4v4M11 13l-4 3M13 13l4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>
+              <span class="m-title">Holistic &amp; integrated</span>
+              <span class="m-lead">A forecast-based energy management system</span>
+            </span>
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="method-detail" id="m3"><div class="inner-pad"><p>This is where a forecast-based EMS comes in. It fuses real-time rooftop PV production, battery status and load consumption with external data like electricity prices and weather forecasts, then makes intelligent decisions about charging and grid interaction to continuously optimize energy flows.</p></div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Forecast horizons (signature interactive) -->
+  <section class="slide bg-white" aria-label="Slide 5: Forecast horizons">
+    <div class="inner">
+      <p class="eyebrow">Horizons</p>
+      <h2 class="h-large">From minutes to a year ahead</h2>
+      <p class="body measure">Forecast <em>type</em> is defined by how far ahead it looks. Select a point on the timeline to see what each horizon does, and who relies on it.</p>
+
+      <div class="timeline">
+        <svg class="timeline-arc" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 118 C 250 118 330 20 500 20 C 670 20 750 118 1000 118" fill="none" stroke="#0071e3" stroke-width="2" opacity=".35"/>
+        </svg>
+        <div class="track" role="tablist" aria-label="Forecast horizons from shortest to longest">
+          <!-- nodes injected by JS -->
+        </div>
+      </div>
+
+      <div class="horizon-detail" role="tabpanel" id="horizonPanel">
+        <div class="range" id="hRange">Minutes → hours</div>
+        <div>
+          <div class="hd-name" id="hName">Nowcasting</div>
+          <p class="hd-desc" id="hDesc">Predicts generation for the very near future using real-time data and advanced monitoring: the fastest, most immediate forecast.</p>
+          <div class="hd-use"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke="#6e6e73" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Best for: <b id="hUse">Instant response to passing clouds</b></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Short-term deep dive -->
+  <section class="slide bg-light" aria-label="Slide 6: Short-term forecasting">
+    <div class="inner">
+      <div class="split">
+        <div>
+          <span class="tag">1 to 6 hours</span>
+          <h2 class="h-large">Short-term forecasting</h2>
+          <p class="body" style="margin-top:var(--sp-15)">Crucial for scheduling, load-following and congestion management. It blends statistical methods with NWP models to give a precise read on near-future generation.</p>
+          <div class="chips">
+            <span class="chip">Nowcasting · minutes to hours</span>
+            <span class="chip">Intra-day · within the day</span>
+            <span class="chip">Day-ahead · 24 to 48 hrs</span>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">Who benefits</p>
+          <div class="benefit">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 9h18M8 21h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <div>
+              <h4>Grid operators</h4>
+              <p>Anticipate fluctuations for better network management and system balancing.</p>
+            </div>
+          </div>
+          <div class="benefit">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 18l5-5 3 3 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 8h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>
+              <h4>Renewable generators</h4>
+              <p>Sharpen intra-day and day-ahead trading strategies to lift profitability.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Medium to long-term -->
+  <section class="slide bg-white" aria-label="Slide 7: Medium to long-term forecasting">
+    <div class="inner">
+      <div class="split">
+        <div>
+          <span class="tag">Days to 1 year</span>
+          <h2 class="h-large">Medium &amp; long-term</h2>
+          <p class="body" style="margin-top:var(--sp-15)">Generated with NWP models corrected for systematic bias. Instrumental for scheduling, reserve planning, market trading and congestion management across longer horizons.</p>
+          <div class="chips">
+            <span class="chip">Week-ahead · ~7 days</span>
+            <span class="chip">Seasonal · weeks to months</span>
+            <span class="chip">Year-ahead · 12 months</span>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">Who benefits</p>
+          <div class="benefit">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <div>
+              <h4>System operators</h4>
+              <p>Plan reserves and prepare proactively for extreme weather, protecting grid resilience.</p>
+            </div>
+          </div>
+          <div class="benefit">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-6.3 7-11a7 7 0 10-14 0c0 4.7 7 11 7 11z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
+            <div>
+              <h4>Renewable generators</h4>
+              <p>Site new plants where output is highest, lowering the risk of a poor location.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Specialized forecasts -->
+  <section class="slide bg-light" aria-label="Slide 8: Specialized forecasts">
+    <div class="inner">
+      <p class="eyebrow">Precision tools</p>
+      <h2 class="h-large">Specialized forecasts</h2>
+      <p class="body lede">Beyond the standard horizons, tailored methods sharpen predictions for the unique quirks of solar generation.</p>
+      <div class="grid-2 stack">
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 20l-5 2V6l5-2 6 2 5-2v16l-5 2-6-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 4v16M15 6v16" stroke="currentColor" stroke-width="1.5"/></svg>
+          <h3 class="card-h">Spatial forecasting</h3>
+          <p>Accounts for the geographic distribution of solar resources, optimizing production across many locations at once.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 16c3-6 5-6 8 0s5 6 8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 11c3-6 5-6 8 0s5 6 8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/></svg>
+          <h3 class="card-h">Uncertainty forecasting</h3>
+          <p>Quantifies the uncertainty in a prediction, giving decision-makers a range of possible outcomes to plan around.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Challenges -->
+  <section class="slide bg-white" aria-label="Slide 9: Challenges">
+    <div class="inner">
+      <p class="eyebrow">The hard part</p>
+      <h2 class="h-large">Why it's difficult</h2>
+      <p class="body lede">Solar depends on the weather, and the weather doesn't hold still. Four challenges make accurate forecasting genuinely hard.</p>
+      <div class="grid-2 stack">
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 18a4 4 0 010-8 5.5 5.5 0 0110.5 1.5A3.5 3.5 0 0117 18H7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <h3 class="card-h">Intermittent by nature</h3>
+          <p>Cloud cover, shifting sunlight and unexpected weather make output constantly fluctuate.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 16a4 4 0 010-8 5.5 5.5 0 0110.5 1.5A3.5 3.5 0 0117 16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 20l1-2M12 21l1-2M16 20l1-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h3 class="card-h">Uncertain weather data</h3>
+          <p>Errors in predicting cloud cover, rain or wind ripple straight into unreliable solar forecasts.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="6" y="4" width="12" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M9 3h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 15l6-6M9.5 9.5l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h3 class="card-h">Solar curtailment</h3>
+          <p>Excess power the grid can't absorb is wasted; good forecasts keep curtailment to a minimum.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-6.3 7-11a7 7 0 10-14 0c0 4.7 7 11 7 11z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.5"/></svg>
+          <h3 class="card-h">Spatial variability</h3>
+          <p>Irradiance differs by region; shading and terrain demand high-resolution, local models.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · Solutions -->
+  <section class="slide bg-light" aria-label="Slide 10: Solutions">
+    <div class="inner">
+      <p class="eyebrow">How we solve it</p>
+      <h2 class="h-large">Turning noise into signal</h2>
+      <p class="body lede">Better data and smarter models close the gap between prediction and reality.</p>
+      <div class="grid-2 stack">
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 4v2M14 4v2M10 18v2M14 18v2M4 10h2M4 14h2M18 10h2M18 14h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h3 class="card-h">Advanced models</h3>
+          <p>Machine learning trained on historical and high-resolution weather data lifts accuracy and cuts curtailment.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="13" r="7.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 13V9M12 13l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 3h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h3 class="card-h">High-frequency weather</h3>
+          <p>Minute-by-minute updates let operators react swiftly as conditions shift.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l4-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><path d="M12 4v1.5M20 12h-1.5M12 20v-1.5M4 12h1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h3 class="card-h">Smart meter data</h3>
+          <p>Real-time household consumption sharpens demand predictions and grid optimization.</p>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="6" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="6" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="18" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M9.5 10.5L6.5 7.3M14.5 10.5l3-3.2M14.5 13.5l3 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h3 class="card-h">Energy Management System</h3>
+          <p>An EMS ties data, models, weather and meters together for holistic optimization.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · Future outlook -->
+  <section class="slide bg-nav" aria-label="Slide 11: Future outlook">
+    <div class="inner">
+      <div class="hero-wrap">
+        <div>
+          <p class="eyebrow">The road ahead</p>
+          <h2 class="h-large">Machine learning sharpens the forecast.</h2>
+          <p class="body lede">By learning how weather, hardware and location interact, models keep narrowing the gap between prediction and reality, adjusting in real time to keep the grid and energy markets ready for solar at scale.</p>
+          <p class="small" style="margin-top:var(--sp-22)">Solar is on track to become a major global power source. Sharper forecasting is what makes it dependable.</p>
+        </div>
+        <div class="curve-card">
+          <svg viewBox="0 0 600 300" role="img" aria-label="A solar generation curve with a tight machine-learning forecast band hugging it, and a wider standard-forecast band behind it">
+            <line x1="60" y1="240" x2="540" y2="240" stroke="#e8e8ed" stroke-width="1.5"/>
+            <!-- fainter, wider standard-forecast band -->
+            <path d="M 60 240 C 175 240 215 55 300 55 C 385 55 425 240 540 240 C 425 240 385 120 300 120 C 215 120 175 240 60 240 Z" fill="rgba(0,113,227,.06)"/>
+            <!-- tight machine-learning forecast band -->
+            <path class="band" d="M 60 240 C 180 240 220 72 300 72 C 380 72 420 240 540 240 C 420 240 380 88 300 88 C 220 88 180 240 60 240 Z" fill="rgba(0,113,227,.16)"/>
+            <!-- generation curve -->
+            <path class="curve-path" d="M 60 240 C 180 240 220 80 300 80 C 380 80 420 240 540 240" fill="none" stroke="#0071e3" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="300" cy="80" r="5" fill="#0071e3"/>
+          </svg>
+          <div class="curve-labels" style="justify-content:flex-start; gap:var(--sp-22); flex-wrap:wrap">
+            <span class="caption" style="display:inline-flex; align-items:center; gap:var(--sp-8)"><span style="width:14px; height:10px; border-radius:3px; background:rgba(0,113,227,.16); display:inline-block"></span>Machine-learning forecast</span>
+            <span class="caption" style="display:inline-flex; align-items:center; gap:var(--sp-8)"><span style="width:14px; height:10px; border-radius:3px; background:rgba(0,113,227,.06); border:1px solid var(--divider-gray); display:inline-block"></span>Standard forecast</span>
+          </div>
+          <p class="caption" style="margin-top:var(--sp-11)">A tighter band means a sharper prediction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · Takeaway / closing -->
+  <section class="slide bg-white" aria-label="Slide 12: Takeaway">
+    <div class="inner">
+      <p class="eyebrow">The takeaway</p>
+      <h2 class="hero" style="font-size:clamp(32px,5.5vw,48px)">Forecasting is how solar<br>becomes dependable.</h2>
+      <div class="recap">
+        <div class="r-item">
+          <b>Three methods</b>
+          <p>Physical, statistical and holistic approaches, often blended for the best result.</p>
+        </div>
+        <div class="r-item">
+          <b>Six horizons</b>
+          <p>From nowcasting in minutes to year-ahead planning across seasons.</p>
+        </div>
+        <div class="r-item">
+          <b>One goal</b>
+          <p>Match generation to demand, minimize curtailment, keep the grid stable.</p>
+        </div>
+      </div>
+      <div class="source-note">
+        <button class="btn ghost" data-go="0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 4a8 8 0 108 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 4L8 7M11 4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Start over</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Bottom controls -->
+<nav class="controls" aria-label="Slide navigation">
+  <button class="nav-btn" id="prev" aria-label="Previous slide" disabled>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="dots" id="dots" role="tablist" aria-label="Jump to slide"></div>
+  <button class="nav-btn" id="next" aria-label="Next slide">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <span class="counter" id="counter">01 / 12</span>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var current = 0;
+
+  var prevBtn = document.getElementById('prev');
+  var nextBtn = document.getElementById('next');
+  var counter = document.getElementById('counter');
+  var progress = document.getElementById('progress');
+  var dotsWrap = document.getElementById('dots');
+
+  /* build dots */
+  var dots = [];
+  for(var i=0;i<total;i++){
+    var d = document.createElement('button');
+    d.className = 'dot-nav';
+    d.setAttribute('role','tab');
+    d.setAttribute('aria-label','Go to slide '+(i+1));
+    (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
+    dotsWrap.appendChild(d);
+    dots.push(d);
+  }
+
+  function pad(n){ return (n<10?'0':'')+n; }
+
+  function goTo(idx){
+    if(idx<0) idx=0;
+    if(idx>total-1) idx=total-1;
+    if(idx===current){ return; }
+    slides[current].classList.remove('active');
+    current = idx;
+    slides[current].classList.add('active');
+    update();
+    /* move focus to the new slide's heading for screen readers, without scroll jump */
+    var h = slides[current].querySelector('h1,h2,.quote');
+    if(h){ h.setAttribute('tabindex','-1'); try{ h.focus({preventScroll:true}); }catch(e){ h.focus(); } }
+  }
+
+  function update(){
+    counter.textContent = pad(current+1)+' / '+pad(total);
+    progress.style.width = ((current)/(total-1))*100 + '%';
+    prevBtn.disabled = current===0;
+    nextBtn.disabled = current===total-1;
+    dots.forEach(function(d,i){
+      d.classList.toggle('active', i===current);
+      d.setAttribute('aria-selected', i===current ? 'true':'false');
+    });
+  }
+
+  function next(){ goTo(current+1); }
+  function prev(){ goTo(current-1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  /* data-go buttons (Start / Start over) */
+  document.querySelectorAll('[data-go]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = b.getAttribute('data-go');
+      goTo(v==='next' ? current+1 : parseInt(v,10));
+    });
+  });
+
+  /* keyboard */
+  document.addEventListener('keydown', function(e){
+    if(e.target.closest('.method-btn, .node')) {
+      /* let interactive components handle their own keys but still allow arrows */
+    }
+    switch(e.key){
+      case 'ArrowRight': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case ' ': if(!e.target.closest('button')){ e.preventDefault(); next(); } break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(total-1); break;
+    }
+  });
+
+  /* touch swipe */
+  var tsX=0, tsY=0;
+  var deck = document.getElementById('deck');
+  deck.addEventListener('touchstart', function(e){
+    tsX = e.changedTouches[0].clientX; tsY = e.changedTouches[0].clientY;
+  }, {passive:true});
+  deck.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - tsX;
+    var dy = e.changedTouches[0].clientY - tsY;
+    if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)){
+      if(dx<0) next(); else prev();
+    }
+  }, {passive:true});
+
+  /* ---- Slide 4: accordion methods ---- */
+  document.querySelectorAll('.method').forEach(function(m){
+    var btn = m.querySelector('.method-btn');
+    var detail = m.querySelector('.method-detail');
+    btn.addEventListener('click', function(){
+      var open = m.getAttribute('aria-expanded')==='true';
+      /* close siblings for a tidy one-at-a-time feel */
+      document.querySelectorAll('.method').forEach(function(o){
+        o.setAttribute('aria-expanded','false');
+        o.querySelector('.method-detail').style.maxHeight = null;
+      });
+      if(!open){
+        m.setAttribute('aria-expanded','true');
+        detail.style.maxHeight = detail.scrollHeight + 'px';
+      }
+    });
+  });
+
+  /* ---- Slide 5: interactive horizon timeline ---- */
+  var horizons = [
+    {label:'Nowcasting', range:'Minutes → hours', desc:'Predicts generation for the very near future using real-time data and advanced monitoring: the fastest, most immediate forecast.', use:'Instant response to passing clouds'},
+    {label:'Intra-day', range:'Within the day', desc:'Tracks generation across a single day, accounting for weather shifts, cloud cover and changing solar radiation throughout the hours.', use:'Keeping the grid stable hour to hour'},
+    {label:'Day-ahead', range:'24 → 48 hours', desc:'Looks one to two days out to support energy-market planning, maintenance scheduling and effective demand management.', use:'Market trading & resource allocation'},
+    {label:'Week-ahead', range:'~7 days', desc:'Extends beyond the daily horizon to guide energy purchases and longer-term resource planning for utilities.', use:'Optimizing weekly energy buys'},
+    {label:'Seasonal', range:'Weeks → months', desc:'Anticipates solar patterns across the seasons, helping plan for shifting demand and adjust resource portfolios.', use:'Planning for seasonal demand swings'},
+    {label:'Year-ahead', range:'12 months', desc:'A long-range view for energy policy, infrastructure development and capacity decisions based on expected generation trends.', use:'Capacity & infrastructure strategy'}
+  ];
+  var track = document.querySelector('.track');
+  var hRange = document.getElementById('hRange');
+  var hName = document.getElementById('hName');
+  var hDesc = document.getElementById('hDesc');
+  var hUse  = document.getElementById('hUse');
+  var nodes = [];
+
+  horizons.forEach(function(h,i){
+    var b = document.createElement('button');
+    b.className='node';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', i===0 ? 'true':'false');
+    b.setAttribute('aria-controls','horizonPanel');
+    b.innerHTML = '<span class="n-label">'+h.label+'</span><span class="dot"></span>';
+    (function(idx){
+      b.addEventListener('click', function(){ selectHorizon(idx); });
+    })(i);
+    track.appendChild(b);
+    nodes.push(b);
+  });
+
+  function selectHorizon(idx){
+    var h = horizons[idx];
+    hRange.textContent = h.range;
+    hName.textContent = h.label;
+    hDesc.textContent = h.desc;
+    hUse.textContent = h.use;
+    nodes.forEach(function(n,i){ n.setAttribute('aria-selected', i===idx?'true':'false'); });
+  }
+
+  update();
+})();
+</script>
+</body>
+</html>
