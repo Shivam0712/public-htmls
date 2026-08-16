@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Sportswear Drawdown — a briefing in 20 slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ tokens ============ */
+:root{
+  --ink:#101826;
+  --ink-2:#1B2536;
+  --paper:#EFF1EE;
+  --paper-2:#E4E7E2;
+  --rule:#CFD4CD;
+  --slate:#5A657B;
+  --blue:#2946F0;
+  --hot:#FF4A17;
+  --r1:#2946F0; --r2:#5A4CD8; --r3:#8F52B4; --r4:#D2547B; --r5:#FF4A17;
+
+  --display:"Big Shoulders Display","Haettenschweiler","Arial Narrow",sans-serif;
+  --body:"Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+
+  --rail:68px;
+  --pad-x:clamp(20px,5vw,84px);
+  --pad-y:clamp(18px,4.5vh,52px);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:16px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;overflow:hidden;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--blue);outline-offset:3px}
+
+/* ============ shell ============ */
+.deck{display:flex;height:100dvh;width:100%}
+.rail{
+  width:var(--rail);flex:0 0 var(--rail);background:var(--ink);color:#fff;
+  display:flex;flex-direction:column;align-items:center;
+  padding:18px 0;gap:10px;z-index:20;
+}
+.rail__mark{
+  font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.06em;
+  writing-mode:vertical-rl;text-orientation:mixed;opacity:.55;margin-bottom:6px;
+}
+.rail__track{flex:1;display:flex;flex-direction:column;justify-content:center;gap:5px;width:100%;align-items:center}
+.tick{
+  width:22px;height:5px;border:0;background:rgba(255,255,255,.22);padding:0;border-radius:1px;
+  transition:background .25s,width .25s;position:relative;
+}
+.tick:hover{background:rgba(255,255,255,.55)}
+.tick[aria-current="true"]{background:#fff;width:34px}
+.rail__num{font-family:var(--mono);font-size:11px;letter-spacing:.08em;opacity:.6}
+
+.stage{position:relative;flex:1;overflow:hidden}
+
+/* ============ slides ============ */
+.slide{
+  position:absolute;inset:0;padding:var(--pad-y) var(--pad-x) 82px;
+  overflow-y:auto;overscroll-behavior:contain;
+  opacity:0;visibility:hidden;transform:translate3d(28px,0,0);
+  transition:opacity .38s ease,transform .45s cubic-bezier(.2,.7,.25,1),visibility 0s .45s;
+}
+.slide.is-active{opacity:1;visibility:visible;transform:none;transition:opacity .38s ease .05s,transform .5s cubic-bezier(.2,.7,.25,1) .05s,visibility 0s}
+.slide.is-past{transform:translate3d(-28px,0,0)}
+
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate)}
+.eyebrow b{color:var(--blue);font-weight:600}
+h1{font-family:var(--display);font-weight:800;line-height:.92;letter-spacing:-.005em;
+   font-size:clamp(40px,6.6vw,86px);margin:.18em 0 .1em;text-transform:uppercase}
+h2{font-family:var(--display);font-weight:700;line-height:.94;letter-spacing:0;
+   font-size:clamp(30px,4.4vw,54px);margin:.16em 0 .22em;text-transform:uppercase}
+h3{font-family:var(--display);font-weight:700;font-size:clamp(19px,2vw,25px);margin:0 0 .3em;text-transform:uppercase;letter-spacing:.01em}
+p{margin:0 0 .8em;max-width:74ch}
+.lede{font-size:clamp(15px,1.35vw,19px);color:var(--ink-2);max-width:62ch}
+.small{font-size:13.5px;color:var(--slate);max-width:80ch}
+.note{font-family:var(--mono);font-size:11.5px;color:var(--slate);letter-spacing:.02em;max-width:88ch}
+.hl{background:linear-gradient(transparent 62%, rgba(41,70,240,.22) 62%);padding:0 .06em}
+strong{font-weight:600}
+
+/* ============ layout helpers ============ */
+.grid{display:grid;gap:clamp(14px,1.8vw,26px)}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.split{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(18px,3vw,48px);align-items:start}
+.stack>*+*{margin-top:12px}
+.head{max-width:80ch}
+
+.panel{background:#fff;border:1px solid var(--rule);padding:clamp(14px,1.5vw,20px)}
+.panel--ink{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel--ink .small,.panel--ink .note,.panel--ink .eyebrow{color:rgba(255,255,255,.62)}
+
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.kv:last-child{border-bottom:0}
+.kv dt{color:var(--slate)}
+.kv dd{margin:0;font-family:var(--mono);font-weight:500}
+
+.num{font-family:var(--display);font-weight:800;font-size:clamp(34px,4.6vw,58px);line-height:.9;letter-spacing:-.01em}
+.num small{display:block;font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-top:8px;line-height:1.4}
+
+/* ============ bars ============ */
+.bar{margin:0 0 11px}
+.bar__top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13.5px;margin-bottom:4px}
+.bar__name{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.02em;text-transform:uppercase}
+.bar__val{font-family:var(--mono);font-size:12.5px;color:var(--slate)}
+.bar__track{height:14px;background:var(--paper-2);position:relative;overflow:hidden}
+.bar__fill{height:100%;width:0;background:var(--blue);transition:width .85s cubic-bezier(.2,.75,.3,1)}
+.is-active .bar__fill{width:var(--w)}
+
+.sbar{display:flex;height:26px;background:var(--paper-2);overflow:hidden}
+.sbar span{width:0;transition:width .9s cubic-bezier(.2,.75,.3,1);display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:.04em;white-space:nowrap}
+.is-active .sbar span{width:var(--w)}
+.sbar .seg-m{background:var(--blue)}
+.sbar .seg-e{background:var(--hot)}
+.sbar .seg-0{background:#B9C0BA;color:var(--ink)}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:11.5px;color:var(--slate);letter-spacing:.03em}
+.legend i{display:inline-block;width:11px;height:11px;margin-right:6px;vertical-align:-1px}
+
+/* ============ cover ============ */
+.cover{display:flex;flex-direction:column;justify-content:space-between;min-height:calc(100dvh - var(--pad-y) - 82px)}
+.field{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(8px,1.4vw,20px);align-items:end;height:min(42vh,340px);margin:8px 0 4px}
+.lane{display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.lane__bar{background:var(--ink);height:0;transition:height 1s cubic-bezier(.2,.75,.3,1);position:relative}
+.is-active .lane__bar{height:var(--h)}
+.lane__pct{font-family:var(--mono);font-size:12px;color:var(--slate);margin-bottom:6px}
+.lane__tk{font-family:var(--display);font-weight:800;font-size:clamp(17px,2.1vw,27px);letter-spacing:.03em;margin-top:8px;border-top:2px solid var(--ink);padding-top:6px}
+.lane__cap{font-size:11.5px;color:var(--slate);line-height:1.3;margin-top:3px}
+
+/* ============ rank cards ============ */
+.ranks{display:grid;gap:8px}
+.rank{display:grid;grid-template-columns:52px minmax(96px,150px) 1fr auto;gap:clamp(10px,1.4vw,20px);align-items:center;
+  width:100%;text-align:left;background:#fff;border:1px solid var(--rule);border-left:5px solid var(--r3);
+  padding:12px 16px;transition:transform .2s,box-shadow .2s}
+.rank:hover{transform:translateX(4px);box-shadow:-4px 4px 0 rgba(16,24,38,.08)}
+.rank__n{font-family:var(--display);font-weight:800;font-size:34px;line-height:1;color:var(--r3)}
+.rank__tk{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase}
+.rank__co{font-size:11.5px;color:var(--slate);display:block;font-family:var(--body);letter-spacing:0;text-transform:none}
+.rank__th{font-size:14px;color:var(--ink-2)}
+.rank__w{font-family:var(--mono);font-size:13px;white-space:nowrap;color:var(--slate)}
+.rank[data-r="1"]{border-left-color:var(--r1)} .rank[data-r="1"] .rank__n{color:var(--r1)}
+.rank[data-r="2"]{border-left-color:var(--r2)} .rank[data-r="2"] .rank__n{color:var(--r2)}
+.rank[data-r="3"]{border-left-color:var(--r3)} .rank[data-r="3"] .rank__n{color:var(--r3)}
+.rank[data-r="4"]{border-left-color:var(--r4)} .rank[data-r="4"] .rank__n{color:var(--r4)}
+.rank[data-r="5"]{border-left-color:var(--r5)} .rank[data-r="5"] .rank__n{color:var(--r5)}
+.rank__more{grid-column:1/-1;font-size:13.5px;color:var(--ink-2);border-top:1px solid var(--rule);
+  margin-top:4px;padding-top:10px;display:none}
+.rank.is-open .rank__more{display:block}
+
+/* ============ toggles / chips ============ */
+.toggle{display:inline-flex;border:1px solid var(--ink);background:#fff}
+.toggle button{background:none;border:0;padding:8px 15px;font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--rule);background:#fff;padding:7px 13px;font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ============ table ============ */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{padding:9px 10px;border-bottom:1px solid var(--rule);text-align:right}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);border-bottom:2px solid var(--ink)}
+.tbl td{font-family:var(--mono)}
+.tbl td:first-child{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.02em}
+.tbl tbody tr:hover{background:rgba(41,70,240,.05)}
+.cheap{color:var(--blue);font-weight:600}
+.rich{color:var(--hot);font-weight:600}
+.tbl .bench td{background:var(--paper-2);color:var(--slate)}
+.tbl .bench td:first-child{font-family:var(--body);font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+
+/* ============ flip cards ============ */
+.flips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.flip{perspective:1100px;background:none;border:0;padding:0;height:clamp(230px,38vh,320px)}
+.flip__in{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.3,.8,.3,1);transform-style:preserve-3d}
+.flip.is-flipped .flip__in{transform:rotateY(180deg)}
+.flip__f,.flip__b{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--rule);
+  padding:16px;display:flex;flex-direction:column;text-align:left;overflow:hidden}
+.flip__f{background:#fff}
+.flip__b{background:var(--ink);color:#fff;transform:rotateY(180deg)}
+.flip__b .small{color:rgba(255,255,255,.68)}
+.flip__tk{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:.02em}
+.flip__q{font-size:13px;color:var(--slate);margin-top:auto;font-family:var(--mono);letter-spacing:.03em}
+.verdict{font-family:var(--display);font-weight:800;font-size:clamp(22px,2.4vw,30px);line-height:1;margin:10px 0 12px}
+.v-low{color:#7FE3B0}.v-mid{color:#FFC46B}.v-high{color:#FF8A63}
+
+/* ============ scenario ============ */
+.scen{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;margin-bottom:14px}
+.scen__lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--slate)}
+.axis{position:relative;height:44px;background:var(--paper-2)}
+.axis__zero{position:absolute;top:0;bottom:0;width:1px;background:var(--ink);left:33.3%}
+.axis__fill{position:absolute;top:9px;bottom:9px;width:0;transition:width .7s cubic-bezier(.2,.75,.3,1),left .7s}
+.axis__val{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:12px;font-weight:500}
+
+/* ============ misc ============ */
+.list{list-style:none;padding:0;margin:0;font-size:14px}
+.list li{padding:8px 0 8px 22px;border-bottom:1px solid var(--rule);position:relative}
+.list li:before{content:"";position:absolute;left:0;top:15px;width:9px;height:9px;background:var(--blue)}
+.list li:last-child{border-bottom:0}
+.list--hot li:before{background:var(--hot)}
+.check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--rule);font-size:13.5px;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--blue);width:15px;height:15px;flex:0 0 auto}
+.check.is-done{color:var(--slate);text-decoration:line-through}
+
+.timeline{position:relative;padding-left:26px}
+.timeline:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--rule)}
+.tl{position:relative;padding:0 0 16px}
+.tl:before{content:"";position:absolute;left:-24px;top:5px;width:11px;height:11px;background:var(--ink);border-radius:50%}
+.tl b{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);display:block}
+
+/* ============ hud ============ */
+.hud{position:fixed;left:var(--rail);right:0;bottom:0;height:64px;background:linear-gradient(transparent,var(--paper) 34%);
+  display:flex;align-items:center;gap:14px;padding:0 var(--pad-x) 14px;z-index:15;pointer-events:none}
+.hud>*{pointer-events:auto}
+.nav{display:flex;gap:0;border:1px solid var(--ink);background:#fff}
+.nav button{border:0;background:none;padding:9px 17px;font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.04em}
+.nav button:first-child{border-right:1px solid var(--ink)}
+.nav button:disabled{opacity:.28;cursor:default}
+.hud__title{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud__count{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--slate);white-space:nowrap}
+.disclaim{position:fixed;right:var(--pad-x);bottom:44px;font-family:var(--mono);font-size:10px;color:var(--slate);opacity:.75;z-index:14}
+
+/* ============ responsive ============ */
+@media (max-width:900px){
+  .split,.g2,.g3{grid-template-columns:1fr}
+  .g5,.flips{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rank{grid-template-columns:38px 1fr;row-gap:4px}
+  .rank__th,.rank__w{grid-column:1/-1}
+  .flip{height:250px}
+  .field{height:32vh}
+  .tbl{font-size:12.5px}
+  .tbl th,.tbl td{padding:7px 5px}
+}
+@media (max-width:620px){
+  :root{--rail:44px}
+  .rail__mark{display:none}
+  .g5,.flips{grid-template-columns:1fr}
+  .lane__cap{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+</head>
+<body id="artifacts-component-root-html">
+<div class="deck">
+
+  <aside class="rail" aria-label="Slide navigation">
+    <span class="rail__mark">THE FIELD</span>
+    <div class="rail__track" id="rail"></div>
+    <span class="rail__num" id="railNum">01</span>
+  </aside>
+
+  <main class="stage" id="stage">
+
+    <!-- 1 ============================================================= -->
+    <section class="slide" data-title="Cover">
+      <div class="cover">
+        <div>
+          <p class="eyebrow">Equity briefing · Sportswear &amp; athleisure · <b>August 2026</b></p>
+          <h1>Five brands fell.<br>Only some<br>got cheap.</h1>
+          <p class="lede">Nike, adidas, On, Deckers and Lululemon are all deep in drawdown. But a falling price and a low price are different things — and the difference decides where the money goes.</p>
+        </div>
+
+        <div>
+          <div class="field" id="coverField"></div>
+          <p class="note">Approximate decline from each name's own peak (Nike &amp; adidas 2021; Deckers &amp; On 2024–25; Lululemon 2023–25). Use arrow keys, or the buttons below, to move through the deck.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 ============================================================= -->
+    <section class="slide" data-title="The verdict">
+      <p class="eyebrow">Slide 02 · The answer first</p>
+      <h2>The ranking</h2>
+      <p class="lede">One core long, two supporting positions, one trade, one to avoid. Tap any row for the reasoning.</p>
+      <div class="ranks" id="ranks"></div>
+      <p class="note" style="margin-top:14px">Sizing is a share of the equity sleeve, inside a 15% cap on total sportswear exposure. Horizon: 2–3 years, moderate risk, US taxable account.</p>
+    </section>
+
+    <!-- 3 ============================================================= -->
+    <section class="slide" data-title="Price = earnings x multiple">
+      <p class="eyebrow">Slide 03 · The one idea that runs through everything</p>
+      <h2>A share price has two moving parts</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede">Price = <strong>earnings</strong> × <strong>the multiple people pay for them</strong>. A 60% fall can come from either. They mean opposite things.</p>
+          <div class="toggle" role="group" aria-label="Choose a cause">
+            <button type="button" data-cause="e" aria-pressed="true">Earnings fell</button>
+            <button type="button" data-cause="m" aria-pressed="false">Multiple fell</button>
+          </div>
+          <div class="panel" id="causeBox"></div>
+        </div>
+        <div class="panel panel--ink">
+          <h3>Why it decides the whole deck</h3>
+          <p class="small">If earnings did the damage, you are buying a business that got worse, and you need it to get better. That is a turnaround, and it can take years or never arrive — the classic value trap.</p>
+          <p class="small">If the multiple did the damage while earnings held, you are buying the same business at a lower price. You need sentiment to normalise, not the business to be rebuilt.</p>
+          <p class="small" style="margin-bottom:0">So the first question for each name is not <em>how far has it fallen</em>. It is <em>which part fell</em>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 ============================================================= -->
+    <section class="slide" data-title="Anatomy of the drawdown">
+      <p class="eyebrow">Slide 04 · Section 1 — Anatomy of the drawdown</p>
+      <h2>Which part fell</h2>
+      <p class="lede">The report's read on what drove each decline. Blue is de-rating you can get back cheaply; orange is earnings that have to be earned back.</p>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="stack" id="anatomy"></div>
+        <div class="panel">
+          <h3>Read it this way</h3>
+          <p class="small"><strong>Lululemon, Deckers and On</strong> fell mostly because investors stopped paying up. On's earnings actually rose through its drawdown — every bit of the fall is de-rating.</p>
+          <p class="small"><strong>Nike</strong> is the outlier: roughly half the damage is real earnings loss, from China and direct-to-consumer margin. EPS went from about $3.90 in FY24 to $2.10–2.20 on FY26 estimates.</p>
+          <p class="small"><strong>adidas</strong> sits in between — an old earnings shock (Yeezy, China) plus compression from a very rich starting multiple.</p>
+          <p class="note" style="margin-top:14px">Splits are the report's directional characterisation, not a precise decomposition.</p>
+        </div>
+      </div>
+      <div class="legend" style="margin-top:16px">
+        <span><i style="background:var(--blue)"></i>Multiple compression</span>
+        <span><i style="background:var(--hot)"></i>Earnings decline</span>
+        <span><i style="background:#B9C0BA"></i>Earnings rose</span>
+      </div>
+    </section>
+
+    <!-- 5 ============================================================= -->
+    <section class="slide" data-title="Nike: the earnings half">
+      <p class="eyebrow">Slide 05 · The name to avoid</p>
+      <h2>Nike fell furthest — and is still not cheap</h2>
+      <div class="split">
+        <div class="stack">
+          <div class="grid g2">
+            <div class="panel"><span class="num" style="color:var(--hot)">−45%<small>FY24 → FY26e earnings per share, $3.90 to about $2.15</small></span></div>
+            <div class="panel"><span class="num">23–25×<small>Forward P/E, versus about 19–20× for the S&amp;P 500</small></span></div>
+          </div>
+          <div class="panel">
+            <h3>Greater China revenue</h3>
+            <div class="bar"><div class="bar__top"><span class="bar__name">FY22</span><span class="bar__val">$7.5bn</span></div><div class="bar__track"><div class="bar__fill" style="--w:100%"></div></div></div>
+            <div class="bar" style="margin-bottom:0"><div class="bar__top"><span class="bar__name">FY26</span><span class="bar__val">$5.8bn</span></div><div class="bar__track"><div class="bar__fill" style="--w:77%;background:var(--hot)"></div></div></div>
+          </div>
+        </div>
+        <div class="stack">
+          <p class="lede">The stock is roughly 70–75% below its 2021 peak. That sounds like deep value. It isn't: earnings fell with it, so the multiple never really got low.</p>
+          <ul class="list list--hot">
+            <li>Forward P/E of 23–25× against a 3–5 year average near 29–31× — a modest discount, not a dislocation.</li>
+            <li>EV/EBITDA around 13–14×, still a premium to the market.</li>
+            <li>North America revenue has slipped from above $21bn to about $20.5bn, with EBIT falling faster.</li>
+            <li>NIKE Direct is shrinking — double-digit declines in digital — while the rebuild of wholesale is slow and dilutes margin.</li>
+          </ul>
+          <p class="small"><strong>The trap:</strong> you pay a premium multiple for a business whose returns may be structurally lower. Buy only below about 18× forward, with China stabilising.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 ============================================================= -->
+    <section class="slide" data-title="Lululemon: the multiple story">
+      <p class="eyebrow">Slide 06 · The top idea</p>
+      <h2>Lululemon fell just as far — and got genuinely cheap</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede">Down roughly 70–75% from its 2023–25 peaks, but earnings held in the low teens and EBITDA is still $2.5–2.7bn. Almost the entire fall is de-rating.</p>
+          <div class="grid g2">
+            <div class="panel"><span class="num" style="color:var(--blue)">10×<small>Forward P/E — half the S&amp;P 500 multiple</small></span></div>
+            <div class="panel"><span class="num" style="color:var(--blue)">5–6×<small>EV/EBITDA, against a 10-year median near 19×</small></span></div>
+          </div>
+          <p class="small">At this price the market is implying roughly zero growth and some margin loss — against a business running mid-teens EBIT margins that is still opening stores in China.</p>
+        </div>
+        <div class="panel">
+          <h3>Revenue by region, FY22 → FY25</h3>
+          <div id="lulu"></div>
+          <p class="small" style="margin-top:14px;margin-bottom:0">China Mainland has nearly tripled and Rest of World has more than doubled. Revenue outside North America now clears $2.6bn. The fear is a growth scare; the evidence is not yet a structural break.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 ============================================================= -->
+    <section class="slide" data-title="The valuation board">
+      <p class="eyebrow">Slide 07 · Section 1 — How cheap, really</p>
+      <h2>The valuation board</h2>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+        <div class="toggle" role="group" aria-label="Comparison basis">
+          <button type="button" data-view="hist" aria-pressed="true">Against its own history</button>
+          <button type="button" data-view="mkt" aria-pressed="false">Against the market</button>
+        </div>
+        <span class="note" id="valNote"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>Name</th><th>Forward P/E</th><th id="colB">5–10yr average P/E</th><th>EV/EBITDA</th><th id="colD">Where that sits</th></tr></thead>
+          <tbody id="valBody"></tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:14px">Multiples are approximate and cross-checked across several data providers; treat them as bands, not points.</p>
+    </section>
+
+    <!-- 8 ============================================================= -->
+    <section class="slide" data-title="Cheapness verdicts">
+      <p class="eyebrow">Slide 08 · Section 1 — Conclusion</p>
+      <h2>Who is actually cheap</h2>
+      <div class="grid g5" id="cheapCards" style="margin-top:20px"></div>
+      <p class="lede" style="margin-top:22px">Only one name in the group trades at value multiples on quality earnings. Two trade at fair-to-good prices for genuine growth. One is a market-multiple turnaround. One is still a premium stock with premium problems.</p>
+    </section>
+
+    <!-- 9 ============================================================= -->
+    <section class="slide" data-title="China: the structural break">
+      <p class="eyebrow">Slide 09 · Section 2 — Regional demand</p>
+      <h2>China stopped being a Western duopoly</h2>
+      <div class="split">
+        <div class="panel">
+          <h3>Chinese sportswear market share</h3>
+          <div class="stack" id="chinaShare"></div>
+          <p class="note" style="margin-top:12px;margin-bottom:0">Domestic brands, combined, moved from under 30% in 2015 to roughly half the market by 2025.</p>
+        </div>
+        <div class="stack">
+          <p class="lede">This is the one part of the picture that reads as structural rather than cyclical — and it lands hardest on the two names ranked last.</p>
+          <ul class="list list--hot">
+            <li>Anta alone holds 21–23% share; Li-Ning is near 9–10%.</li>
+            <li>Nike has slipped to the mid-teens; adidas to roughly 8–9%.</li>
+            <li>National-pride purchasing and local product cycles are reinforcing the shift, not reversing it.</li>
+          </ul>
+          <p class="small"><strong>Why it matters for the ranking:</strong> Nike and adidas need China to recover to justify their multiples. Lululemon and Deckers do not — for Lululemon, China is still a growth engine rather than a hole to fill.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 ============================================================= -->
+    <section class="slide" data-title="Where demand is growing">
+      <p class="eyebrow">Slide 10 · Section 2 — Regional demand</p>
+      <h2>Where demand is actually growing</h2>
+      <p class="lede">The three names with intact growth are growing in different places — which is part of why they de-rated together but should not stay correlated.</p>
+      <div class="grid g3" style="margin-top:18px">
+        <div class="panel">
+          <h3>On — from niche to global</h3>
+          <div id="onRegions"></div>
+          <p class="small" style="margin-top:12px;margin-bottom:0">Roughly half Americas, a quarter EMEA, a quarter Asia-Pacific. Wholesale still leads, but DTC is growing faster and gross margin is strong.</p>
+        </div>
+        <div class="panel">
+          <h3>Deckers — Hoka overtakes UGG</h3>
+          <div id="deckMix"></div>
+          <p class="small" style="margin-top:12px;margin-bottom:0">US $3.19bn versus international $2.28bn. DTC is now above $2.2bn with over $800m of segment EBIT — the high-margin end of the business.</p>
+        </div>
+        <div class="panel">
+          <h3>Lululemon — outside North America</h3>
+          <div id="luluGrow"></div>
+          <p class="small" style="margin-top:12px;margin-bottom:0">China Mainland comps are still growing double digits while global athleisure growth moderates to mid single digits. Company-operated stores and DTC carry most of the EBIT.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 ============================================================= -->
+    <section class="slide" data-title="Pricing power vs discounting">
+      <p class="eyebrow">Slide 11 · Section 2 — Quality of revenue</p>
+      <h2>Sold at full price, or sold on markdown?</h2>
+      <p class="lede">Two companies can report the same revenue line and mean completely different things. Discount depth is the tell.</p>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="panel">
+          <h3 style="color:var(--blue)">Pricing power intact</h3>
+          <ul class="list">
+            <li><strong>Lululemon</strong> — premium pricing held, shallow discounting, price rises taken without obvious volume loss.</li>
+            <li><strong>Hoka (Deckers)</strong> — tight inventory, low discount depth, strong full-price sell-through.</li>
+            <li><strong>On</strong> — premium running product clearing at full price with limited markdown.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3 style="color:var(--hot)">Revenue leaning on promotion</h3>
+          <ul class="list list--hot">
+            <li><strong>adidas</strong> — the post-Yeezy clean-up ran through promotional and outlet channels.</li>
+            <li><strong>Nike</strong> — digital and outlet discounting has been doing real work to clear elevated inventory.</li>
+            <li><strong>UGG</strong> — seasonal and more discount-sensitive, though still a profitable cash cow.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="small" style="margin-top:16px">This is also the early-warning system. If Lululemon or Hoka start discounting hard, the thesis is breaking before the revenue line shows it.</p>
+    </section>
+
+    <!-- 12 ============================================================= -->
+    <section class="slide" data-title="The tariff stack">
+      <p class="eyebrow">Slide 12 · Section 3 — Tariffs</p>
+      <h2>What it costs to land a shoe in the US</h2>
+      <p class="lede">Duties now come in layers. Pick a route to see the stack as of mid-August 2026.</p>
+      <div class="chips" id="tariffChips" style="margin:16px 0 18px"></div>
+      <div class="split">
+        <div class="panel" id="tariffBox"></div>
+        <div class="stack">
+          <div class="panel panel--ink">
+            <h3>The moving part</h3>
+            <p class="small">The 10% Section 122 surcharge, imposed 24 February 2026, is statutorily temporary — up to 150 days, so a sunset around 24 July 2026. USTR has proposed replacing it with 10–12.5% Section 301 duties across a wide set of countries including Vietnam, India, Thailand and China.</p>
+            <p class="small" style="margin-bottom:0">Translation: the number in the box is a snapshot of a stack that is still being rebuilt. Most of the current level is already in guidance; the unpriced risk is further escalation.</p>
+          </div>
+          <p class="note">Base MFN duty on footwear averages 11–12.5%, ranging from near zero to about 48% by category; apparel base is around 16.5%.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 ============================================================= -->
+    <section class="slide" data-title="Sourcing exposure">
+      <p class="eyebrow">Slide 13 · Section 3 — Supply chain</p>
+      <h2>Who is standing in the blast radius</h2>
+      <div class="split">
+        <div class="panel">
+          <h3>Sourcing by country</h3>
+          <div id="sourcing"></div>
+          <p class="note" style="margin-top:12px;margin-bottom:0">Nike: share of footwear production, FY26. adidas and Puma: share of total volume. Puma is shown as a comparator for how concentrated this industry can get.</p>
+        </div>
+        <div class="stack">
+          <p class="lede">Nike and adidas both source well over half their volume from Vietnam and Indonesia, and mid-teens percentages from China. Neither owns a factory — essentially all production is outsourced.</p>
+          <div class="panel">
+            <h3>Lower exposure</h3>
+            <p class="small"><strong>On</strong> — concentrated in Vietnam and China too, but far smaller absolute scale and more flexibility to move.</p>
+            <p class="small"><strong>Deckers</strong> — Asian manufacturing, but diversified across origins and two very different brands.</p>
+            <p class="small" style="margin-bottom:0"><strong>Lululemon</strong> — mainly apparel, sourced across North America and Asia; exposed to apparel duties rather than China-specific footwear surcharges.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 ============================================================= -->
+    <section class="slide" data-title="Margin math">
+      <p class="eyebrow">Slide 14 · Section 3 — What it does to earnings</p>
+      <h2>The margin math, and the three ways out</h2>
+      <div class="split">
+        <div class="panel panel--ink">
+          <span class="num" style="color:#fff">30–50 bps<small>Gross margin hit for Nike or adidas from each 1 point rise in the blended tariff on Asian imports</small></span>
+          <p class="small" style="margin-top:16px;margin-bottom:0">At their operating leverage that compounds into a low- to mid-single-digit percentage hit to EPS before any mitigation. The effect scales with how much of cost of goods comes from the taxed origin — which is why the sourcing table on the previous slide is the real risk map.</p>
+        </div>
+        <div class="stack">
+          <h3>Mitigation levers, ranked by who can actually pull them</h3>
+          <div class="panel">
+            <p class="small"><strong>1 · Raise prices.</strong> Works where the brand has power: Lululemon, Hoka, On, premium adidas lines. Nike's recent price actions have met mixed elasticity, especially in China and lower-tier product.</p>
+            <p class="small"><strong>2 · Move production and share cost with vendors.</strong> Shift out of China to Vietnam, Indonesia, India. Nike and adidas have already done a decade of this — the easy moves are behind them.</p>
+            <p class="small" style="margin-bottom:0"><strong>3 · Shift the mix.</strong> More DTC, more premium, more non-US revenue. Deckers and Lululemon are positioned for this. Nike's DTC margin has compressed, which closes the lever just when it is needed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15 ============================================================= -->
+    <section class="slide" data-title="Value trap test">
+      <p class="eyebrow">Slide 15 · Section 4 — Value trap test</p>
+      <h2>Cheap, or broken?</h2>
+      <p class="lede">The test: is the problem cyclical or structural? Tap a card for the verdict.</p>
+      <div class="flips" id="flips" style="margin-top:18px"></div>
+    </section>
+
+    <!-- 16 ============================================================= -->
+    <section class="slide" data-title="Scenarios">
+      <p class="eyebrow">Slide 16 · Section 5 — Scenarios</p>
+      <h2>Bear, base, bull</h2>
+      <p class="lede">Indicative three-year outcomes against today's price. Pick a name.</p>
+      <div class="chips" id="scenChips" style="margin:16px 0 20px"></div>
+      <div class="split">
+        <div>
+          <div id="scenBars"></div>
+          <p class="note">Ranges are assumption-based and directional — a framework for sizing, not a forecast.</p>
+        </div>
+        <div class="panel" id="scenText"></div>
+      </div>
+    </section>
+
+    <!-- 17 ============================================================= -->
+    <section class="slide" data-title="Risk and reward">
+      <p class="eyebrow">Slide 17 · Section 5 — Skew</p>
+      <h2>The shape of the bet</h2>
+      <p class="lede">Rank by asymmetry, not by upside. The question is how much you make if right versus lose if wrong.</p>
+      <div style="overflow-x:auto;margin-top:16px">
+        <table class="tbl">
+          <thead><tr><th>Name</th><th>Downside if wrong</th><th>Base case</th><th>Upside if right</th><th>Skew</th></tr></thead>
+          <tbody>
+            <tr><td>LULU</td><td class="cheap">−20 to −30%</td><td>+60 to +80%</td><td>&gt;+100%</td><td class="cheap">Best in group</td></tr>
+            <tr><td>DECK</td><td class="cheap">−20 to −30%</td><td>+40 to +60%</td><td>+80 to +100%</td><td class="cheap">Strongly favourable</td></tr>
+            <tr><td>ONON</td><td>−20 to −30%</td><td>+40 to +60%</td><td>&gt;+100%</td><td>Good, growth-dependent</td></tr>
+            <tr><td>ADDYY</td><td>−25 to −35%</td><td>+25 to +40%</td><td>+60 to +80%</td><td>Balanced</td></tr>
+            <tr><td>NKE</td><td class="rich">−30%</td><td>Around flat</td><td>+40 to +50%</td><td class="rich">About 1.5 : 1 — thin</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small" style="margin-top:16px">Nike's problem is not that it cannot go up. It is that you are paid roughly 1.5 to 1 to take structural China risk, while Lululemon pays you three to one for a sentiment problem.</p>
+    </section>
+
+    <!-- 18 ============================================================= -->
+    <section class="slide" data-title="Catalysts and timing">
+      <p class="eyebrow">Slide 18 · Section 6 — Horizon and catalysts</p>
+      <h2>What has to happen, and when you'd see it</h2>
+      <div class="split">
+        <div class="panel">
+          <h3>The calendar</h3>
+          <div class="timeline">
+            <div class="tl"><b>Around 24 July 2026</b>Section 122 surcharge sunsets unless extended; proposed Section 301 replacements take shape. Watch gross margin and sourcing commentary in the next filings.</div>
+            <div class="tl"><b>Next 4–8 quarters</b>Everything else lands in quarterly earnings: revenue by region, gross margin, inventory versus sales, DTC mix.</div>
+            <div class="tl"><b>1–3 quarter lag</b>Typical delay between an earnings inflection and the market re-rating it, while analysts rebuild models.</div>
+            <div class="tl"><b>2–3 years</b>Enough time to settle On, Deckers and Lululemon. Nike and adidas are 3–5 year questions — their issues resolve slower than your horizon.</div>
+          </div>
+        </div>
+        <div>
+          <h3>The dashboard — tick what you'll track</h3>
+          <div id="dash"></div>
+          <p class="note" style="margin-top:12px">Set trigger bands: China revenue growth below zero for two quarters, gross margin down more than 200bps, or inventory growing at twice the rate of sales — any one of those forces a thesis review.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 19 ============================================================= -->
+    <section class="slide" data-title="Position sizing and entries">
+      <p class="eyebrow">Slide 19 · Section 7 — Construction</p>
+      <h2>Sizing and entry discipline</h2>
+      <div class="split">
+        <div>
+          <h3>Position sizes, within a 15% sector cap</h3>
+          <div id="alloc"></div>
+          <p class="small" style="margin-top:14px">The cap matters as much as the picks. These five move together on China headlines, tariff news and consumer data, so the sleeve behaves like one position more often than five.</p>
+        </div>
+        <div>
+          <h3>Buy zones — valuation bands, not price targets</h3>
+          <div class="panel">
+            <dl class="kv" style="margin:0"><dt>LULU · accumulate</dt><dd>P/E ≤ 12× · EV/EBITDA ≤ 7×</dd></dl>
+            <dl class="kv" style="margin:0"><dt>DECK · accumulate</dt><dd>P/E ≤ 14× · EV/EBITDA ≤ 10×</dd></dl>
+            <dl class="kv" style="margin:0"><dt>ONON · enter</dt><dd>P/E ≤ 25× · EV/EBITDA ≤ 20×</dd></dl>
+            <dl class="kv" style="margin:0"><dt>ADDYY · trade only</dt><dd>P/E ≤ 17× · EV/EBITDA ≤ 10×, with China progress</dd></dl>
+            <dl class="kv" style="margin:0"><dt>NKE · no new buys</dt><dd>Until P/E &lt; 18× and China stabilises</dd></dl>
+          </div>
+          <p class="small" style="margin-top:14px">Build in 3–4 tranches per name, triggered by valuation thresholds and confirmed catalysts rather than dates. Trim back toward historical medians — Lululemon or Deckers above 15× EV/EBITDA, On above 35× forward.</p>
+          <p class="note">Tax: hold past 12 months for long-term treatment. ADDYY carries German dividend withholding and small depositary fees; avoid repurchasing within 30 days of realising a loss.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 20 ============================================================= -->
+    <section class="slide" data-title="Kill criteria">
+      <p class="eyebrow">Slide 20 · Section 7 — Before you buy anything</p>
+      <h2>Write the exit before the entry</h2>
+      <p class="lede">Kill criteria are the events that end a position regardless of price. Decide them now, while you have no money on the line.</p>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="panel">
+          <ul class="list list--hot">
+            <li><strong>LULU</strong> — several quarters of negative comps in core markets, margins sustained below the low teens, or visible loss of premium positioning through heavy discounting.</li>
+            <li><strong>DECK</strong> — Hoka growth drops to low single digits and stays there, or UGG declines structurally with nothing offsetting it.</li>
+            <li><strong>ONON</strong> — growth falls below high single digits for several quarters, or margins collapse into discounting: brand heat fading.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <ul class="list list--hot">
+            <li><strong>ADDYY</strong> — China recovery stalls and margins miss targets, or the terrace cycle ends without a replacement product hit.</li>
+            <li><strong>NKE</strong> — further China share loss plus sustained margin decline with no credible turnaround. Exit even at a loss.</li>
+          </ul>
+          <p class="small" style="margin-top:14px;margin-bottom:0">Full exit when valuation is rich <em>and</em> the catalysts have played out — or the moment a kill criterion trips, whichever comes first.</p>
+        </div>
+      </div>
+      <div class="panel panel--ink" style="margin-top:18px">
+        <p class="small" style="margin-bottom:0">This deck summarises one research document for education. It is not personalised investment advice, and I'm not a financial adviser. Multiples, tariff rates and share figures move — verify current data before acting, and stress-test the assumptions against your own models and tax position.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="hud">
+  <div class="nav">
+    <button type="button" id="prev" aria-label="Previous slide">←</button>
+    <button type="button" id="next" aria-label="Next slide">→</button>
+  </div>
+  <span class="hud__title" id="hudTitle"></span>
+  <span class="hud__count" id="hudCount"></span>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- data ---------- */
+const NAMES = {
+  NKE:{co:"Nike",   dd:73, color:"var(--r5)"},
+  ADS:{co:"adidas", dd:47, color:"var(--r4)"},
+  ONON:{co:"On Holding", dd:37, color:"var(--r3)"},
+  DECK:{co:"Deckers", dd:50, color:"var(--r2)"},
+  LULU:{co:"Lululemon", dd:75, color:"var(--r1)"}
+};
+
+const RANKS = [
+  {r:1,tk:"LULU",co:"Lululemon",w:"5–6% of sleeve",th:"The clearest mispricing: a premium global brand at near-value multiples.",
+   more:"Down 70–75% while earnings held and China kept growing. Forward P/E around 10× and EV/EBITDA of 5–6× against a 10-year median near 19×. The market is pricing zero growth into a business running mid-teens EBIT margins. Core long."},
+  {r:2,tk:"DECK",co:"Deckers",w:"3–4%",th:"High-return compounder on a low-teens multiple, carried by Hoka.",
+   more:"Roughly 50% off 2024 highs while earnings kept growing — almost pure de-rating. Low-teens forward P/E and single-digit EV/EBITDA for a business with high ROIC, very low net debt and Hoka now bigger than UGG. Risk is deceleration, not impairment."},
+  {r:3,tk:"ONON",co:"On Holding",w:"3–4%",th:"Real growth at a multiple that finally makes sense.",
+   more:"Forward P/E collapsed from a five-year average above 50× to about 22× while revenue and margins inflected upward. Still priced for mid-teens growth, so it is the most expectation-sensitive name here — but most of the de-rating has already happened."},
+  {r:4,tk:"ADDYY",co:"adidas ADR",w:"2–3%",th:"A cyclical turnaround at a market multiple. Trade, not core.",
+   more:"Forward P/E near 18–19× and EV/EBITDA around 10× — cheap against its own rich history, roughly in line with Nike and the S&P 500. Gulden has delivered early milestones, but China share is structurally ceded and the Samba cycle is a fashion bet."},
+  {r:5,tk:"NKE",co:"Nike",w:"0–2%, or nothing",th:"Premium price, structural problems. Avoid or underweight.",
+   more:"The only name where roughly half the drawdown is genuine earnings loss. Still trades richer than the S&P 500 on forward earnings, with China share slipping to the mid-teens and DTC margins compressed. You are not being paid for the risk."}
+];
+
+const VAL = [
+  {tk:"LULU", pe:"10–11×", hist:"~20–22×", ev:"5–6×",  histV:"Deepest discount to its own history in the group", mktV:"Roughly half the S&P 500 multiple", cls:"cheap"},
+  {tk:"DECK", pe:"~12×",   hist:"mid-teens to 20×", ev:"8–10×", histV:"Clear discount, and earnings still growing", mktV:"Well below market and sector", cls:"cheap"},
+  {tk:"ADDYY",pe:"18–19×", hist:"mid-20s+",  ev:"~10×", histV:"Below its own historic premium", mktV:"About in line with the market", cls:""},
+  {tk:"ONON", pe:"22–23×", hist:"&gt;50×",      ev:"16–22×",histV:"Huge discount to its own history", mktV:"A modest premium to the market", cls:""},
+  {tk:"NKE",  pe:"23–25×", hist:"high-20s/low-30s", ev:"13–14×", histV:"Only modestly below average, on lower earnings", mktV:"Still a premium to the market", cls:"rich"}
+];
+
+const CHEAP = [
+  {tk:"LULU",v:"Genuinely cheap",t:"Value multiples on a quality, still-growing business.",c:"var(--r1)"},
+  {tk:"DECK",v:"Reasonably cheap",t:"Low-teens P/E against high ROIC and growth.",c:"var(--r2)"},
+  {tk:"ONON",v:"Fairly priced",t:"Dislocated versus its own past, only modest versus the market.",c:"var(--r3)"},
+  {tk:"ADDYY",v:"Moderately cheap",t:"Market-like multiples on mid-cycle earnings.",c:"var(--r4)"},
+  {tk:"NKE",v:"Not cheap",t:"A premium multiple on impaired earnings.",c:"var(--r5)"}
+];
+
+const TARIFFS = {
+  "vn-foot":{label:"Footwear · Vietnam", parts:[["Base MFN duty",12.5],["Section 122 surcharge",10]], total:"12.5 – 22.5%",
+    note:"No China-style Section 301 layer. Reverts to base duty plus whatever forced-labour surcharge replaces Section 122 — a 10–12.5% proposal is on the table."},
+  "cn-foot":{label:"Footwear · China", parts:[["Base MFN duty",16],["Section 122 surcharge",10],["Section 301 add-on",16]], total:"35 – 55%",
+    note:"Base runs 12.5–20% depending on category; Section 301 is usually 7.5% for List 4A footwear and up to 25% for some categories. This is the worst route into the US."},
+  "vn-app":{label:"Apparel · Vietnam", parts:[["Base MFN duty",16.5],["Section 122 surcharge",10]], total:"~26.5%",
+    note:"Apparel carries a higher base rate than footwear. This is the route that matters most for Lululemon."},
+  "cn-app":{label:"Apparel · China", parts:[["Base MFN duty",16.5],["Section 122 surcharge",10],["Section 301 add-on",7.5]], total:"24 – 34%",
+    note:"Section 301 pushes effective apparel rates into the high twenties and low thirties."}
+};
+
+const TRAP = [
+  {tk:"LULU",q:"Is the slowdown a growth scare or a broken brand?",v:"Low risk",cls:"v-low",
+   a:"Athleisure growth is moderating to high single digits, but Lululemon's brand, pricing and China momentum are intact. Low net debt, strong free cash flow, inventory growing in line with expansion. The fear looks cyclical."},
+  {tk:"DECK",q:"Does Hoka's growth curve hold, or is UGG the whole company?",v:"Low risk",cls:"v-low",
+   a:"Hoka now exceeds UGG in revenue with high ROIC and healthy launches; UGG is a stable seasonal cash cow. Very low net debt, disciplined buybacks, no accounting flags. The risk is deceleration, not impairment."},
+  {tk:"ONON",q:"Is the growth real, or is this early-cycle enthusiasm?",v:"Low–moderate",cls:"v-low",
+   a:"Revenue is compounding across all three regions with expanding margins and low net debt. The genuine risk is over-investment or saturation before the multiple fully normalises — a growth disappointment, not a trap."},
+  {tk:"ADDYY",q:"Is the recovery a turnaround or a fashion cycle?",v:"Moderate",cls:"v-mid",
+   a:"Yeezy and inventory issues are cleaned up and margins are recovering, but the current cycle harvests terrace fashion rather than performance innovation. China share is structurally ceded. Less trap-like than Nike, but it can still disappoint."},
+  {tk:"NKE",q:"Can China and DTC margins come back?",v:"Real trap risk",cls:"v-high",
+   a:"Domestic Chinese brands have crossed 50% share and the shift is political as much as commercial. If China never returns to prior margins and tariffs keep ROIC lower, today's premium multiple is not compensation — it is the trap."}
+];
+
+const SCEN = {
+  LULU:{bear:-25,base:70,bull:110,txt:"<h3>Lululemon</h3><p class='small'><strong>Bear</strong> — growth slows to 3–4% and margins compress to the low teens; multiples stay depressed. Down 20–30%.</p><p class='small'><strong>Base</strong> — 6–8% revenue growth with stable margins, and the multiple normalises toward 15× earnings. Up 60–80%.</p><p class='small'><strong>Bull</strong> — 10–12% growth, high margins sustained, China and APAC strong; multiple back to the mid-teens on both earnings and EBITDA. More than double.</p>"},
+  DECK:{bear:-25,base:50,bull:90,txt:"<h3>Deckers</h3><p class='small'><strong>Bear</strong> — Hoka growth slows sharply and UGG stagnates. Down 20–30%.</p><p class='small'><strong>Base</strong> — 8–10% revenue growth with stable margins. Up 40–60%.</p><p class='small'><strong>Bull</strong> — Hoka stays a powerhouse above 15% growth with margin expansion. Up 80–100%.</p>"},
+  ONON:{bear:-25,base:50,bull:100,txt:"<h3>On Holding</h3><p class='small'><strong>Bear</strong> — growth slows to high single digits, margins merely stabilise. Down 20–30%.</p><p class='small'><strong>Base</strong> — mid-teens growth with modest margin expansion. Up 40–60% over three years.</p><p class='small'><strong>Bull</strong> — growth stays above 20% with strong margin expansion. More than double.</p>"},
+  ADDYY:{bear:-30,base:32,bull:70,txt:"<h3>adidas</h3><p class='small'><strong>Bear</strong> — China stagnates, the Samba cycle fades, margins stall below 8%. Down 25–35%.</p><p class='small'><strong>Base</strong> — 4–5% revenue growth, margins reach 10–11%. Up 25–40%.</p><p class='small'><strong>Bull</strong> — stronger China plus sustained fashion hits. Up 60–80%.</p>"},
+  NKE:{bear:-30,base:2,bull:50,txt:"<h3>Nike</h3><p class='small'><strong>Bear</strong> — revenue flat to down, EBIT margin stuck below 10%, tariffs and China drag on. Down 20–30%.</p><p class='small'><strong>Base</strong> — 3–4% growth with margins recovering to the mid teens over 3–5 years. Roughly today's price.</p><p class='small'><strong>Bull</strong> — mid-single-digit growth, high-teens margins, China re-accelerates. Up 40–60%.</p><p class='small' style='color:var(--hot)'>Note the shape: the base case is flat. That is why it ranks last.</p>"}
+};
+
+const DASH = [
+  "Revenue by region — North America, Greater China, EMEA, Asia-Pacific",
+  "Constant-currency growth by region and by footwear versus apparel",
+  "Gross margin and operating margin trend",
+  "Inventory growth versus sales growth, and discount depth",
+  "DTC versus wholesale mix, and DTC margin",
+  "China market-share updates on Nike and adidas versus Anta and Li-Ning",
+  "Tariff developments — Section 122 sunset, new Section 301 rules",
+  "FX: dollar against euro, Swiss franc and renminbi",
+  "Capex and store counts, especially China and Asia-Pacific",
+  "Buybacks and capital allocation",
+  "Search and social interest in flagship products",
+  "Benchmarks: S&P 500 forward P/E, consumer discretionary EV/EBITDA"
+];
+
+/* ---------- build: cover ---------- */
+(function(){
+  const cap = {NKE:"Peak 2021",ADS:"Peak 2021",ONON:"Peak 2025",DECK:"Peak 2024",LULU:"Peak 2023–25"};
+  document.getElementById("coverField").innerHTML = Object.entries(NAMES).map(([tk,d])=>`
+    <div class="lane">
+      <span class="lane__pct">−${d.dd}%</span>
+      <div class="lane__bar" style="--h:${d.dd}%;background:${d.color}"></div>
+      <span class="lane__tk">${tk}</span>
+      <span class="lane__cap">${d.co} · ${cap[tk]}</span>
+    </div>`).join("");
+})();
+
+/* ---------- build: ranks ---------- */
+document.getElementById("ranks").innerHTML = RANKS.map(r=>`
+  <button type="button" class="rank" data-r="${r.r}" aria-expanded="false">
+    <span class="rank__n">${r.r}</span>
+    <span class="rank__tk">${r.tk}<span class="rank__co">${r.co}</span></span>
+    <span class="rank__th">${r.th}</span>
+    <span class="rank__w">${r.w}</span>
+    <span class="rank__more">${r.more}</span>
+  </button>`).join("");
+document.querySelectorAll(".rank").forEach(b=>b.addEventListener("click",()=>{
+  const open = b.classList.toggle("is-open");
+  b.setAttribute("aria-expanded", open ? "true":"false");
+}));
+
+/* ---------- build: cause toggle (slide 3) ---------- */
+const CAUSE = {
+  e:`<h3 style="color:var(--hot)">Earnings fell 60%, multiple unchanged</h3>
+     <p class="small">The company earns less. At the same 20× multiple, the price falls with it — and the stock is exactly as expensive as before. Nothing got cheaper. You now own a smaller business at the same price per unit of profit.</p>
+     <p class="small" style="margin-bottom:0"><strong>What you need:</strong> a genuine operational recovery. <strong>Group example:</strong> roughly half of Nike's decline.</p>`,
+  m:`<h3 style="color:var(--blue)">Earnings unchanged, multiple fell 60%</h3>
+     <p class="small">The company earns the same. Investors simply pay 8× instead of 20× for it. The business is intact; only the price tag moved. Every dollar of profit now costs you 60% less.</p>
+     <p class="small" style="margin-bottom:0"><strong>What you need:</strong> sentiment to normalise. <strong>Group example:</strong> almost all of Lululemon's decline.</p>`
+};
+const causeBox = document.getElementById("causeBox");
+causeBox.innerHTML = CAUSE.e;
+document.querySelectorAll("[data-cause]").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("[data-cause]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  causeBox.innerHTML = CAUSE[b.dataset.cause];
+}));
+
+/* ---------- build: anatomy (slide 4) ---------- */
+(function(){
+  const rows = [
+    {tk:"LULU",dd:75,m:90,e:10,lab:"Almost entirely de-rating"},
+    {tk:"DECK",dd:50,m:85,e:15,lab:"De-rating, earnings still growing"},
+    {tk:"ONON",dd:37,m:100,e:0,lab:"All de-rating — earnings rose"},
+    {tk:"ADS", dd:47,m:60,e:40,lab:"Mixed: old earnings shock plus compression"},
+    {tk:"NKE", dd:73,m:50,e:50,lab:"Half the damage is real earnings loss"}
+  ];
+  document.getElementById("anatomy").innerHTML = rows.map(r=>`
+    <div>
+      <div class="bar__top"><span class="bar__name">${r.tk} <span style="font-family:var(--body);font-weight:400;font-size:12.5px;color:var(--slate);text-transform:none;letter-spacing:0">${r.lab}</span></span><span class="bar__val">−${r.dd}%</span></div>
+      <div class="sbar">
+        <span class="seg-m" style="--w:${r.m}%">${r.m}% multiple</span>
+        ${r.e>0?`<span class="seg-e" style="--w:${r.e}%">${r.e}%</span>`:`<span class="seg-0" style="--w:0.001%"></span>`}
+      </div>
+    </div>`).join("");
+})();
+
+/* ---------- helper: bar row ---------- */
+function bars(list, color){
+  const max = Math.max(...list.map(x=>x.v));
+  return list.map(x=>`
+    <div class="bar">
+      <div class="bar__top"><span class="bar__name">${x.n}</span><span class="bar__val">${x.l}</span></div>
+      <div class="bar__track"><div class="bar__fill" style="--w:${(x.v/max*100).toFixed(1)}%;background:${x.c||color||"var(--blue)"}"></div></div>
+    </div>`).join("");
+}
+
+/* ---------- slide 6 / 9 / 10 / 13 charts ---------- */
+document.getElementById("lulu").innerHTML = bars([
+  {n:"Americas FY22",v:5.3,l:"$5.3bn",c:"#9AA6C9"},{n:"Americas FY25",v:7.9,l:"$7.9bn"},
+  {n:"China FY22",v:0.52,l:"$0.52bn",c:"#9AA6C9"},{n:"China FY25",v:1.36,l:"$1.36bn"},
+  {n:"Rest of world FY22",v:0.52,l:"$0.52bn",c:"#9AA6C9"},{n:"Rest of world FY25",v:1.30,l:"$1.30bn"}
+]);
+
+document.getElementById("chinaShare").innerHTML = bars([
+  {n:"Domestic brands 2015",v:29,l:"under 30%",c:"#9AA6C9"},
+  {n:"Domestic brands 2025",v:50,l:"about 50%",c:"var(--hot)"},
+  {n:"Anta today",v:22,l:"21–23%",c:"var(--hot)"},
+  {n:"Li-Ning today",v:9.5,l:"9–10%",c:"var(--hot)"},
+  {n:"Nike today",v:15,l:"mid-teens",c:"var(--ink)"},
+  {n:"adidas today",v:8.5,l:"8–9%",c:"var(--ink)"}
+]);
+
+document.getElementById("onRegions").innerHTML = bars([
+  {n:"Americas 2022",v:764,l:"$764m",c:"#9AA6C9"},{n:"Americas 2025",v:1740,l:"$1.74bn"},
+  {n:"EMEA 2022",v:378,l:"$378m",c:"#9AA6C9"},{n:"EMEA 2025",v:763,l:"$763m"},
+  {n:"APAC 2022",v:80,l:"$80m",c:"#9AA6C9"},{n:"APAC 2025",v:500,l:"over $500m"}
+]);
+
+document.getElementById("deckMix").innerHTML = bars([
+  {n:"Hoka",v:2.58,l:"$2.58bn"},{n:"UGG and rest",v:2.74,l:"$2.74bn",c:"#9AA6C9"},
+  {n:"United States",v:3.19,l:"$3.19bn"},{n:"International",v:2.28,l:"$2.28bn",c:"#9AA6C9"},
+  {n:"DTC",v:2.2,l:"over $2.2bn"}
+]);
+
+document.getElementById("luluGrow").innerHTML = bars([
+  {n:"Americas",v:7.9,l:"$7.9bn"},
+  {n:"China Mainland",v:1.36,l:"$1.36bn · growing fast"},
+  {n:"Rest of world",v:1.30,l:"$1.30bn"},
+  {n:"Outside N. America",v:2.66,l:"over $2.6bn",c:"var(--ink)"}
+]);
+
+document.getElementById("sourcing").innerHTML = bars([
+  {n:"Nike · Vietnam",v:52,l:"52%",c:"var(--hot)"},
+  {n:"Nike · Indonesia",v:27,l:"27%",c:"var(--hot)"},
+  {n:"Nike · China",v:16,l:"16%",c:"var(--hot)"},
+  {n:"adidas · Vietnam",v:27,l:"27%",c:"var(--r4)"},
+  {n:"adidas · Indonesia",v:18,l:"18%",c:"var(--r4)"},
+  {n:"adidas · China",v:16,l:"16%",c:"var(--r4)"},
+  {n:"Puma · China",v:28,l:"28%",c:"#9AA6C9"},
+  {n:"Puma · Vietnam",v:26,l:"26%",c:"#9AA6C9"}
+]);
+
+/* ---------- slide 7: valuation table ---------- */
+function renderVal(view){
+  document.getElementById("colB").textContent = view==="hist" ? "5–10yr average P/E" : "S&P 500 forward P/E";
+  document.getElementById("colD").textContent = view==="hist" ? "Against its own history" : "Against the market";
+  document.getElementById("valNote").textContent = view==="hist"
+    ? "Every name is below its own average. That alone proves nothing."
+    : "S&P 500 forward P/E about 19–20×; consumer discretionary EV/EBITDA about 19.6×.";
+  document.getElementById("valBody").innerHTML =
+    VAL.map(v=>`<tr><td>${v.tk}</td><td class="${v.cls}">${v.pe}</td><td>${view==="hist"?v.hist:"19–20×"}</td><td class="${v.cls}">${v.ev}</td><td style="text-align:left">${view==="hist"?v.histV:v.mktV}</td></tr>`).join("")
+    + `<tr class="bench"><td>Benchmark</td><td>19–20×</td><td>—</td><td>~19.6×</td><td style="text-align:left">S&P 500 forward P/E · sector EV/EBITDA</td></tr>`;
+}
+renderVal("hist");
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("[data-view]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  renderVal(b.dataset.view);
+}));
+
+/* ---------- slide 8: cheapness cards ---------- */
+document.getElementById("cheapCards").innerHTML = CHEAP.map(c=>`
+  <div class="panel" style="border-top:5px solid ${c.c}">
+    <span class="rank__tk" style="font-size:24px">${c.tk}</span>
+    <div class="verdict" style="color:${c.c};font-size:20px;margin:8px 0 8px">${c.v}</div>
+    <p class="small" style="margin-bottom:0">${c.t}</p>
+  </div>`).join("");
+
+/* ---------- slide 12: tariffs ---------- */
+const tChips = document.getElementById("tariffChips");
+tChips.innerHTML = Object.entries(TARIFFS).map(([k,v],i)=>
+  `<button type="button" class="chip" data-t="${k}" aria-pressed="${i===0}">${v.label}</button>`).join("");
+function renderTariff(key){
+  const t = TARIFFS[key];
+  const sum = t.parts.reduce((a,b)=>a+b[1],0);
+  document.getElementById("tariffBox").innerHTML = `
+    <h3>${t.label}</h3>
+    ${t.parts.map((p,i)=>`
+      <div class="bar">
+        <div class="bar__top"><span class="bar__name" style="font-size:15px">${p[0]}</span><span class="bar__val">${p[1]}%</span></div>
+        <div class="bar__track"><div class="bar__fill" style="width:${(p[1]/sum*100).toFixed(1)}%;background:${i===0?"var(--ink)":i===1?"var(--blue)":"var(--hot)"}"></div></div>
+      </div>`).join("")}
+    <div class="num" style="margin-top:14px;color:${key.startsWith("cn")?"var(--hot)":"var(--blue)"}">${t.total}<small>Typical effective landed duty</small></div>
+    <p class="small" style="margin:14px 0 0">${t.note}</p>`;
+}
+renderTariff("vn-foot");
+tChips.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+  tChips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  renderTariff(b.dataset.t);
+}));
+
+/* ---------- slide 15: flip cards ---------- */
+document.getElementById("flips").innerHTML = TRAP.map(t=>`
+  <button type="button" class="flip" aria-label="${t.tk} value trap verdict">
+    <span class="flip__in">
+      <span class="flip__f">
+        <span class="flip__tk">${t.tk}</span>
+        <p class="small" style="margin-top:12px">${t.q}</p>
+        <span class="flip__q">Tap to reveal →</span>
+      </span>
+      <span class="flip__b">
+        <span class="flip__tk">${t.tk}</span>
+        <span class="verdict ${t.cls}">${t.v}</span>
+        <p class="small" style="margin:0">${t.a}</p>
+      </span>
+    </span>
+  </button>`).join("");
+document.querySelectorAll(".flip").forEach(f=>f.addEventListener("click",()=>f.classList.toggle("is-flipped")));
+
+/* ---------- slide 16: scenarios ---------- */
+const sChips = document.getElementById("scenChips");
+sChips.innerHTML = Object.keys(SCEN).map((k,i)=>
+  `<button type="button" class="chip" data-s="${k}" aria-pressed="${i===0}">${k}</button>`).join("");
+function renderScen(key){
+  const s = SCEN[key];
+  const scale = v => Math.min(Math.abs(v),120)/120*66.6;   // 66.6% of track = +120%
+  const row = (lab,v,col)=>{
+    const neg = v<0, w = scale(v);
+    const left = neg ? (33.3 - w) : 33.3;
+    return `<div class="scen">
+      <span class="scen__lab">${lab}</span>
+      <div class="axis"><div class="axis__zero"></div>
+        <div class="axis__fill" style="left:${left}%;width:${w}%;background:${col}"></div>
+        <span class="axis__val" style="left:calc(${neg?left:left+w}% ${neg?"- 8px":"+ 8px"});transform:translate(${neg?"-100%":"0"},-50%);color:${col}">${v>0?"+":""}${v}%</span>
+      </div></div>`;
+  };
+  document.getElementById("scenBars").innerHTML =
+    row("Bear", s.bear, "var(--hot)") + row("Base", s.base, "var(--ink)") + row("Bull", s.bull, "var(--blue)");
+  document.getElementById("scenText").innerHTML = s.txt;
+}
+renderScen("LULU");
+sChips.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+  sChips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  renderScen(b.dataset.s);
+}));
+
+/* ---------- slide 18: dashboard ---------- */
+document.getElementById("dash").innerHTML = DASH.map((d,i)=>
+  `<label class="check"><input type="checkbox" data-d="${i}"><span>${d}</span></label>`).join("");
+document.querySelectorAll(".check input").forEach(c=>c.addEventListener("change",e=>{
+  e.target.closest(".check").classList.toggle("is-done", e.target.checked);
+}));
+
+/* ---------- slide 19: allocation ---------- */
+document.getElementById("alloc").innerHTML = bars([
+  {n:"LULU",v:5.5,l:"5–6% · core long",c:"var(--r1)"},
+  {n:"DECK",v:3.5,l:"3–4%",c:"var(--r2)"},
+  {n:"ONON",v:3.5,l:"3–4%",c:"var(--r3)"},
+  {n:"ADDYY",v:2.5,l:"2–3% · trade",c:"var(--r4)"},
+  {n:"NKE",v:1,l:"0–2% · or nothing",c:"var(--r5)"},
+  {n:"Sector cap",v:15,l:"15% of the equity sleeve",c:"var(--ink)"}
+]);
+
+/* ---------- deck engine ---------- */
+const slides = [...document.querySelectorAll(".slide")];
+const rail = document.getElementById("rail");
+const railNum = document.getElementById("railNum");
+const hudTitle = document.getElementById("hudTitle");
+const hudCount = document.getElementById("hudCount");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+let idx = 0;
+
+rail.innerHTML = slides.map((s,i)=>
+  `<button type="button" class="tick" data-i="${i}" aria-label="Slide ${i+1}: ${s.dataset.title}"></button>`).join("");
+const ticks = [...rail.querySelectorAll(".tick")];
+ticks.forEach(t=>t.addEventListener("click",()=>go(+t.dataset.i)));
+
+function go(n){
+  idx = Math.max(0, Math.min(slides.length-1, n));
+  slides.forEach((s,i)=>{
+    s.classList.toggle("is-active", i===idx);
+    s.classList.toggle("is-past", i<idx);
+    s.setAttribute("aria-hidden", i===idx ? "false":"true");
+    if(i===idx) s.scrollTop = 0;
+  });
+  ticks.forEach((t,i)=>t.setAttribute("aria-current", i===idx ? "true":"false"));
+  const n1 = String(idx+1).padStart(2,"0");
+  railNum.textContent = n1;
+  hudTitle.textContent = slides[idx].dataset.title;
+  hudCount.textContent = n1 + " / " + String(slides.length).padStart(2,"0");
+  prevBtn.disabled = idx===0;
+  nextBtn.disabled = idx===slides.length-1;
+}
+prevBtn.addEventListener("click",()=>go(idx-1));
+nextBtn.addEventListener("click",()=>go(idx+1));
+
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea")) return;
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();go(idx+1);}
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(idx-1);}
+  else if(e.key==="Home"){go(0);}
+  else if(e.key==="End"){go(slides.length-1);}
+});
+
+let tx=0, ty=0;
+const stage = document.getElementById("stage");
+stage.addEventListener("touchstart",e=>{tx=e.changedTouches[0].clientX;ty=e.changedTouches[0].clientY;},{passive:true});
+stage.addEventListener("touchend",e=>{
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.6) go(idx + (dx<0?1:-1));
+},{passive:true});
+
+go(0);
+</script>
+</body>
+</html>
