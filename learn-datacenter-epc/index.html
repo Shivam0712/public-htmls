@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Index — Datacenter Course</title>
+<style>
+  :root{
+    --bg:#faf9f5; --ink:#232120; --muted:#6b675f; --accent:#b05730;
+    --card:#ffffff; --line:#e6e2d8; --code:#f1efe8;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#161514; --ink:#e8e5df; --muted:#a09a8e; --accent:#e08a5c;
+           --card:#1f1d1b; --line:#33302c; --code:#242220; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:17px/1.65 Georgia,'Times New Roman',serif}
+  header{border-bottom:1px solid var(--line);padding:1rem 1.25rem;
+         font-family:system-ui,sans-serif;font-size:.85rem}
+  header a{color:var(--muted);text-decoration:none;margin-right:1rem}
+  header a:hover{color:var(--accent)}
+  main{max-width:46rem;margin:0 auto;padding:2rem 1.25rem 5rem}
+  h1{font-size:1.9rem;line-height:1.25;margin:.5rem 0 1.5rem}
+  h2{font-size:1.35rem;margin-top:2.2rem;border-bottom:1px solid var(--line);
+     padding-bottom:.3rem}
+  h3{font-size:1.1rem;margin-top:1.6rem}
+  a{color:var(--accent)}
+  code,pre{font-family:ui-monospace,Menlo,monospace;background:var(--code);
+           border-radius:4px}
+  code{padding:.1em .35em;font-size:.9em}
+  pre{padding:1rem;overflow-x:auto;font-size:.85em}
+  blockquote{margin:1.2rem 0;padding:.6rem 1rem;border-left:3px solid
+             var(--accent);background:var(--card);color:var(--muted)}
+  table{border-collapse:collapse;width:100%;font-size:.92em;
+        font-family:system-ui,sans-serif}
+  th,td{border:1px solid var(--line);padding:.45rem .6rem;text-align:left}
+  th{background:var(--card)}
+  .apx-ref{font-family:system-ui,sans-serif;font-size:.8rem;
+           color:var(--muted);background:var(--card);
+           border:1px solid var(--line);border-radius:4px;
+           padding:.05rem .4rem;white-space:nowrap}
+  .meta{font-family:system-ui,sans-serif;color:var(--muted);
+        font-size:.85rem;margin-bottom:2rem}
+  footer{max-width:46rem;margin:0 auto;padding:0 1.25rem 3rem;
+         font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted)}
+  .lede{font-size:1.05rem;color:var(--muted);margin-bottom:2rem}
+  ol.topics{list-style:none;margin:0;padding:0}
+  li.topic{border-top:1px solid var(--line);padding:1.1rem 0}
+  li.topic:last-child{border-bottom:1px solid var(--line)}
+  .topic-head{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+  .num{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);
+       min-width:1.4rem}
+  .name{font-size:1.08rem;font-weight:600}
+  .badge{font-family:system-ui,sans-serif;font-size:.7rem;
+         text-transform:uppercase;letter-spacing:.04em;border-radius:99px;
+         padding:.12rem .55rem;border:1px solid var(--line);
+         background:var(--card);color:var(--muted)}
+  .desc{margin:.4rem 0 .5rem 2rem;font-size:.95rem;color:var(--muted)}
+  .links{margin:0 0 0 2rem;font-family:system-ui,sans-serif;font-size:.82rem}
+  .links a{margin-right:.9rem}
+  .mode{display:inline-block;min-width:1.2rem;margin-right:.9rem;
+        color:var(--muted);border:1px solid var(--line);border-radius:3px;
+        padding:0 .3rem;font-size:.75rem}
+  .muted-note{font-style:italic}
+  .legend{font-family:system-ui,sans-serif;font-size:.82rem;color:var(--muted);
+          margin-top:2rem}
+</style>
+</head>
+<body>
+<header>
+  <strong>Datacenter Course</strong>
+</header>
+<main>
+  <h1>Course Index</h1>
+  <div class="meta">Layer 1 — Topology · Last updated 2026-08-30</div>
+  <p class="lede">A 4-layer self-study course on building a data center from
+  scratch — 14 days, ~2 hours a day. Each topic gets a <strong>Layer 3</strong>
+  chapter (readable working knowledge) and an <strong>Appendix</strong>
+  (deep detail, sourced). The 60-word Layer 2 overview and the cross-topic
+  threads are written last, on days 13–14.</p>
+
+  <p class="lede"><strong>Day 0 of 14.</strong> No content exists yet — every
+  topic below is pending and its links are placeholders.</p>
+
+  <h2>Topics</h2>
+  <ol class="topics">
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">1</span>
+        <span class="name">Foundations &amp; Industry Landscape</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">What a data center is; types (enterprise, colocation, hyperscale, edge, modular); the facility lifecycle (plan → design → build → commission → operate); who builds and runs them; cost structure at a glance.</p>
+      <p class="links">
+        <span class="mode" title="web research">W</span>
+        <a href="L3-foundations.html">Layer 3</a>
+        <a href="APX-foundations.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">2</span>
+        <span class="name">Standards, Tiers &amp; Compliance</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Uptime Institute Tier I–IV; TIA-942; BICSI; ASHRAE thermal guidelines; relevant codes (electrical, fire, building); certifications and audits (SOC 2, ISO 27001, PCI as facility concerns).</p>
+      <p class="links">
+        <span class="mode" title="web research">W</span>
+        <a href="L3-standards.html">Layer 3</a>
+        <a href="APX-standards.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">3</span>
+        <span class="name">Site Selection &amp; Planning</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Location factors: power availability &amp; cost, fiber/network proximity, climate, natural-hazard risk, water, land, taxes/incentives, community &amp; permitting; capacity planning; total cost of ownership framing.</p>
+      <p class="links">
+        <span class="mode" title="deep research">R</span>
+        <a href="L3-site-selection.html">Layer 3</a>
+        <a href="APX-site-selection.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">4</span>
+        <span class="name">Building &amp; Physical Infrastructure</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Shell &amp; core; structural loading; raised floor vs slab; room topology (white space, gray space, MEP galleries); loading docks &amp; logistics; seismic/flood/wind hardening; roof &amp; envelope.</p>
+      <p class="links">
+        <span class="mode" title="deep research">R</span>
+        <a href="L3-building.html">Layer 3</a>
+        <a href="APX-building.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">5</span>
+        <span class="name">Power Systems</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Utility feed &amp; substations; transformers &amp; switchgear; generators &amp; fuel; UPS topologies and batteries; distribution (PDUs, busway, RPPs); redundancy models (N, N+1, 2N, 2N+1, distributed redundant); grounding &amp; bonding; EPO.</p>
+      <p class="links">
+        <span class="mode" title="deep research">R</span>
+        <a href="L3-power.html">Layer 3</a>
+        <a href="APX-power.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">6</span>
+        <span class="name">Cooling &amp; Thermal Management</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Heat &amp; airflow fundamentals; CRAC vs CRAH; chilled-water plants; direct/indirect economization; hot/cold-aisle containment; in-row &amp; rear-door cooling; liquid &amp; immersion cooling; ASHRAE envelopes; humidity control.</p>
+      <p class="links">
+        <span class="mode" title="deep research">R</span>
+        <a href="L3-cooling.html">Layer 3</a>
+        <a href="APX-cooling.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">7</span>
+        <span class="name">Structured Cabling</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Copper &amp; fiber media; TIA-942 spaces &amp; topology (MDA/IDA/HDA/EDA); pathways (overhead vs underfloor); patching &amp; cross-connects; labeling &amp; documentation; meet-me rooms &amp; carrier entry.</p>
+      <p class="links">
+        <span class="mode" title="web research">W</span>
+        <a href="L3-cabling.html">Layer 3</a>
+        <a href="APX-cabling.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">8</span>
+        <span class="name">Network Architecture</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Spine-leaf (Clos) fabrics; ToR vs EoR; underlay/overlay (BGP, EVPN/VXLAN); edge, peering &amp; data-center interconnect; load balancing; out-of-band management network; IP/DNS/automation basics for fabrics.</p>
+      <p class="links">
+        <span class="mode" title="deep research">R</span>
+        <a href="L3-network.html">Layer 3</a>
+        <a href="APX-network.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">9</span>
+        <span class="name">Compute &amp; Storage</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Racks &amp; rack units; server platforms; storage architectures (DAS, SAN, NAS, object, disaggregated); virtualization &amp; orchestration at a glance; power density trends; GPU/AI clusters and what they change.</p>
+      <p class="links">
+        <span class="mode" title="deep research">R</span>
+        <a href="L3-compute-storage.html">Layer 3</a>
+        <a href="APX-compute-storage.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">10</span>
+        <span class="name">Physical Security &amp; Fire Protection</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Layered security (perimeter → building → room → rack); access control, mantraps, surveillance; fire detection (spot, VESDA); suppression (pre-action water, clean agent); egress &amp; life safety.</p>
+      <p class="links">
+        <span class="mode" title="web research">W</span>
+        <a href="L3-security-fire.html">Layer 3</a>
+        <a href="APX-security-fire.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">11</span>
+        <span class="name">Monitoring &amp; DCIM</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Sensors &amp; metering; BMS vs DCIM vs EPMS; alerting &amp; thresholds; capacity dashboards; asset &amp; change tracking; integration with IT monitoring.</p>
+      <p class="links">
+        <span class="mode" title="web research">W</span>
+        <a href="L3-monitoring.html">Layer 3</a>
+        <a href="APX-monitoring.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">12</span>
+        <span class="name">Commissioning &amp; Testing</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Commissioning levels 1–5; factory &amp; site acceptance; integrated systems testing (pull-the-plug day); documentation &amp; handover; common failure findings.</p>
+      <p class="links">
+        <span class="mode" title="deep research">R</span>
+        <a href="L3-commissioning.html">Layer 3</a>
+        <a href="APX-commissioning.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">13</span>
+        <span class="name">Operations &amp; Maintenance</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">MOPs/SOPs/EOPs; preventive maintenance programs; staffing models &amp; shifts; change management; incident management &amp; post-mortems; vendor management; spare strategy.</p>
+      <p class="links">
+        <span class="mode" title="web research">W</span>
+        <a href="L3-operations.html">Layer 3</a>
+        <a href="APX-operations.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">14</span>
+        <span class="name">Sustainability &amp; Efficiency</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">PUE/WUE/CUE and their limits; efficiency levers; renewable procurement; heat reuse; water strategy; embodied carbon; regulatory pressure.</p>
+      <p class="links">
+        <span class="mode" title="web research">W</span>
+        <a href="L3-sustainability.html">Layer 3</a>
+        <a href="APX-sustainability.html">Appendix</a>
+      </p>
+    </li>
+    <li class="topic">
+      <div class="topic-head">
+        <span class="num">15</span>
+        <span class="name">Cross-Topic Threads</span>
+        <span class="badge badge-pending">pending</span>
+      </div>
+      <p class="desc">Follow a watt (utility → CPU); follow a bit (internet → server → back); follow a BTU (chip → outside air); the utility-failure timeline (second-by-second); how one design decision ripples across power, cooling, network, and ops. <span class="muted-note">(days 13–14)</span></p>
+      <p class="links">
+        <span class="mode" title="synthesis">—</span>
+        <a href="L3-threads.html">Layer 3</a>
+        <a href="APX-threads.html">Appendix</a>
+      </p>
+    </li>
+  </ol>
+
+  <p class="legend"><strong>R</strong> = deep research run in Claude Desktop
+  · <strong>W</strong> = researched via web search · <strong>—</strong> =
+  synthesis, built on days 13–14. Statuses run
+  pending → researching → drafted → reviewed → done.</p>
+</main>
+<footer>Datacenter Course — self-study project. Questions? File a GitHub
+issue on this repo.</footer>
+</body>
+</html>
