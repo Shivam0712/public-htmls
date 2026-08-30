@@ -44,6 +44,7 @@
         font-size:.85rem;margin-bottom:2rem}
   footer{max-width:46rem;margin:0 auto;padding:0 1.25rem 3rem;
          font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted)}
+
   .lede{font-size:1.05rem;color:var(--muted);margin-bottom:2rem}
   ol.topics{list-style:none;margin:0;padding:0}
   li.topic{border-top:1px solid var(--line);padding:1.1rem 0}
@@ -56,15 +57,18 @@
          text-transform:uppercase;letter-spacing:.04em;border-radius:99px;
          padding:.12rem .55rem;border:1px solid var(--line);
          background:var(--card);color:var(--muted)}
+  .badge-done{border-color:var(--accent);color:var(--accent)}
   .desc{margin:.4rem 0 .5rem 2rem;font-size:.95rem;color:var(--muted)}
+  .desc p{margin:.4rem 0}
   .links{margin:0 0 0 2rem;font-family:system-ui,sans-serif;font-size:.82rem}
   .links a{margin-right:.9rem}
+  .links .dead{margin-right:.9rem;color:var(--muted);opacity:.55}
   .mode{display:inline-block;min-width:1.2rem;margin-right:.9rem;
         color:var(--muted);border:1px solid var(--line);border-radius:3px;
         padding:0 .3rem;font-size:.75rem}
-  .muted-note{font-style:italic}
-  .legend{font-family:system-ui,sans-serif;font-size:.82rem;color:var(--muted);
-          margin-top:2rem}
+  .legend{font-family:system-ui,sans-serif;font-size:.82rem;
+          color:var(--muted);margin-top:2rem}
+  .l2 h2{font-size:1.15rem}
 </style>
 </head>
 <body>
@@ -74,54 +78,59 @@
 <main>
   <h1>Course Index</h1>
   <div class="meta">Layer 1 — Topology · Last updated 2026-08-30</div>
-  <p class="lede">A 4-layer self-study course on building a data center from
-  scratch — 14 days, ~2 hours a day. Each topic gets a <strong>Layer 3</strong>
-  chapter (readable working knowledge) and an <strong>Appendix</strong>
-  (deep detail, sourced). The 60-word Layer 2 overview and the cross-topic
-  threads are written last, on days 13–14.</p>
+  <p class="lede">A four-layer self-study course on building a data
+  center from scratch — 14 days, about two hours a day. Each topic has a
+  <a href="overview.html">sixty-word summary</a>, a <strong>Layer 3</strong>
+  chapter of readable working knowledge, and an <strong>Appendix</strong>
+  with the deep detail and sources.</p>
 
-  <p class="lede"><strong>Day 0 of 14.</strong> No content exists yet — every
-  topic below is pending and its links are placeholders.</p>
+  <p class="lede">The course runs <strong>owner → project → systems →
+  handover</strong>: what you are building and what it costs, then where it
+  goes and whether you can get power, then the systems themselves, then
+  proving it works and running it.</p>
+
+  <p class="lede"><strong>0 of 12 topics complete.</strong>
+  Greyed links are chapters not yet written.</p>
 
   <h2>Topics</h2>
   <ol class="topics">
     <li class="topic">
       <div class="topic-head">
         <span class="num">1</span>
-        <span class="name">Foundations &amp; Industry Landscape</span>
+        <span class="name">Foundations, Delivery Models &amp; Project Economics</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">What a data center is; types (enterprise, colocation, hyperscale, edge, modular); the facility lifecycle (plan → design → build → commission → operate); who builds and runs them; cost structure at a glance.</p>
+      <div class="desc"><p>What a data center is and the types that exist (enterprise, colocation, hyperscale, edge, modular, "AI factory"); the facility lifecycle from plan to operate; <strong>who actually builds one</strong> — the contracting models (design-bid-build, design-build, EPC turnkey) and which party carries which risk; and what it costs — capex versus opex, dollars per megawatt, and TCO as a discipline rather than a footnote.</p></div>
       <p class="links">
         <span class="mode" title="web research">W</span>
-        <a href="L3-foundations.html">Layer 3</a>
-        <a href="APX-foundations.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">2</span>
-        <span class="name">Standards, Tiers &amp; Compliance</span>
+        <span class="name">Design Requirements, Capacity &amp; Load Planning</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Uptime Institute Tier I–IV; TIA-942; BICSI; ASHRAE thermal guidelines; relevant codes (electrical, fire, building); certifications and audits (SOC 2, ISO 27001, PCI as facility concerns).</p>
+      <div class="desc"><p>The owner's side of the table. Owner's Project Requirements and Basis of Design; <strong>density-first capacity planning</strong> — deciding kW per rack, because that single number drives power, cooling, and structure downstream; availability frameworks (Uptime Tiers, TIA-942 ratings, BICSI classes) as one design criterion among several rather than the spine; codes; certifications and audits as facility concerns.</p></div>
       <p class="links">
         <span class="mode" title="web research">W</span>
-        <a href="L3-standards.html">Layer 3</a>
-        <a href="APX-standards.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">3</span>
-        <span class="name">Site Selection &amp; Planning</span>
+        <span class="name">Site Selection, Grid Interconnection, Water &amp; Procurement</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Location factors: power availability &amp; cost, fiber/network proximity, climate, natural-hazard risk, water, land, taxes/incentives, community &amp; permitting; capacity planning; total cost of ownership framing.</p>
+      <div class="desc"><p>Where it goes and whether you can actually get what you need. Location, climate, and natural-hazard factors; <strong>grid interconnection as a multi-year process</strong>, not a wiring job; water sourcing, discharge permitting, and community moratoriums; taxes, incentives, and permitting risk; and <strong>long-lead equipment procurement</strong> — why transformers and switchgear get ordered before the design is finished.</p></div>
       <p class="links">
         <span class="mode" title="deep research">R</span>
-        <a href="L3-site-selection.html">Layer 3</a>
-        <a href="APX-site-selection.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
@@ -130,162 +139,123 @@
         <span class="name">Building &amp; Physical Infrastructure</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Shell &amp; core; structural loading; raised floor vs slab; room topology (white space, gray space, MEP galleries); loading docks &amp; logistics; seismic/flood/wind hardening; roof &amp; envelope.</p>
+      <div class="desc"><p>Shell and core; structural loading, now driven by racks weighing over a tonne; raised floor versus slab; room topology (white space, gray space, MEP galleries); loading docks and equipment logistics; seismic, flood, and wind hardening; roof and envelope; noise as a permitting constraint.</p></div>
       <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <a href="L3-building.html">Layer 3</a>
-        <a href="APX-building.html">Appendix</a>
+        <span class="mode" title="web research">W</span>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">5</span>
-        <span class="name">Power Systems</span>
+        <span class="name">Power Systems I — Utility to UPS</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Utility feed &amp; substations; transformers &amp; switchgear; generators &amp; fuel; UPS topologies and batteries; distribution (PDUs, busway, RPPs); redundancy models (N, N+1, 2N, 2N+1, distributed redundant); grounding &amp; bonding; EPO.</p>
+      <div class="desc"><p>Utility feed and substations; transformers and switchgear; generators and fuel systems; UPS topologies (double-conversion, line-interactive, rotary) and the batteries behind them (VRLA, lithium-ion). Everything between the grid and the point where clean power becomes available to distribute.</p></div>
       <p class="links">
         <span class="mode" title="deep research">R</span>
-        <a href="L3-power.html">Layer 3</a>
-        <a href="APX-power.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">6</span>
-        <span class="name">Cooling &amp; Thermal Management</span>
+        <span class="name">Power Systems II — Distribution &amp; Redundancy</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Heat &amp; airflow fundamentals; CRAC vs CRAH; chilled-water plants; direct/indirect economization; hot/cold-aisle containment; in-row &amp; rear-door cooling; liquid &amp; immersion cooling; ASHRAE envelopes; humidity control.</p>
+      <div class="desc"><p>Distribution from UPS to rack: PDUs, busway, remote power panels. Redundancy models (N, N+1, 2N, 2N+1, distributed redundant) and what each actually buys. The shift to 48V and higher-voltage DC for high-density racks. Grounding and bonding; emergency power off.</p></div>
       <p class="links">
         <span class="mode" title="deep research">R</span>
-        <a href="L3-cooling.html">Layer 3</a>
-        <a href="APX-cooling.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">7</span>
-        <span class="name">Structured Cabling</span>
+        <span class="name">Cooling &amp; Thermal Management</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Copper &amp; fiber media; TIA-942 spaces &amp; topology (MDA/IDA/HDA/EDA); pathways (overhead vs underfloor); patching &amp; cross-connects; labeling &amp; documentation; meet-me rooms &amp; carrier entry.</p>
+      <div class="desc"><p>Heat and airflow fundamentals; CRAC versus CRAH; chilled-water plants; direct and indirect economization; hot/cold-aisle containment; <strong>liquid and immersion cooling as the mainstream path for high density</strong>, not an exotic appendix — cold plates, CDUs, rear-door heat exchangers; ASHRAE envelopes and humidity control; water use and heat reuse.</p></div>
       <p class="links">
-        <span class="mode" title="web research">W</span>
-        <a href="L3-cabling.html">Layer 3</a>
-        <a href="APX-cabling.html">Appendix</a>
+        <span class="mode" title="deep research">R</span>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">8</span>
-        <span class="name">Network Architecture</span>
+        <span class="name">AI/HPC Infrastructure + Compute &amp; Storage</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Spine-leaf (Clos) fabrics; ToR vs EoR; underlay/overlay (BGP, EVPN/VXLAN); edge, peering &amp; data-center interconnect; load balancing; out-of-band management network; IP/DNS/automation basics for fabrics.</p>
+      <div class="desc"><p><strong>AI clusters as a design driver</strong>: what megawatt racks change across power, cooling, network, floor loading, and cost. Then the general case — racks and rack units, server platforms, storage architectures (DAS, SAN, NAS, object, disaggregated), virtualization and orchestration at a glance, and where density is heading.</p></div>
       <p class="links">
         <span class="mode" title="deep research">R</span>
-        <a href="L3-network.html">Layer 3</a>
-        <a href="APX-network.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">9</span>
-        <span class="name">Compute &amp; Storage</span>
+        <span class="name">Network Architecture &amp; Structured Cabling</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Racks &amp; rack units; server platforms; storage architectures (DAS, SAN, NAS, object, disaggregated); virtualization &amp; orchestration at a glance; power density trends; GPU/AI clusters and what they change.</p>
+      <div class="desc"><p>The logical layer: spine-leaf (Clos) fabrics, ToR versus EoR, underlay and overlay (BGP, EVPN/VXLAN), AI fabrics (InfiniBand, 800G), peering and data-center interconnect, out-of-band management. The physical layer that carries it: copper and fiber media, TIA-942 spaces (MDA/IDA/HDA/EDA), overhead versus underfloor pathways, cross-connects, labeling, meet-me rooms and carrier entry.</p></div>
       <p class="links">
         <span class="mode" title="deep research">R</span>
-        <a href="L3-compute-storage.html">Layer 3</a>
-        <a href="APX-compute-storage.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">10</span>
-        <span class="name">Physical Security &amp; Fire Protection</span>
+        <span class="name">Physical Security, Fire Protection, Monitoring &amp; Efficiency</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Layered security (perimeter → building → room → rack); access control, mantraps, surveillance; fire detection (spot, VESDA); suppression (pre-action water, clean agent); egress &amp; life safety.</p>
+      <div class="desc"><p>Layered security from perimeter to rack; access control, mantraps, surveillance; fire detection (spot, VESDA) and suppression (pre-action, clean agent); egress and life safety. Then the instrumentation layer: sensors and metering, BMS versus DCIM versus EPMS, alerting, capacity dashboards, asset and change tracking — and <strong>PUE/WUE/CUE, their limits, and efficiency levers</strong>, taught where they are actually measured.</p></div>
       <p class="links">
         <span class="mode" title="web research">W</span>
-        <a href="L3-security-fire.html">Layer 3</a>
-        <a href="APX-security-fire.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">11</span>
-        <span class="name">Monitoring &amp; DCIM</span>
+        <span class="name">Commissioning, Operations &amp; Decommissioning</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Sensors &amp; metering; BMS vs DCIM vs EPMS; alerting &amp; thresholds; capacity dashboards; asset &amp; change tracking; integration with IT monitoring.</p>
+      <div class="desc"><p>Proving it works, running it, and ending it. Commissioning levels 1–5; factory and site acceptance; <strong>the independent commissioning agent</strong> and why independence is the point; integrated systems testing (pull-the-plug day); documentation and handover. Then MOPs/SOPs/EOPs, preventive maintenance, staffing and the labor shortage, change and incident management, vendor and spares strategy. Finally decommissioning: ITAD, data sanitization, and chain of custody.</p></div>
       <p class="links">
-        <span class="mode" title="web research">W</span>
-        <a href="L3-monitoring.html">Layer 3</a>
-        <a href="APX-monitoring.html">Appendix</a>
+        <span class="mode" title="deep research">R</span>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
     <li class="topic">
       <div class="topic-head">
         <span class="num">12</span>
-        <span class="name">Commissioning &amp; Testing</span>
+        <span class="name">Cross-Topic Threads (synthesis — built days 13–14)</span>
         <span class="badge badge-pending">pending</span>
       </div>
-      <p class="desc">Commissioning levels 1–5; factory &amp; site acceptance; integrated systems testing (pull-the-plug day); documentation &amp; handover; common failure findings.</p>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <a href="L3-commissioning.html">Layer 3</a>
-        <a href="APX-commissioning.html">Appendix</a>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">13</span>
-        <span class="name">Operations &amp; Maintenance</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <p class="desc">MOPs/SOPs/EOPs; preventive maintenance programs; staffing models &amp; shifts; change management; incident management &amp; post-mortems; vendor management; spare strategy.</p>
-      <p class="links">
-        <span class="mode" title="web research">W</span>
-        <a href="L3-operations.html">Layer 3</a>
-        <a href="APX-operations.html">Appendix</a>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">14</span>
-        <span class="name">Sustainability &amp; Efficiency</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <p class="desc">PUE/WUE/CUE and their limits; efficiency levers; renewable procurement; heat reuse; water strategy; embodied carbon; regulatory pressure.</p>
-      <p class="links">
-        <span class="mode" title="web research">W</span>
-        <a href="L3-sustainability.html">Layer 3</a>
-        <a href="APX-sustainability.html">Appendix</a>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">15</span>
-        <span class="name">Cross-Topic Threads</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <p class="desc">Follow a watt (utility → CPU); follow a bit (internet → server → back); follow a BTU (chip → outside air); the utility-failure timeline (second-by-second); how one design decision ripples across power, cooling, network, and ops. <span class="muted-note">(days 13–14)</span></p>
+      <div class="desc"><p>Follow a watt (utility → CPU); follow a bit (internet → server → back); follow a BTU (chip → outside air); the utility-failure timeline, second by second; <strong>follow a dollar</strong> (budget → procurement → installed capacity); and how one decision — rack density — ripples across power, cooling, building, network, and operations.</p></div>
       <p class="links">
         <span class="mode" title="synthesis">—</span>
-        <a href="L3-threads.html">Layer 3</a>
-        <a href="APX-threads.html">Appendix</a>
+        <span class="dead">Layer 3</span>
+        <span class="dead">Appendix</span>
       </p>
     </li>
   </ol>
 
   <p class="legend"><strong>R</strong> = deep research run in Claude Desktop
   · <strong>W</strong> = researched via web search · <strong>—</strong> =
-  synthesis, built on days 13–14. Statuses run
-  pending → researching → drafted → reviewed → done.</p>
+  synthesis, built on days 13–14. Statuses run pending → researching →
+  drafted → reviewed → done.</p>
 </main>
 <footer>Datacenter Course — self-study project. Questions? File a GitHub
 issue on this repo.</footer>

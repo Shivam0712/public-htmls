@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview — Datacenter Course</title>
+<style>
+  :root{
+    --bg:#faf9f5; --ink:#232120; --muted:#6b675f; --accent:#b05730;
+    --card:#ffffff; --line:#e6e2d8; --code:#f1efe8;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#161514; --ink:#e8e5df; --muted:#a09a8e; --accent:#e08a5c;
+           --card:#1f1d1b; --line:#33302c; --code:#242220; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:17px/1.65 Georgia,'Times New Roman',serif}
+  header{border-bottom:1px solid var(--line);padding:1rem 1.25rem;
+         font-family:system-ui,sans-serif;font-size:.85rem}
+  header a{color:var(--muted);text-decoration:none;margin-right:1rem}
+  header a:hover{color:var(--accent)}
+  main{max-width:46rem;margin:0 auto;padding:2rem 1.25rem 5rem}
+  h1{font-size:1.9rem;line-height:1.25;margin:.5rem 0 1.5rem}
+  h2{font-size:1.35rem;margin-top:2.2rem;border-bottom:1px solid var(--line);
+     padding-bottom:.3rem}
+  h3{font-size:1.1rem;margin-top:1.6rem}
+  a{color:var(--accent)}
+  code,pre{font-family:ui-monospace,Menlo,monospace;background:var(--code);
+           border-radius:4px}
+  code{padding:.1em .35em;font-size:.9em}
+  pre{padding:1rem;overflow-x:auto;font-size:.85em}
+  blockquote{margin:1.2rem 0;padding:.6rem 1rem;border-left:3px solid
+             var(--accent);background:var(--card);color:var(--muted)}
+  table{border-collapse:collapse;width:100%;font-size:.92em;
+        font-family:system-ui,sans-serif}
+  th,td{border:1px solid var(--line);padding:.45rem .6rem;text-align:left}
+  th{background:var(--card)}
+  .apx-ref{font-family:system-ui,sans-serif;font-size:.8rem;
+           color:var(--muted);background:var(--card);
+           border:1px solid var(--line);border-radius:4px;
+           padding:.05rem .4rem;white-space:nowrap}
+  .meta{font-family:system-ui,sans-serif;color:var(--muted);
+        font-size:.85rem;margin-bottom:2rem}
+  footer{max-width:46rem;margin:0 auto;padding:0 1.25rem 3rem;
+         font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted)}
+
+  .lede{font-size:1.05rem;color:var(--muted);margin-bottom:2rem}
+  ol.topics{list-style:none;margin:0;padding:0}
+  li.topic{border-top:1px solid var(--line);padding:1.1rem 0}
+  li.topic:last-child{border-bottom:1px solid var(--line)}
+  .topic-head{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+  .num{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);
+       min-width:1.4rem}
+  .name{font-size:1.08rem;font-weight:600}
+  .badge{font-family:system-ui,sans-serif;font-size:.7rem;
+         text-transform:uppercase;letter-spacing:.04em;border-radius:99px;
+         padding:.12rem .55rem;border:1px solid var(--line);
+         background:var(--card);color:var(--muted)}
+  .badge-done{border-color:var(--accent);color:var(--accent)}
+  .desc{margin:.4rem 0 .5rem 2rem;font-size:.95rem;color:var(--muted)}
+  .desc p{margin:.4rem 0}
+  .links{margin:0 0 0 2rem;font-family:system-ui,sans-serif;font-size:.82rem}
+  .links a{margin-right:.9rem}
+  .links .dead{margin-right:.9rem;color:var(--muted);opacity:.55}
+  .mode{display:inline-block;min-width:1.2rem;margin-right:.9rem;
+        color:var(--muted);border:1px solid var(--line);border-radius:3px;
+        padding:0 .3rem;font-size:.75rem}
+  .legend{font-family:system-ui,sans-serif;font-size:.82rem;
+          color:var(--muted);margin-top:2rem}
+  .l2 h2{font-size:1.15rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html">← Course Index</a>
+</header>
+<main>
+  <h1>Overview</h1>
+  <div class="meta">Layer 2 — Sixty Words a Topic · Last updated 2026-08-30</div>
+  <p class="lede">Every topic in sixty words or fewer. These are Day 1 stubs written from the topology; they get rewritten on Day 13 as a true compression of the finished chapters.</p>
+<div class="l2">
+<h2>1. Foundations, Delivery Models &amp; Project Economics</h2>
+<p>A data center is a building that converts electricity into computation and heat. They come as enterprise, colocation, hyperscale, edge, modular, and now AI factories. Someone owns it, someone designs it, someone builds it — under design-bid-build, design-build, or EPC, which decide who eats the risk. It is bought in dollars per megawatt.</p>
+<h2>2. Design Requirements, Capacity &amp; Load Planning</h2>
+<p>Before anything is drawn, the owner states what they need and the designer states how they will meet it. The number that matters most is kilowatts per rack: it sets the power, the cooling, and the floor loading. Tiers, TIA-942 ratings, and BICSI classes are ways to say how much failure is tolerable.</p>
+<h2>3. Site Selection, Grid Interconnection, Water &amp; Procurement</h2>
+<p>Land is easy; power is not. Choosing a site means finding grid capacity you can actually be granted — a process measured in years, not months — plus fiber, water you are permitted to use and discharge, tolerable hazard risk, and a community that will have you. Meanwhile the transformers must already be on order.</p>
+<h2>4. Building &amp; Physical Infrastructure</h2>
+<p>The shell holds the machines up and keeps the weather out. Floors carry racks that can exceed a tonne each. Space divides into white space for IT, gray space for the plant that serves it, and galleries for pipes and conduit. Docks, routes, hardening, and noise limits are all design constraints.</p>
+<h2>5. Power Systems I — Utility to UPS</h2>
+<p>Grid power arrives at medium voltage and must be stepped down, switched, and made trustworthy. Transformers convert it, switchgear directs it, generators replace it when the utility fails, and the UPS bridges the gap between those two events — seconds that decide whether the facility rides through or goes dark.</p>
+<h2>6. Power Systems II — Distribution &amp; Redundancy</h2>
+<p>From the UPS, power fans out through PDUs, busway, and panels to each rack. Redundancy is described as N, N+1, or 2N — how many spare paths exist and whether maintenance requires an outage. High density is pushing racks toward 48-volt and higher-voltage DC. Grounding keeps it safe; EPO kills it all.</p>
+<h2>7. Cooling &amp; Thermal Management</h2>
+<p>Every watt in becomes a watt of heat out, and it has to go somewhere. Air handles low density: contained aisles, CRACs or CRAHs, chillers, and free cooling when the weather permits. Above roughly fifty kilowatts a rack, air fails and liquid must reach the chip itself.</p>
+<h2>8. AI/HPC Infrastructure + Compute &amp; Storage</h2>
+<p>An AI rack can draw more than a hundred kilowatts where a normal one draws eight, and that single fact rewrites the power, cooling, structure, and network around it. Underneath sits the ordinary business: racks and rack units, servers, and storage as direct, networked, or object.</p>
+<h2>9. Network Architecture &amp; Structured Cabling</h2>
+<p>Modern fabrics are flat: leaf switches at every rack, spines connecting them, any server two hops from any other. Overlays like EVPN/VXLAN carve it into tenants; AI clusters demand their own high-speed fabric. Beneath the logic lies physical plant — fiber, copper, pathways, patch fields, and the room where carriers land.</p>
+<h2>10. Physical Security, Fire Protection, Monitoring &amp; Efficiency</h2>
+<p>Security is layered from fence to cabinet, each ring assuming the last one failed. Fire is detected early and suppressed without ruining the equipment. Sensors watch power, temperature, and space, feeding BMS, DCIM, and EPMS. PUE, WUE, and CUE score the waste — imperfectly, and easy to flatter.</p>
+<h2>11. Commissioning, Operations &amp; Decommissioning</h2>
+<p>A finished building is not a working one. Commissioning proves each system, then all of them together, culminating in deliberately cutting utility power to see what happens. Operations then lives by written procedures, planned maintenance, and disciplined change. At the end, hardware leaves under chain of custody with its data destroyed.</p>
+<h2>12. Cross-Topic Threads</h2>
+<p>The course ends by tracing single things all the way through: a watt from substation to processor, a bit from the internet and back, a BTU from chip to sky, a dollar from budget to installed capacity, and the second-by-second timeline of a utility failure.</p>
+</div>
+</main>
+<footer>Datacenter Course — self-study project. Questions? File a GitHub
+issue on this repo.</footer>
+</body>
+</html>
