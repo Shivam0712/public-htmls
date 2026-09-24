@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Course Index — Datacenter Course</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Building a data center, from owner to handover — Datacenter Course</title>
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf9f5">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161514">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="apple-touch-icon" href="./icons/icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="preload" href="./fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./site.css">
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
@@ -22,260 +24,50 @@
     });
   }
 </script>
-<style>
-  :root{
-    --bg:#faf9f5; --ink:#232120; --muted:#6b675f; --accent:#b05730;
-    --card:#ffffff; --line:#e6e2d8; --code:#f1efe8;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{ --bg:#161514; --ink:#e8e5df; --muted:#a09a8e; --accent:#e08a5c;
-           --card:#1f1d1b; --line:#33302c; --code:#242220; }
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-       font:17px/1.65 Georgia,'Times New Roman',serif}
-  header{border-bottom:1px solid var(--line);padding:1rem 1.25rem;
-         font-family:system-ui,sans-serif;font-size:.85rem}
-  header a{color:var(--muted);text-decoration:none;margin-right:1rem}
-  header a:hover{color:var(--accent)}
-  main{max-width:46rem;margin:0 auto;padding:2rem 1.25rem 5rem}
-  h1{font-size:1.9rem;line-height:1.25;margin:.5rem 0 1.5rem}
-  h2{font-size:1.35rem;margin-top:2.2rem;border-bottom:1px solid var(--line);
-     padding-bottom:.3rem}
-  h3{font-size:1.1rem;margin-top:1.6rem}
-  a{color:var(--accent)}
-  code,pre{font-family:ui-monospace,Menlo,monospace;background:var(--code);
-           border-radius:4px}
-  code{padding:.1em .35em;font-size:.9em}
-  pre{padding:1rem;overflow-x:auto;font-size:.85em}
-  blockquote{margin:1.2rem 0;padding:.6rem 1rem;border-left:3px solid
-             var(--accent);background:var(--card);color:var(--muted)}
-  table{border-collapse:collapse;width:100%;font-size:.92em;
-        font-family:system-ui,sans-serif}
-  th,td{border:1px solid var(--line);padding:.45rem .6rem;text-align:left}
-  th{background:var(--card)}
-  .apx-ref{font-family:system-ui,sans-serif;font-size:.8rem;
-           color:var(--muted);background:var(--card);
-           border:1px solid var(--line);border-radius:4px;
-           padding:.05rem .4rem;white-space:nowrap}
-  .meta{font-family:system-ui,sans-serif;color:var(--muted);
-        font-size:.85rem;margin-bottom:2rem}
-  footer{max-width:46rem;margin:0 auto;padding:0 1.25rem 3rem;
-         font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted)}
-
-  .lede{font-size:1.05rem;color:var(--muted);margin-bottom:2rem}
-  ol.topics{list-style:none;margin:0;padding:0}
-  li.topic{border-top:1px solid var(--line);padding:1.1rem 0}
-  li.topic:last-child{border-bottom:1px solid var(--line)}
-  .topic-head{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
-  .num{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);
-       min-width:1.4rem}
-  .name{font-size:1.08rem;font-weight:600}
-  .badge{font-family:system-ui,sans-serif;font-size:.7rem;
-         text-transform:uppercase;letter-spacing:.04em;border-radius:99px;
-         padding:.12rem .55rem;border:1px solid var(--line);
-         background:var(--card);color:var(--muted)}
-  .badge-done{border-color:var(--accent);color:var(--accent)}
-  .desc{margin:.4rem 0 .5rem 2rem;font-size:.95rem;color:var(--muted)}
-  .desc p{margin:.4rem 0}
-  .links{margin:0 0 0 2rem;font-family:system-ui,sans-serif;font-size:.82rem}
-  .links a{margin-right:.9rem}
-  .links .dead{margin-right:.9rem;color:var(--muted);opacity:.55}
-  .mode{display:inline-block;min-width:1.2rem;margin-right:.9rem;
-        color:var(--muted);border:1px solid var(--line);border-radius:3px;
-        padding:0 .3rem;font-size:.75rem}
-  .legend{font-family:system-ui,sans-serif;font-size:.82rem;
-          color:var(--muted);margin-top:2rem}
-  .l2 h2{font-size:1.15rem}
-</style>
 </head>
-<body>
-<header>
-  <strong>Datacenter Course</strong>
-</header>
-<main>
-  <h1>Course Index</h1>
-  <div class="meta">Layer 1 — Topology · Last updated 2026-09-23</div>
-  <p class="lede">A four-layer self-study course on building a data
-  center from scratch — 14 days, about two hours a day. Each topic has a
-  <a href="overview.html">sixty-word summary</a>, a <strong>Layer 3</strong>
-  chapter of readable working knowledge, and an <strong>Appendix</strong>
-  with the deep detail and sources.</p>
+<body class="landing" data-page="index">
 
-  <p class="lede">The course runs <strong>owner → project → systems →
-  handover</strong>: what you are building and what it costs, then where it
-  goes and whether you can get power, then the systems themselves, then
-  proving it works and running it.</p>
-
-  <p class="lede"><strong>0 of 12 topics complete.</strong>
-  Greyed links are chapters not yet written.</p>
-
-  <h2>Topics</h2>
-  <ol class="topics">
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">1</span>
-        <span class="name">Foundations, Delivery Models &amp; Project Economics</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>What a data center is and the types that exist (enterprise, colocation, hyperscale, edge, modular, "AI factory"); the facility lifecycle from plan to operate; <strong>who actually builds one</strong> — the contracting models (design-bid-build, design-build, EPC turnkey) and which party carries which risk; and what it costs — capex versus opex, dollars per megawatt, and TCO as a discipline rather than a footnote.</p></div>
-      <p class="links">
-        <span class="mode" title="web research">W</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">2</span>
-        <span class="name">Design Requirements, Capacity &amp; Load Planning</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>The owner's side of the table. Owner's Project Requirements and Basis of Design; <strong>density-first capacity planning</strong> — deciding kW per rack, because that single number drives power, cooling, and structure downstream; availability frameworks (Uptime Tiers, TIA-942 ratings, BICSI classes) as one design criterion among several rather than the spine; codes; certifications and audits as facility concerns.</p></div>
-      <p class="links">
-        <span class="mode" title="web research">W</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">3</span>
-        <span class="name">Site Selection, Grid Interconnection, Water &amp; Procurement</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Where it goes and whether you can actually get what you need. Location, climate, and natural-hazard factors; <strong>grid interconnection as a multi-year process</strong>, not a wiring job; water sourcing, discharge permitting, and community moratoriums; taxes, incentives, and permitting risk; and <strong>long-lead equipment procurement</strong> — why transformers and switchgear get ordered before the design is finished.</p></div>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">4</span>
-        <span class="name">Building &amp; Physical Infrastructure</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Shell and core; structural loading, now driven by racks weighing over a tonne; raised floor versus slab; room topology (white space, gray space, MEP galleries); loading docks and equipment logistics; seismic, flood, and wind hardening; roof and envelope; noise as a permitting constraint.</p></div>
-      <p class="links">
-        <span class="mode" title="web research">W</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">5</span>
-        <span class="name">Power Systems I — Utility to UPS</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Utility feed and substations; transformers and switchgear; generators and fuel systems; UPS topologies (double-conversion, line-interactive, rotary) and the batteries behind them (VRLA, lithium-ion). Everything between the grid and the point where clean power becomes available to distribute.</p></div>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">6</span>
-        <span class="name">Power Systems II — Distribution &amp; Redundancy</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Distribution from UPS to rack: PDUs, busway, remote power panels. Redundancy models (N, N+1, 2N, 2N+1, distributed redundant) and what each actually buys. The shift to 48V and higher-voltage DC for high-density racks. Grounding and bonding; emergency power off.</p></div>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">7</span>
-        <span class="name">Cooling &amp; Thermal Management</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Heat and airflow fundamentals; CRAC versus CRAH; chilled-water plants; direct and indirect economization; hot/cold-aisle containment; <strong>liquid and immersion cooling as the mainstream path for high density</strong>, not an exotic appendix — cold plates, CDUs, rear-door heat exchangers; ASHRAE envelopes and humidity control; water use and heat reuse.</p></div>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">8</span>
-        <span class="name">AI/HPC Infrastructure + Compute &amp; Storage</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p><strong>AI clusters as a design driver</strong>: what megawatt racks change across power, cooling, network, floor loading, and cost. Then the general case — racks and rack units, server platforms, storage architectures (DAS, SAN, NAS, object, disaggregated), virtualization and orchestration at a glance, and where density is heading.</p></div>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">9</span>
-        <span class="name">Network Architecture &amp; Structured Cabling</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>The logical layer: spine-leaf (Clos) fabrics, ToR versus EoR, underlay and overlay (BGP, EVPN/VXLAN), AI fabrics (InfiniBand, 800G), peering and data-center interconnect, out-of-band management. The physical layer that carries it: copper and fiber media, TIA-942 spaces (MDA/IDA/HDA/EDA), overhead versus underfloor pathways, cross-connects, labeling, meet-me rooms and carrier entry.</p></div>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">10</span>
-        <span class="name">Physical Security, Fire Protection, Monitoring &amp; Efficiency</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Layered security from perimeter to rack; access control, mantraps, surveillance; fire detection (spot, VESDA) and suppression (pre-action, clean agent); egress and life safety. Then the instrumentation layer: sensors and metering, BMS versus DCIM versus EPMS, alerting, capacity dashboards, asset and change tracking — and <strong>PUE/WUE/CUE, their limits, and efficiency levers</strong>, taught where they are actually measured.</p></div>
-      <p class="links">
-        <span class="mode" title="web research">W</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">11</span>
-        <span class="name">Commissioning, Operations &amp; Decommissioning</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Proving it works, running it, and ending it. Commissioning levels 1–5; factory and site acceptance; <strong>the independent commissioning agent</strong> and why independence is the point; integrated systems testing (pull-the-plug day); documentation and handover. Then MOPs/SOPs/EOPs, preventive maintenance, staffing and the labor shortage, change and incident management, vendor and spares strategy. Finally decommissioning: ITAD, data sanitization, and chain of custody.</p></div>
-      <p class="links">
-        <span class="mode" title="deep research">R</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-    <li class="topic">
-      <div class="topic-head">
-        <span class="num">12</span>
-        <span class="name">Cross-Topic Threads (synthesis — built days 13–14)</span>
-        <span class="badge badge-pending">pending</span>
-      </div>
-      <div class="desc"><p>Follow a watt (utility → CPU); follow a bit (internet → server → back); follow a BTU (chip → outside air); the utility-failure timeline, second by second; <strong>follow a dollar</strong> (budget → procurement → installed capacity); and how one decision — rack density — ripples across power, cooling, building, network, and operations.</p></div>
-      <p class="links">
-        <span class="mode" title="synthesis">—</span>
-        <span class="dead">Layer 3</span>
-        <span class="dead">Appendix</span>
-      </p>
-    </li>
-  </ol>
-
-  <p class="legend"><strong>R</strong> = deep research run in Claude Desktop
-  · <strong>W</strong> = researched via web search · <strong>—</strong> =
-  synthesis, built on days 13–14. Statuses run pending → researching →
-  drafted → reviewed → done.</p>
+<header class="crumb"><span class="here">Datacenter Course</span></header>
+<main class="wide">
+  <h1>Building a data center, from owner to handover</h1>
+  <p class="lede">A working knowledge of how a data center gets built, in the
+  order it actually happens: an owner decides what to build, a project finds
+  power and land, the systems go in, and someone proves it works. Twelve
+  topics, each with a readable chapter and an appendix of sources.</p>
+  <div class="sld"><svg class="sld-h" viewBox="0 0 1000 244" role="img" aria-label="The course drawn as a single-line diagram: one lifecycle bus in four sections, twelve topics tapped off it"><path class="bus" d="M30 84 H163"/><rect class="breaker" x="165" y="78" width="10" height="12"/><text class="ph" x="30" y="62">Owner</text><line class="tap" x1="30" y1="70" x2="30" y2="80" opacity=".6"/><a href="#t-foundations" data-open="t-foundations" data-topic-page="L3-foundations" aria-label="Topic 1: Foundations, Delivery Models &amp; Project Economics"><line class="tap" x1="63" y1="84" x2="63" y2="118"/><circle class="node pending" cx="63" cy="128" r="10"/><text x="63" y="132" text-anchor="middle">1</text><text x="63" y="152" text-anchor="middle">Foundations</text></a><a href="#t-requirements" data-open="t-requirements" data-topic-page="L3-requirements" aria-label="Topic 2: Design Requirements, Capacity &amp; Load Planning"><line class="tap" x1="130" y1="84" x2="130" y2="158"/><circle class="node pending" cx="130" cy="168" r="10"/><text x="130" y="172" text-anchor="middle">2</text><text x="130" y="192" text-anchor="middle">Requirements</text></a><path class="bus" d="M177 84 H311"/><rect class="breaker" x="313" y="78" width="10" height="12"/><text class="ph" x="177" y="62">Project</text><line class="tap" x1="177" y1="70" x2="177" y2="80" opacity=".6"/><a href="#t-site" data-open="t-site" data-topic-page="L3-site" aria-label="Topic 3: Site Selection, Grid Interconnection, Water &amp; Procurement"><line class="tap" x1="211" y1="84" x2="211" y2="118"/><circle class="node pending" cx="211" cy="128" r="10"/><text x="211" y="132" text-anchor="middle">3</text><text x="211" y="152" text-anchor="middle">Site &amp; grid</text></a><a href="#t-building" data-open="t-building" data-topic-page="L3-building" aria-label="Topic 4: Building &amp; Physical Infrastructure"><line class="tap" x1="278" y1="84" x2="278" y2="158"/><circle class="node pending" cx="278" cy="168" r="10"/><text x="278" y="172" text-anchor="middle">4</text><text x="278" y="192" text-anchor="middle">Building</text></a><path class="bus" d="M325 84 H725"/><rect class="breaker" x="727" y="78" width="10" height="12"/><text class="ph" x="325" y="62">Systems</text><line class="tap" x1="325" y1="70" x2="325" y2="80" opacity=".6"/><a href="#t-power-1" data-open="t-power-1" data-topic-page="L3-power-1" aria-label="Topic 5: Power Systems I — Utility to UPS"><line class="tap" x1="358" y1="84" x2="358" y2="118"/><circle class="node pending" cx="358" cy="128" r="10"/><text x="358" y="132" text-anchor="middle">5</text><text x="358" y="152" text-anchor="middle">Power I</text></a><a href="#t-power-2" data-open="t-power-2" data-topic-page="L3-power-2" aria-label="Topic 6: Power Systems II — Distribution &amp; Redundancy"><line class="tap" x1="425" y1="84" x2="425" y2="158"/><circle class="node pending" cx="425" cy="168" r="10"/><text x="425" y="172" text-anchor="middle">6</text><text x="425" y="192" text-anchor="middle">Power II</text></a><a href="#t-cooling" data-open="t-cooling" data-topic-page="L3-cooling" aria-label="Topic 7: Cooling &amp; Thermal Management"><line class="tap" x1="492" y1="84" x2="492" y2="118"/><circle class="node pending" cx="492" cy="128" r="10"/><text x="492" y="132" text-anchor="middle">7</text><text x="492" y="152" text-anchor="middle">Cooling</text></a><a href="#t-compute" data-open="t-compute" data-topic-page="L3-compute" aria-label="Topic 8: AI/HPC Infrastructure + Compute &amp; Storage"><line class="tap" x1="558" y1="84" x2="558" y2="158"/><circle class="node pending" cx="558" cy="168" r="10"/><text x="558" y="172" text-anchor="middle">8</text><text x="558" y="192" text-anchor="middle">AI &amp; compute</text></a><a href="#t-network" data-open="t-network" data-topic-page="L3-network" aria-label="Topic 9: Network Architecture &amp; Structured Cabling"><line class="tap" x1="625" y1="84" x2="625" y2="118"/><circle class="node pending" cx="625" cy="128" r="10"/><text x="625" y="132" text-anchor="middle">9</text><text x="625" y="152" text-anchor="middle">Network</text></a><a href="#t-security-monitoring" data-open="t-security-monitoring" data-topic-page="L3-security-monitoring" aria-label="Topic 10: Physical Security, Fire Protection, Monitoring &amp; Efficiency"><line class="tap" x1="692" y1="84" x2="692" y2="158"/><circle class="node pending" cx="692" cy="168" r="10"/><text x="692" y="172" text-anchor="middle">10</text><text x="692" y="192" text-anchor="middle">Security</text></a><path class="bus" d="M739 84 H833"/><rect class="breaker" x="835" y="78" width="10" height="12"/><text class="ph" x="739" y="62">Handover</text><line class="tap" x1="739" y1="70" x2="739" y2="80" opacity=".6"/><a href="#t-commissioning" data-open="t-commissioning" data-topic-page="L3-commissioning" aria-label="Topic 11: Commissioning, Operations &amp; Decommissioning"><line class="tap" x1="786" y1="84" x2="786" y2="118"/><circle class="node pending" cx="786" cy="128" r="10"/><text x="786" y="132" text-anchor="middle">11</text><text x="786" y="152" text-anchor="middle">Commissioning</text></a><path class="bus" d="M847 84 H940" stroke-dasharray="6 5"/><text class="ph" x="847" y="62">Threads</text><line class="tap" x1="847" y1="70" x2="847" y2="80" opacity=".6"/><a href="#t-threads" data-open="t-threads" data-topic-page="L3-threads" aria-label="Topic 12: Cross-Topic Threads"><line class="tap" x1="893" y1="84" x2="893" y2="118"/><circle class="node pending" cx="893" cy="128" r="10"/><text x="893" y="132" text-anchor="middle">12</text><text x="893" y="152" text-anchor="middle">Threads</text></a><path class="bus" d="M940 84 h12"/><path class="arrow" d="M952 78 l10 6 -10 6z"/><path class="risk-thread" d="M30 214 H833"/><text class="risk" x="30" y="230">Delivery and risk: who owns each decision, from contract to handover</text></svg><svg class="sld-v" viewBox="0 0 360 690" role="img" aria-label="The course drawn as a riser diagram: one lifecycle bus, twelve topics tapped off it"><path class="bus" d="M34 18 V114"/><text class="ph" x="52" y="31">Owner</text><a href="#t-foundations" data-open="t-foundations" data-topic-page="L3-foundations" aria-label="Topic 1: Foundations, Delivery Models &amp; Project Economics"><line class="tap" x1="34" y1="48" x2="85" y2="48"/><circle class="node pending" cx="96" cy="48" r="11"/><text x="96" y="52" text-anchor="middle">1</text><text x="116" y="52">Foundations</text></a><a href="#t-requirements" data-open="t-requirements" data-topic-page="L3-requirements" aria-label="Topic 2: Design Requirements, Capacity &amp; Load Planning"><line class="tap" x1="34" y1="94" x2="85" y2="94"/><circle class="node pending" cx="96" cy="94" r="11"/><text x="96" y="98" text-anchor="middle">2</text><text x="116" y="98">Requirements</text></a><rect class="breaker" x="28" y="115" width="12" height="10"/><path class="bus" d="M34 130 V226"/><text class="ph" x="52" y="143">Project</text><a href="#t-site" data-open="t-site" data-topic-page="L3-site" aria-label="Topic 3: Site Selection, Grid Interconnection, Water &amp; Procurement"><line class="tap" x1="34" y1="160" x2="85" y2="160"/><circle class="node pending" cx="96" cy="160" r="11"/><text x="96" y="164" text-anchor="middle">3</text><text x="116" y="164">Site &amp; grid</text></a><a href="#t-building" data-open="t-building" data-topic-page="L3-building" aria-label="Topic 4: Building &amp; Physical Infrastructure"><line class="tap" x1="34" y1="206" x2="85" y2="206"/><circle class="node pending" cx="96" cy="206" r="11"/><text x="96" y="210" text-anchor="middle">4</text><text x="116" y="210">Building</text></a><rect class="breaker" x="28" y="227" width="12" height="10"/><path class="bus" d="M34 242 V522"/><text class="ph" x="52" y="255">Systems</text><a href="#t-power-1" data-open="t-power-1" data-topic-page="L3-power-1" aria-label="Topic 5: Power Systems I — Utility to UPS"><line class="tap" x1="34" y1="272" x2="85" y2="272"/><circle class="node pending" cx="96" cy="272" r="11"/><text x="96" y="276" text-anchor="middle">5</text><text x="116" y="276">Power I</text></a><a href="#t-power-2" data-open="t-power-2" data-topic-page="L3-power-2" aria-label="Topic 6: Power Systems II — Distribution &amp; Redundancy"><line class="tap" x1="34" y1="318" x2="85" y2="318"/><circle class="node pending" cx="96" cy="318" r="11"/><text x="96" y="322" text-anchor="middle">6</text><text x="116" y="322">Power II</text></a><a href="#t-cooling" data-open="t-cooling" data-topic-page="L3-cooling" aria-label="Topic 7: Cooling &amp; Thermal Management"><line class="tap" x1="34" y1="364" x2="85" y2="364"/><circle class="node pending" cx="96" cy="364" r="11"/><text x="96" y="368" text-anchor="middle">7</text><text x="116" y="368">Cooling</text></a><a href="#t-compute" data-open="t-compute" data-topic-page="L3-compute" aria-label="Topic 8: AI/HPC Infrastructure + Compute &amp; Storage"><line class="tap" x1="34" y1="410" x2="85" y2="410"/><circle class="node pending" cx="96" cy="410" r="11"/><text x="96" y="414" text-anchor="middle">8</text><text x="116" y="414">AI &amp; compute</text></a><a href="#t-network" data-open="t-network" data-topic-page="L3-network" aria-label="Topic 9: Network Architecture &amp; Structured Cabling"><line class="tap" x1="34" y1="456" x2="85" y2="456"/><circle class="node pending" cx="96" cy="456" r="11"/><text x="96" y="460" text-anchor="middle">9</text><text x="116" y="460">Network</text></a><a href="#t-security-monitoring" data-open="t-security-monitoring" data-topic-page="L3-security-monitoring" aria-label="Topic 10: Physical Security, Fire Protection, Monitoring &amp; Efficiency"><line class="tap" x1="34" y1="502" x2="85" y2="502"/><circle class="node pending" cx="96" cy="502" r="11"/><text x="96" y="506" text-anchor="middle">10</text><text x="116" y="506">Security</text></a><rect class="breaker" x="28" y="523" width="12" height="10"/><path class="bus" d="M34 538 V588"/><text class="ph" x="52" y="551">Handover</text><a href="#t-commissioning" data-open="t-commissioning" data-topic-page="L3-commissioning" aria-label="Topic 11: Commissioning, Operations &amp; Decommissioning"><line class="tap" x1="34" y1="568" x2="85" y2="568"/><circle class="node pending" cx="96" cy="568" r="11"/><text x="96" y="572" text-anchor="middle">11</text><text x="116" y="572">Commissioning</text></a><rect class="breaker" x="28" y="589" width="12" height="10"/><path class="bus" d="M34 604 V654" stroke-dasharray="6 5"/><text class="ph" x="52" y="617">Threads</text><a href="#t-threads" data-open="t-threads" data-topic-page="L3-threads" aria-label="Topic 12: Cross-Topic Threads"><line class="tap" x1="34" y1="634" x2="85" y2="634"/><circle class="node pending" cx="96" cy="634" r="11"/><text x="96" y="638" text-anchor="middle">12</text><text x="116" y="638">Threads</text></a><path class="bus" d="M34 668 v8"/><path class="arrow" d="M28 676 h12 l-6 10z"/></svg>
+  <p class="aside">Each circle is a chapter, tapped off the lifecycle like a load off a bus.
+  A yellow fill means the chapter is written; solid yellow means it is done. The dashed red line is the delivery thread: which party carries
+  the risk at each step. Tap a circle to jump to its topic.</p></div>
+  <div class="status-line"><span><span class="count">0</span> of 12 chapters written.</span>
+  <span><span class="count" data-read-count>0</span> read on this device.</span>
+  <span class="tools"><button class="btn quiet" type="button" data-export>Export progress</button>
+  <label class="btn quiet" tabindex="0">Import<input type="file" accept="application/json" data-import></label>
+  <button class="btn quiet" type="button" data-reset>Reset</button></span></div>
+<section class="phase" id="ph-owner"><h2>Owner</h2><p class="why">What you are building, who builds it, and what it costs.</p>
+<details class="topic pending" id="t-foundations" data-topic-page="L3-foundations"><summary><span class="n">1</span><span class="t">Foundations, Delivery Models &amp; Project Economics</span><span class="st">not started</span></summary><div class="body"><p>A data center is a building that converts electricity into computation and heat. They come as enterprise, colocation, hyperscale, edge, modular, and now AI factories. Someone owns it, someone designs it, someone builds it — under design-bid-build, design-build, or EPC, which decide who eats the risk. It is bought in dollars per megawatt.</p><p class="desc">What a data center is and the types that exist (enterprise, colocation, hyperscale, edge, modular, "AI factory"); the facility lifecycle from plan to operate; <strong>who actually builds one</strong> — the contracting models (design-bid-build, design-build, EPC turnkey) and which party carries which risk; and what it costs — capex versus opex, dollars per megawatt, and TCO as a discipline rather than a footnote.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+<details class="topic pending" id="t-requirements" data-topic-page="L3-requirements"><summary><span class="n">2</span><span class="t">Design Requirements, Capacity &amp; Load Planning</span><span class="st">not started</span></summary><div class="body"><p>Before anything is drawn, the owner states what they need and the designer states how they will meet it. The number that matters most is kilowatts per rack: it sets the power, the cooling, and the floor loading. Tiers, TIA-942 ratings, and BICSI classes are ways to say how much failure is tolerable.</p><p class="desc">The owner's side of the table. Owner's Project Requirements and Basis of Design; <strong>density-first capacity planning</strong> — deciding kW per rack, because that single number drives power, cooling, and structure downstream; availability frameworks (Uptime Tiers, TIA-942 ratings, BICSI classes) as one design criterion among several rather than the spine; codes; certifications and audits as facility concerns.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+</section>
+<section class="phase" id="ph-project"><h2>Project</h2><p class="why">Where it goes, and whether you can get the power, water and permits.</p>
+<details class="topic pending" id="t-site" data-topic-page="L3-site"><summary><span class="n">3</span><span class="t">Site Selection, Grid Interconnection, Water &amp; Procurement</span><span class="st">not started</span></summary><div class="body"><p>Land is easy; power is not. Choosing a site means finding grid capacity you can actually be granted — a process measured in years, not months — plus fiber, water you are permitted to use and discharge, tolerable hazard risk, and a community that will have you. Meanwhile the transformers must already be on order.</p><p class="desc">Where it goes and whether you can actually get what you need. Location, climate, and natural-hazard factors; <strong>grid interconnection as a multi-year process</strong>, not a wiring job; water sourcing, discharge permitting, and community moratoriums; taxes, incentives, and permitting risk; and <strong>long-lead equipment procurement</strong> — why transformers and switchgear get ordered before the design is finished.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+<details class="topic pending" id="t-building" data-topic-page="L3-building"><summary><span class="n">4</span><span class="t">Building &amp; Physical Infrastructure</span><span class="st">not started</span></summary><div class="body"><p>The shell holds the machines up and keeps the weather out. Floors carry racks that can exceed a tonne each. Space divides into white space for IT, gray space for the plant that serves it, and galleries for pipes and conduit. Docks, routes, hardening, and noise limits are all design constraints.</p><p class="desc">Shell and core; structural loading, now driven by racks weighing over a tonne; raised floor versus slab; room topology (white space, gray space, MEP galleries); loading docks and equipment logistics; seismic, flood, and wind hardening; roof and envelope; noise as a permitting constraint.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+</section>
+<section class="phase" id="ph-systems"><h2>Systems</h2><p class="why">The plant itself: power, cooling, compute, network, protection.</p>
+<details class="topic pending" id="t-power-1" data-topic-page="L3-power-1"><summary><span class="n">5</span><span class="t">Power Systems I — Utility to UPS</span><span class="st">not started</span></summary><div class="body"><p>Grid power arrives at medium voltage and must be stepped down, switched, and made trustworthy. Transformers convert it, switchgear directs it, generators replace it when the utility fails, and the UPS bridges the gap between those two events — seconds that decide whether the facility rides through or goes dark.</p><p class="desc">Utility feed and substations; transformers and switchgear; generators and fuel systems; UPS topologies (double-conversion, line-interactive, rotary) and the batteries behind them (VRLA, lithium-ion). Everything between the grid and the point where clean power becomes available to distribute.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+<details class="topic pending" id="t-power-2" data-topic-page="L3-power-2"><summary><span class="n">6</span><span class="t">Power Systems II — Distribution &amp; Redundancy</span><span class="st">not started</span></summary><div class="body"><p>From the UPS, power fans out through PDUs, busway, and panels to each rack. Redundancy is described as N, N+1, or 2N — how many spare paths exist and whether maintenance requires an outage. High density is pushing racks toward 48-volt and higher-voltage DC. Grounding keeps it safe; EPO kills it all.</p><p class="desc">Distribution from UPS to rack: PDUs, busway, remote power panels. Redundancy models (N, N+1, 2N, 2N+1, distributed redundant) and what each actually buys. The shift to 48V and higher-voltage DC for high-density racks. Grounding and bonding; emergency power off.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+<details class="topic pending" id="t-cooling" data-topic-page="L3-cooling"><summary><span class="n">7</span><span class="t">Cooling &amp; Thermal Management</span><span class="st">not started</span></summary><div class="body"><p>Every watt in becomes a watt of heat out, and it has to go somewhere. Air handles low density: contained aisles, CRACs or CRAHs, chillers, and free cooling when the weather permits. Above roughly fifty kilowatts a rack, air fails and liquid must reach the chip itself.</p><p class="desc">Heat and airflow fundamentals; CRAC versus CRAH; chilled-water plants; direct and indirect economization; hot/cold-aisle containment; <strong>liquid and immersion cooling as the mainstream path for high density</strong>, not an exotic appendix — cold plates, CDUs, rear-door heat exchangers; ASHRAE envelopes and humidity control; water use and heat reuse.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+<details class="topic pending" id="t-compute" data-topic-page="L3-compute"><summary><span class="n">8</span><span class="t">AI/HPC Infrastructure + Compute &amp; Storage</span><span class="st">not started</span></summary><div class="body"><p>An AI rack can draw more than a hundred kilowatts where a normal one draws eight, and that single fact rewrites the power, cooling, structure, and network around it. Underneath sits the ordinary business: racks and rack units, servers, and storage as direct, networked, or object.</p><p class="desc"><strong>AI clusters as a design driver</strong>: what megawatt racks change across power, cooling, network, floor loading, and cost. Then the general case — racks and rack units, server platforms, storage architectures (DAS, SAN, NAS, object, disaggregated), virtualization and orchestration at a glance, and where density is heading.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+<details class="topic pending" id="t-network" data-topic-page="L3-network"><summary><span class="n">9</span><span class="t">Network Architecture &amp; Structured Cabling</span><span class="st">not started</span></summary><div class="body"><p>Modern fabrics are flat: leaf switches at every rack, spines connecting them, any server two hops from any other. Overlays like EVPN/VXLAN carve it into tenants; AI clusters demand their own high-speed fabric. Beneath the logic lies physical plant — fiber, copper, pathways, patch fields, and the room where carriers land.</p><p class="desc">The logical layer: spine-leaf (Clos) fabrics, ToR versus EoR, underlay and overlay (BGP, EVPN/VXLAN), AI fabrics (InfiniBand, 800G), peering and data-center interconnect, out-of-band management. The physical layer that carries it: copper and fiber media, TIA-942 spaces (MDA/IDA/HDA/EDA), overhead versus underfloor pathways, cross-connects, labeling, meet-me rooms and carrier entry.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+<details class="topic pending" id="t-security-monitoring" data-topic-page="L3-security-monitoring"><summary><span class="n">10</span><span class="t">Physical Security, Fire Protection, Monitoring &amp; Efficiency</span><span class="st">not started</span></summary><div class="body"><p>Security is layered from fence to cabinet, each ring assuming the last one failed. Fire is detected early and suppressed without ruining the equipment. Sensors watch power, temperature, and space, feeding BMS, DCIM, and EPMS. PUE, WUE, and CUE score the waste — imperfectly, and easy to flatter.</p><p class="desc">Layered security from perimeter to rack; access control, mantraps, surveillance; fire detection (spot, VESDA) and suppression (pre-action, clean agent); egress and life safety. Then the instrumentation layer: sensors and metering, BMS versus DCIM versus EPMS, alerting, capacity dashboards, asset and change tracking — and <strong>PUE/WUE/CUE, their limits, and efficiency levers</strong>, taught where they are actually measured.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+</section>
+<section class="phase" id="ph-handover"><h2>Handover</h2><p class="why">Proving it works, running it, and ending it.</p>
+<details class="topic pending" id="t-commissioning" data-topic-page="L3-commissioning"><summary><span class="n">11</span><span class="t">Commissioning, Operations &amp; Decommissioning</span><span class="st">not started</span></summary><div class="body"><p>A finished building is not a working one. Commissioning proves each system, then all of them together, culminating in deliberately cutting utility power to see what happens. Operations then lives by written procedures, planned maintenance, and disciplined change. At the end, hardware leaves under chain of custody with its data destroyed.</p><p class="desc">Proving it works, running it, and ending it. Commissioning levels 1–5; factory and site acceptance; <strong>the independent commissioning agent</strong> and why independence is the point; integrated systems testing (pull-the-plug day); documentation and handover. Then MOPs/SOPs/EOPs, preventive maintenance, staffing and the labor shortage, change and incident management, vendor and spares strategy. Finally decommissioning: ITAD, data sanitization, and chain of custody.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+</section>
+<section class="phase synthesis" id="ph-threads"><h2>Threads</h2><p class="why">Follow a watt, a bit, a BTU and a dollar across everything above.</p>
+<details class="topic pending" id="t-threads" data-topic-page="L3-threads"><summary><span class="n">12</span><span class="t">Cross-Topic Threads</span><span class="st">not started</span></summary><div class="body"><p>The course ends by tracing single things all the way through: a watt from substation to processor, a bit from the internet and back, a BTU from chip to sky, a dollar from budget to installed capacity, and the second-by-second timeline of a utility failure.</p><p class="desc">Follow a watt (utility → CPU); follow a bit (internet → server → back); follow a BTU (chip → outside air); the utility-failure timeline, second by second; <strong>follow a dollar</strong> (budget → procurement → installed capacity); and how one decision — rack density — ripples across power, cooling, building, network, and operations.</p><p class="links"><span class="off">Chapter not written yet</span> </p></div></details>
+</section>
+  
 </main>
-<footer>Datacenter Course — self-study project. Questions? File a GitHub
-issue on this repo.</footer>
+<footer>Generated from the course markdown on 2026-09-23. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a></footer>
+<script src="./site.js" defer></script>
 </body>
 </html>

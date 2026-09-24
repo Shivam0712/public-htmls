@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Glossary — Datacenter Course</title>
+<!-- PWA: installable + offline. All paths relative: the site is served
+     from a subdirectory of the public-htmls Pages repo. -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DC Course">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="preload" href="./fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./site.css">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
+    });
+  }
+</script>
+</head>
+<body class="" data-page="glossary">
+
+<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><span class="here">Glossary</span></header>
+<main class="">
+  <h1>Glossary</h1>
+  <p class="lede">One plain-English line per term, added as each chapter is written.</p>
+<input class="filter" type="search" placeholder="Filter terms" aria-label="Filter glossary terms">
+<section class="gloss-group"><h2>Course &amp; system terms</h2><dl class="gloss">
+<dt id="r-w">[R] / [W]</dt><dd>topic research mode — Desktop Research feature vs Claude Code's own web search (see PLAN.md).</dd>
+<dt id="wrap">Wrap</dt><dd>the close-out procedure (/wrap) that updates state, syncs issues, regenerates docs, and lands a <code>wrap:</code> commit.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Data center terms</h2><dl class="gloss">
+<dt id="cdu">CDU</dt><dd>Coolant Distribution Unit — the interface between the building's water loop and the liquid-cooling loops inside a rack.</dd>
+<dt id="cxa">CxA</dt><dd>Commissioning Agent — the independent third party who verifies systems perform as designed. Independent on purpose: they work for the owner, not the designer or builder.</dd>
+<dt id="dbb-db">DBB / DB</dt><dd>Design-Bid-Build (design and construction contracted separately, one after the other) / Design-Build (one firm does both).</dd>
+<dt id="dcim-bms-epms">DCIM / BMS / EPMS</dt><dd>Data Center Infrastructure Management / Building Management System / Electrical Power Monitoring System — three overlapping monitoring stacks that watch IT, building, and electrical systems.</dd>
+<dt id="direct-to-chip-immersion-cooling">Direct-to-chip / immersion cooling</dt><dd>bringing liquid to the chip via cold plates, or submerging hardware in non-conductive fluid. Required above roughly 50 kW per rack.</dd>
+<dt id="epc">EPC</dt><dd>Engineering, Procurement, Construction — a delivery model where one contractor owns all three, concentrating schedule and performance risk in a single party.</dd>
+<dt id="interconnection">Interconnection</dt><dd>the utility's process of studying and connecting a large new electrical load to the grid. A multi-year process, not a wiring job.</dd>
+<dt id="ist">IST</dt><dd>Integrated Systems Test — the "pull the plug" rehearsal that fails everything at once to see whether the facility really rides through.</dd>
+<dt id="itad">ITAD</dt><dd>IT Asset Disposition — secure disposal or resale of retired equipment, including data sanitization (NIST 800-88).</dd>
+<dt id="long-lead-equipment">Long-lead equipment</dt><dd>gear whose manufacturing time dominates the project schedule — transformers, switchgear, generators. Ordered before the design is finished.</dd>
+<dt id="ocp-orv3-48v-busbar">OCP / ORv3 / 48V busbar</dt><dd>Open Compute Project and its Open Rack v3 spec; the shift from 12V to 48V DC rack power to feed high density.</dd>
+<dt id="opr-bod">OPR / BOD</dt><dd>Owner's Project Requirements / Basis of Design — what the owner needs, and how the design intends to meet it. Commissioning tests against these two documents.</dd>
+<dt id="pue-wue-cue">PUE / WUE / CUE</dt><dd>Power / Water / Carbon Usage Effectiveness — total facility resource use divided by IT resource use. Lower is better; all three are easy to game.</dd>
+<dt id="rack-density-kw-rack">Rack density (kW/rack)</dt><dd>power drawn, and therefore heat produced, per rack. The number that drives power, cooling, and structural design.</dd>
+<dt id="spine-leaf-clos">Spine-leaf (Clos)</dt><dd>the flat, scalable network topology used inside data centers. <strong>EVPN/VXLAN</strong> are the overlay protocols run on top of it.</dd>
+<dt id="tier-uptime-rating-tia-942-class-bicsi">Tier (Uptime) / Rating (TIA-942) / Class (BICSI)</dt><dd>three competing schemes for classifying facility redundancy and availability, I–IV or equivalent. They are not interchangeable.</dd>
+</dl></section>
+  
+</main>
+<footer>Generated from the course markdown on 2026-09-23. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a></footer>
+<script src="./site.js" defer></script>
+</body>
+</html>
