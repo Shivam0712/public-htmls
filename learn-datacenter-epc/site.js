@@ -80,7 +80,7 @@
      5, 7, 8 refine them. Keep the model in estimate() and nowhere else. */
   var RACKS = 1000;          // the hall we hold fixed: a room of 1,000 cabinets
   var BLOCK_MW = 2.5;        // one UPS + generator block, commonly 2 to 3 MW
-  var THRESH = [20, 38, 70]; // kW/rack: air alone ends, containment ends, liquid required
+  var THRESH = [20, 45, 80]; // kW/rack: air alone ends, containment ends, liquid required (Topic 2 scale)
   var REGIME = [
     { mode: 'Air, room-level', pue: [1.4, 1.7], liquid: [0, 0],     m2: 2.8 },
     { mode: 'Air with containment', pue: [1.25, 1.45], liquid: [0, 0], m2: 2.8 },
@@ -88,7 +88,7 @@
     { mode: 'Direct-to-chip liquid', pue: [1.1, 1.25], liquid: [0.7, 0.8], m2: 4.0 }
   ];
   /* Slider position 0..200 -> kW. The scale is stretched (power 1.5) so the
-     5-70 kW range where every threshold sits gets ~60% of the track. */
+     5-80 kW range where every threshold sits gets ~60% of the track. */
   function kwFromPos(p) { return 5 + 145 * Math.pow(p / 200, 1.5); }
   function posFromKw(kw) { return 200 * Math.pow((kw - 5) / 145, 1 / 1.5); }
 
