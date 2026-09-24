@@ -35,6 +35,23 @@
     render();
   }
 
+  /* ---- expand / collapse every read-more on a chapter ---- */
+  var xa = document.querySelector('[data-expand-all]');
+  if (xa) {
+    var mores = document.querySelectorAll('details.more');
+    var paint2 = function () {
+      var allOpen = Array.prototype.every.call(mores, function (d) { return d.open; });
+      xa.textContent = allOpen ? 'Collapse all' : 'Expand all';
+      xa.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
+    };
+    xa.addEventListener('click', function () {
+      var allOpen = Array.prototype.every.call(mores, function (d) { return d.open; });
+      mores.forEach(function (d) { d.open = !allOpen; }); paint2();
+    });
+    mores.forEach(function (d) { d.addEventListener('toggle', paint2); });
+    paint2();
+  }
+
   /* ---- quiz cards ---- */
   var quiz = load(KEY_QUIZ);
   document.querySelectorAll('.quiz').forEach(function (card) {
