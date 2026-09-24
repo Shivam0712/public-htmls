@@ -92,6 +92,29 @@
 <dt id="turnkey">Turnkey</dt><dd>a contract that hands over a complete, working facility for a fixed price; the usual meaning of EPC in data centers.</dd>
 <dt id="white-space-gray-space">White space / gray space</dt><dd>the IT floor where racks live / the support area holding UPS, switchgear, generators and cooling plant.</dd>
 </dl></section>
+<section class="gloss-group"><h2>Topic 2 — Requirements, capacity and availability</h2><dl class="gloss">
+<dt id="ahj-authority-having-jurisdiction">AHJ (Authority Having Jurisdiction)</dt><dd>the local building or fire official who decides which code editions apply at a site and enforces them, local amendments included.</dd>
+<dt id="ai-ready">AI-ready</dt><dd>a label that means something only when it names numbers: kW per rack, floor loading, supply-water temperature, GPM per rack, CDU space.</dd>
+<dt id="ashrae-90-4-mlc-elc">ASHRAE 90.4 (MLC / ELC)</dt><dd>the data center energy standard; compliance is two ratios against maxima, the Mechanical Load Component (cooling power over IT power) and the Electrical Loss Component (power-chain losses). PUE is defined but not used for compliance.</dd>
+<dt id="ashrae-guideline-0-standard-202">ASHRAE Guideline 0 / Standard 202</dt><dd>the commissioning-process guideline and standard that make the OPR the yardstick the finished facility is tested against.</dd>
+<dt id="availability-class-en-50600-iso-iec-22237">Availability class (EN 50600 / ISO/IEC 22237)</dt><dd>the European framework's Class 1–4, basic to fault tolerant, set separately for power, cooling and cabling, plus Protection Class 1–4 for physical security.</dd>
+<dt id="change-order">Change order</dt><dd>an amendment to a signed contract that changes scope, price or time; how a vague requirement becomes the owner's bill.</dd>
+<dt id="code-standard-guideline-certification">Code / standard / guideline / certification</dt><dd>legal minimum rules enforced by the AHJ / detailed good practice, binding only when a code adopts it by reference / advisory best practice / third-party verification against a standard.</dd>
+<dt id="concurrent-maintainability">Concurrent maintainability</dt><dd>any component can be taken out for maintenance without shutting down IT, which needs redundant components and redundant paths (Uptime Tier III).</dd>
+<dt id="containment-hot-cold-aisle">Containment (hot / cold aisle)</dt><dd>walls, doors and roofs that keep cold supply air and hot exhaust from mixing; needed from roughly 10 kW per rack, and air's practical limit sits near 20 kW.</dd>
+<dt id="density-profile-pod">Density profile / pod</dt><dd>the distribution of kW per rack across the zones of a hall, never an average; a pod is a group of cabinets sharing one power and cooling rating, and no cabinet may exceed the pod's peak.</dd>
+<dt id="design-load-nameplate-actual-load">Design load / nameplate / actual load</dt><dd>what the facility is sized to carry after diversity and headroom / the sum of equipment ratings / the real operating draw. Each is smaller than the last; the power block is sized to the first.</dd>
+<dt id="epo-emergency-power-off">EPO (Emergency Power Off)</dt><dd>the single-action disconnect that kills power to an IT room; one of the NEC Article 645.4 conditions.</dd>
+<dt id="fault-tolerance">Fault tolerance</dt><dd>any single failure is survived automatically because two active paths run in physically separated rooms (Uptime Tier IV).</dd>
+<dt id="nec-article-645">NEC Article 645</dt><dd>the optional National Electrical Code article for IT rooms; an owner opts in by meeting 645.4 (dedicated HVAC, restricted room, fire-rated separation, EPO) in exchange for wiring flexibility.</dd>
+<dt id="nfpa-75-76-855">NFPA 75 / 76 / 855</dt><dd>fire protection of IT equipment / of telecom facilities / of energy-storage systems; the last is reshaping UPS battery rooms as lithium-ion replaces lead-acid.</dd>
+<dt id="performance-specification">Performance specification</dt><dd>a specification that states the outcome to be achieved (Tier III, PUE ≤ 1.4, 10 MW) and leaves the means to the contractor; the basis of EPC risk transfer.</dd>
+<dt id="phasing-day-one-vs-ultimate">Phasing (day-one vs ultimate)</dt><dd>building shell and site for the ultimate load but MEP for the first block only, adding plant as leasing and interconnection arrive.</dd>
+<dt id="rdhx-rear-door-heat-exchanger">RDHx (rear-door heat exchanger)</dt><dd>a liquid-cooled coil on the back of a rack that removes exhaust heat before it reaches the room; bridges roughly 20–80 kW per rack.</dd>
+<dt id="reference-design-owner-standard">Reference design (owner standard)</dt><dd>a repeatable, pre-engineered building block an owner reuses across sites under a master agreement; the hyperscaler way to keep cost predictable.</dd>
+<dt id="stranded-capacity">Stranded capacity</dt><dd>capacity paid for but unusable because a different resource (power, cooling, busway, floor) ran out first.</dd>
+<dt id="tcdd-tccf-tcos">TCDD / TCCF / TCOS</dt><dd>Uptime's Tier Certification of Design Documents / Constructed Facility / Operational Sustainability. Ask for the TCCF for the specific hall; many plaques are design-only.</dd>
+</dl></section>
   
 </main>
 <footer>Generated from the course markdown on 2026-09-24. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a></footer>
