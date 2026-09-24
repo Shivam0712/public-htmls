@@ -4,6 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Overview — Datacenter Course</title>
+<!-- PWA: installable + offline. All paths relative: the site is served
+     from a subdirectory of the public-htmls Pages repo. -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf9f5">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161514">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DC Course">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
+    });
+  }
+</script>
 <style>
   :root{
     --bg:#faf9f5; --ink:#232120; --muted:#6b675f; --accent:#b05730;
@@ -77,7 +95,7 @@
 </header>
 <main>
   <h1>Overview</h1>
-  <div class="meta">Layer 2 — Sixty Words a Topic · Last updated 2026-08-30</div>
+  <div class="meta">Layer 2 — Sixty Words a Topic · Last updated 2026-09-23</div>
   <p class="lede">Every topic in sixty words or fewer. These are Day 1 stubs written from the topology; they get rewritten on Day 13 as a true compression of the finished chapters.</p>
 <div class="l2">
 <h2>1. Foundations, Delivery Models &amp; Project Economics</h2>
