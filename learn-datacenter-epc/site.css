@@ -345,7 +345,10 @@ ol.timeline li::before{content:"";position:absolute;left:-1.1rem;top:.45rem;widt
 ol.timeline li:last-child{padding-bottom:.2rem}
 ol.timeline .stage{font-weight:600}
 ol.timeline .dur{font-family:var(--mono);font-size:.8rem;color:var(--ink);background:var(--sheet);
-  border:1px solid var(--rule);border-radius:3px;padding:.05rem .4rem;white-space:nowrap}
+  border:1px solid var(--rule);border-radius:3px;padding:.05rem .4rem;max-width:11rem;text-align:right;
+  line-height:1.3;justify-self:end}
+@media (max-width:30rem){ol.timeline li{grid-template-columns:1fr}
+  ol.timeline .dur{justify-self:start;text-align:left;max-width:100%}}
 ol.timeline .lock{grid-column:1/-1;color:var(--steel);font-size:.92rem}
 
 /* flow: boxes with labelled edges; row on wide screens, column on phones */
