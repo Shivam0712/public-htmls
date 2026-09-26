@@ -1,5 +1,5 @@
 /* site.js — reader behaviour. No network, no dependencies.
-   Progress and quiz results live in localStorage under dc-course:*.
+   Progress, quiz results and the card-deck position live in localStorage under dc-course:*.
    Copied verbatim into docs/ by scripts/build-docs.py. */
 (function () {
   'use strict';
@@ -9,9 +9,10 @@
   var page = document.body.getAttribute('data-page') || '';
 
   /* ---- reading progress line (chapter pages) ---- */
-  var bar = document.querySelector('.progress');
+  var bar = document.querySelector('.progress'), tick = null;
   if (bar) {
-    var tick = function () {
+    tick = function () {
+      if (document.querySelector('.deck[data-view=one]')) return; /* the deck sets it by card index */
       var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
       bar.style.width = (max > 0 ? Math.min(100, 100 * h.scrollTop / max) : 0) + '%';
     };
@@ -72,6 +73,95 @@
     paint();
   });
 
+
+  /* ---- card deck (C-<slug> pages) ----
+     One state, one render(). The cards themselves are quiz cards (handled
+     above, stored under dc-course:quiz as C-<slug>#<id>); this block only
+     decides which of them are shown. view: 'one' (current card, Next /
+     Previous, arrow keys, swipe) or 'all' (the list). filter: null or the
+     list of card indices to step through (Review missed). The position is
+     remembered per deck under dc-course:deck-pos. */
+  var deck = document.querySelector('.deck');
+  if (deck) {
+    var KEY_POS = 'dc-course:deck-pos', deckId = page;
+    var cards = Array.prototype.slice.call(deck.querySelectorAll('.card'));
+    var fin = deck.querySelector('.card.fin'), last = cards.length - 1;
+    var posStore = load(KEY_POS);
+    var st = { view: 'one', i: Math.min(Math.max(parseInt(posStore[deckId], 10) || 0, 0), last), filter: null };
+    var vt = deck.querySelector('[data-view-toggle]'), dn = deck.querySelector('[data-deck-note]');
+    var bPrev = deck.querySelector('[data-prev]'), bNext = deck.querySelector('[data-next]');
+    var bMiss = deck.querySelector('[data-review-missed]'), bAll = deck.querySelector('[data-review-all]');
+    var order = function () { return st.filter || cards.map(function (_, k) { return k; }); };
+    var tally = function () {
+      var q = load(KEY_QUIZ), t = { hit: 0, miss: 0, missIdx: [] };
+      cards.forEach(function (c, k) {
+        var id = c.getAttribute('data-q'); if (!id) return;
+        var r = q[deckId + '#' + id];
+        if (r === 'hit') t.hit++; else if (r === 'miss') { t.miss++; t.missIdx.push(k); }
+      });
+      return t;
+    };
+    var renderDeck = function () {
+      var vis = order();
+      if (vis.indexOf(st.i) < 0) st.i = vis[0];
+      var k = vis.indexOf(st.i), one = st.view === 'one';
+      deck.setAttribute('data-view', st.view);
+      cards.forEach(function (c, j) {
+        c.classList.toggle('cur', j === st.i);
+        c.hidden = one ? j !== st.i : vis.indexOf(j) < 0;
+      });
+      if (vt) { vt.textContent = one ? 'Show all cards' : 'One at a time'; vt.setAttribute('aria-pressed', one ? 'false' : 'true'); }
+      if (bPrev) bPrev.disabled = k <= 0;
+      if (bNext) bNext.disabled = k >= vis.length - 1;
+      var t = tally();
+      if (fin) {
+        fin.querySelector('[data-fin-hit]').textContent = t.hit;
+        fin.querySelector('[data-fin-miss]').textContent = t.miss;
+        fin.querySelector('[data-fin-left]').textContent = last - t.hit - t.miss;
+        if (bMiss) { bMiss.disabled = t.miss === 0; bMiss.textContent = t.miss ? 'Review ' + t.miss + ' missed' : 'Nothing missed'; }
+        if (bAll) bAll.hidden = !st.filter;
+      }
+      if (dn) dn.textContent = st.filter ? 'Reviewing ' + (st.filter.length - 1) + ' missed card' + (st.filter.length === 2 ? '' : 's') : '';
+      if (bar) { if (one) bar.style.width = (100 * (k + 1) / vis.length).toFixed(2) + '%'; else if (tick) tick(); }
+      posStore[deckId] = st.i; save(KEY_POS, posStore);
+    };
+    var go = function (d) {
+      var vis = order(), k = vis.indexOf(st.i) + d;
+      if (k < 0 || k >= vis.length) return;
+      st.i = vis[k]; renderDeck();
+      var top = deck.getBoundingClientRect().top + window.scrollY - 8;
+      if (window.scrollY > top || deck.getBoundingClientRect().top < 0) window.scrollTo(0, top);
+      var h = cards[st.i].querySelector('h2');
+      if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+    };
+    if (bPrev) bPrev.addEventListener('click', function () { go(-1); });
+    if (bNext) bNext.addEventListener('click', function () { go(1); });
+    if (vt) vt.addEventListener('click', function () { st.view = st.view === 'one' ? 'all' : 'one'; renderDeck(); });
+    if (bMiss) bMiss.addEventListener('click', function () {
+      var m = tally().missIdx; if (!m.length) return;
+      st.filter = m.concat([last]); st.i = m[0]; renderDeck();
+      if (st.view === 'one') go(0);
+    });
+    if (bAll) bAll.addEventListener('click', function () { st.filter = null; renderDeck(); });
+    deck.addEventListener('click', function (ev) { if (ev.target.closest('[data-score]')) renderDeck(); });
+    document.addEventListener('keydown', function (ev) {
+      if (st.view !== 'one' || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+      if (/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
+      if (ev.key === 'ArrowRight') { ev.preventDefault(); go(1); }
+      else if (ev.key === 'ArrowLeft') { ev.preventDefault(); go(-1); }
+    });
+    var tx = 0, ty = 0, touching = false;
+    deck.addEventListener('touchstart', function (ev) {
+      var t = ev.changedTouches[0]; tx = t.clientX; ty = t.clientY; touching = true;
+    }, { passive: true });
+    deck.addEventListener('touchend', function (ev) {
+      if (!touching) return; touching = false;
+      if (st.view !== 'one') return;
+      var t = ev.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty;
+      if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    renderDeck();
+  }
 
   /* ---- figure lightbox: tap a raster figure to see it at readable size ----
      Illustration labels are about 6px tall at phone width. One overlay per
@@ -376,7 +466,7 @@
     });
     if (rs) rs.addEventListener('click', function () {
       if (confirm('Clear all reading and quiz progress on this device?')) {
-        localStorage.removeItem(KEY_READ); localStorage.removeItem(KEY_QUIZ); location.reload();
+        localStorage.removeItem(KEY_READ); localStorage.removeItem(KEY_QUIZ); localStorage.removeItem('dc-course:deck-pos'); location.reload();
       }
     });
   }

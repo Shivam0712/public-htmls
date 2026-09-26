@@ -352,16 +352,16 @@ ol.timeline .dur{font-family:var(--mono);font-size:.8rem;color:var(--ink);backgr
 ol.timeline .lock{grid-column:1/-1;color:var(--steel);font-size:.92rem}
 
 /* flow: boxes with labelled edges; row on wide screens, column on phones */
-ol.flow{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;align-items:stretch}
-ol.flow .box{border:1.75px solid var(--ink);background:var(--paper);padding:.55rem .8rem;font-weight:500;
+ol.flow,ol.mm-chain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;align-items:stretch}
+ol.flow .box,ol.mm-chain .box{border:1.75px solid var(--ink);background:var(--paper);padding:.55rem .8rem;font-weight:500;
   border-radius:3px;text-align:center}
-ol.flow .edge{position:relative;min-height:2.4rem;display:flex;align-items:center;justify-content:center;
+ol.flow .edge,ol.mm-chain .edge{position:relative;min-height:2.4rem;display:flex;align-items:center;justify-content:center;
   color:var(--steel);font-size:.85rem;padding:.2rem 1.6rem}
-ol.flow .edge::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--ink);
+ol.flow .edge::before,ol.mm-chain .edge::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--ink);
   transform:translateX(-50%)}
-ol.flow .edge::after{content:"";position:absolute;left:50%;bottom:-1px;border:6px solid transparent;
+ol.flow .edge::after,ol.mm-chain .edge::after{content:"";position:absolute;left:50%;bottom:-1px;border:6px solid transparent;
   border-top:8px solid var(--ink);border-bottom:0;transform:translateX(-50%)}
-ol.flow .edge span{background:var(--paper);position:relative;padding:.05rem .4rem;z-index:1}
+ol.flow .edge span,ol.mm-chain .edge span{background:var(--paper);position:relative;padding:.05rem .4rem;z-index:1}
 @media (min-width:52rem){
   ol.flow{flex-direction:row;align-items:stretch;padding-bottom:1.9rem}
   ol.flow .box{flex:1 1 0;min-width:4.5rem;display:flex;align-items:center;justify-content:center;
@@ -373,6 +373,8 @@ ol.flow .edge span{background:var(--paper);position:relative;padding:.05rem .4re
   ol.flow .edge span{position:absolute;top:calc(50% + .55rem);left:0;right:0;text-align:center;background:none;
     padding:0 .15rem;font-size:.76rem;line-height:1.25}
 }
+
+/* (ol.mm-chain, the card deck's vertical chain, shares the column rules above and never goes to a row) */
 
 /* compare: matrix with graded dots; first column sticks on phones */
 .compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1.25rem;padding:0 1.25rem}
@@ -482,3 +484,71 @@ figure.fig img[role=button]{cursor:zoom-in}
 html.lb-lock,body.lb-lock{overflow:hidden}
 body.lb-lock{position:fixed;left:0;right:0}
 @media (prefers-reduced-motion:reduce){.lightbox{transition:none}}
+
+/* ============ card deck (C-<slug>) ============
+   One question per article.card; the same reveal / got-it / missed pattern
+   and storage as the chapter quiz (class quiz). data-view="one" shows only
+   the current card (site.js sets hidden on the rest); "all" is the list. */
+.deck{margin-top:1.2rem}
+.deck-bar{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap;
+  padding:0 0 .7rem;border-bottom:1px solid var(--rule)}
+.deck .btn{min-height:44px;padding:.6rem 1rem}
+.deck .card{background:transparent;border:0;border-bottom:1px solid var(--rule);border-radius:0;
+  padding:1.2rem 0 1.4rem;margin:0}
+.deck[data-view=one] .card{border-bottom:0}
+.deck .card .meta{display:flex;justify-content:space-between;gap:.6rem;font-size:.85rem;
+  color:var(--steel);margin:0 0 .45rem}
+.deck .card h2{font-size:1.25rem;line-height:1.3;margin:0 0 .9rem;text-wrap:pretty}
+.deck .card .a{display:none;border-top:0;padding-top:0;margin:0 0 .9rem}
+.deck .card.open .a{display:block}
+.deck .card .a>p{margin-bottom:.8rem}
+.deck .card .row{margin-top:.2rem}
+.deck .card .result:not(:empty)::before{content:"";display:inline-block;width:.6rem;height:.6rem;
+  border-radius:50%;margin-right:.4rem;background:var(--rule);vertical-align:.02em}
+.deck .card.hit .result::before{background:var(--live)}
+.deck .card.miss .result::before{background:var(--risk)}
+.deck .card .src{margin:.9rem 0 0;font-size:.82rem}
+.deck .card.fin .tally{font-size:1.05rem}
+.deck .card.fin .tally b{font-weight:600}
+.deck-nav{display:flex;justify-content:space-between;align-items:center;gap:.6rem;
+  margin-top:.6rem;padding-top:.9rem;border-top:1px solid var(--rule)}
+.deck-nav .btn{min-width:6.5rem}
+.deck-nav .hint{flex:1;text-align:center;font-size:.82rem}
+.deck-nav .btn[disabled]{opacity:.4;cursor:default}
+.deck-nav .btn[disabled]:hover{background:var(--paper);color:var(--ink)}
+.deck[data-view=all] .deck-nav{display:none}
+@media (max-width:26rem){.deck-nav .hint{display:none}}
+
+/* the mental model: a sheet panel with a copper rule, drawn from the card's visual spec */
+.mm{background:var(--sheet);border-left:3px solid var(--copper);padding:.8rem .9rem .75rem;
+  margin:.4rem 0 .4rem;border-radius:2px;font-size:.92rem;line-height:1.45}
+.mm .kicker{display:block;color:var(--steel);font-size:.82rem;margin-bottom:.55rem}
+.mm .mm-cap{margin:.65rem 0 0;color:var(--steel);font-size:.85rem;line-height:1.4}
+.mm .mm-h{font-weight:600;display:block}
+.mm .mm-t{display:block}
+.mm ul{margin:.25rem 0 0;padding-left:1rem}
+.mm li{margin:.15rem 0}
+ol.mm-chain .box{text-align:left;font-weight:400;padding:.5rem .7rem;font-size:.9rem}
+ol.mm-chain .edge{min-height:2.2rem;font-size:.8rem;line-height:1.3;padding:.25rem 1rem}
+ol.mm-chain .edge span{background:var(--sheet)}
+ul.mm-notes{margin:.6rem 0 0;padding-left:1.1rem;color:var(--steel);font-size:.85rem}
+ul.mm-grid{list-style:none;margin:0;padding:0;display:grid;gap:.5rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,8.5rem),1fr))}
+.mm-tile{border:1px solid var(--rule);background:var(--paper);padding:.5rem .6rem;border-radius:2px;
+  font-size:.88rem;line-height:1.4}
+.mm-tile ul{padding-left:.95rem}
+.mm-tree ul{list-style:none;margin:0;padding:0}
+.mm-tree ul ul{margin:.3rem 0 0;padding-left:.9rem;border-left:2px solid var(--rule)}
+.mm-tree li{margin:.3rem 0;position:relative}
+.mm-tree ul ul li{padding-left:.6rem}
+.mm-tree ul ul li::before{content:"";position:absolute;left:0;top:.7em;width:.45rem;height:2px;background:var(--rule)}
+.mm-eq code{display:block;background:var(--paper);border:1px solid var(--rule);padding:.35rem .6rem;
+  margin:0 0 .35rem;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.84rem;line-height:1.45;border-radius:2px}
+.mm-note{margin:.5rem 0 0;font-size:.88rem}
+.mm-ill{border:1.5px dashed var(--steel);padding:.7rem .8rem;border-radius:2px}
+.mm-ill p{margin:0 0 .4rem;font-style:italic;color:var(--steel)}
+.mm-ill .mm-labels{font-family:var(--mono);font-size:.8rem}
+@media print{
+  .deck .card[hidden]{display:block}.deck .card .a{display:block}
+  .deck-bar,.deck-nav,.deck .row,.progress{display:none}
+}
