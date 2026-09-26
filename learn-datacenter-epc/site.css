@@ -197,7 +197,6 @@ details.topic .body p{margin:0 0 .7rem}
 details.topic .body .links{font-size:.9rem}
 details.topic .body .links a{margin-right:1rem}
 details.topic .body .links .off{color:var(--steel);margin-right:1rem}
-details.topic .body .desc{color:var(--steel);font-size:.94rem}
 @media (max-width:30rem){
   details.topic summary{grid-template-columns:1.6rem 1fr;grid-template-areas:"n t" ". st"}
   details.topic summary .n{grid-area:n}details.topic summary .t{grid-area:t}
@@ -279,8 +278,11 @@ dl.gloss .hide{display:none}
 .x-scale .mk.b{top:3.1rem}
 .x-scale .mk.b::before{top:-1.9rem;height:1.9rem}
 .x-scale .mk:hover{color:var(--live)}
-.x-scale .mk[data-kw="115"]::before{display:none}
-.x-scale .mk[data-kw="115"]{color:var(--live)}
+/* marks in the last fifth of the track hang left of their tick on phones so the label stays inside */
+@media (max-width:40rem){
+  .x-scale .mk.end{transform:translateX(-100%)}
+  .x-scale .mk.end::before{left:auto;right:0}
+}
 .x-note{color:var(--print-dim);font-size:.82rem;margin:.6rem 0 0;max-width:60ch}
 @media (max-width:26rem){.x-scale{font-size:.66rem}.x-scale .mk{font-size:.66rem}}
 
@@ -321,6 +323,15 @@ dl.gloss .hide{display:none}
 .pic .tk{font-family:var(--mono);font-size:10px;fill:var(--print-dim)}
 .takeaway{margin:1.6rem 0 0;font-size:1.12rem;line-height:1.45;max-width:60ch;color:var(--print-ink);
   border-left:3px solid var(--live);padding-left:.9rem;min-height:3.2em}
+/* the index teaser: a quiet exhibit label pointing at explorer.html; no blueprint here */
+.explore-teaser{margin:1.6rem 0 0;padding:1rem 1.2rem 1.1rem;max-width:56ch;
+  background:var(--sheet);border:1px solid var(--rule);border-left:3px solid var(--live);border-radius:3px}
+.explore-teaser h2{font-size:1.12rem;margin:0 0 .35rem}
+.explore-teaser p{margin:0 0 .8rem;color:var(--steel);font-size:.94rem;line-height:1.5}
+.explore-teaser .btn{min-height:44px;padding:.7rem 1rem;display:inline-flex;align-items:center}
+/* explorer.html: the hero sits directly under the page h1; the method block and the way back follow */
+.explorer-page h1{margin-bottom:1rem}
+.x-back{margin:1.6rem 0 0;color:var(--steel);max-width:56ch}
 details.method{margin:1.2rem 0 0;font-size:.94rem}
 details.method summary{cursor:pointer;color:var(--steel);padding:.5rem 0}
 details.method summary:hover{color:var(--ink)}

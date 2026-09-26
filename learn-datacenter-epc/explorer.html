@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One number decides the building — Datacenter Course</title>
+<!-- PWA: installable + offline. All paths relative: the site is served
+     from a subdirectory of the public-htmls Pages repo. -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DC Course">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="preload" href="./fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./site.css">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
+    });
+  }
+</script>
+</head>
+<body class="landing explorer-page" data-page="explorer">
+
+<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><span class="here">Explorer</span></header>
+<main class="wide">
+  <h1>One number decides the building</h1>
+  <section class="explorer" data-regime="1" aria-label="One number decides the building">
+  <div class="x-top"><div><p class="x-sub">Drag the rack density. Everything downstream is re-sized live for a
+  hall of 1,000 racks. The racks are held fixed because a room of cabinets is what an
+  owner orders; the substation, generators, chillers and slab are sized from what
+  they draw.</p></div>
+  <output class="x-out" for="density"><b data-x="kw">45</b> <span class="u">kW per rack</span></output></div>
+  <div class="x-ctl"><label for="density">Rack density</label>
+  <input type="range" id="density" min="0" max="200" step="1" value="85" aria-valuetext="45 kilowatts per rack"
+   aria-describedby="x-scale-note">
+  <div class="x-scale"><span class="band air" style="left:0.0%;width:22.0%"></span><span class="band contained" style="left:22.0%;width:20.3%"></span><span class="band rear-door" style="left:42.4%;width:22.1%"></span><span class="band liquid" style="left:64.4%;width:35.6%"></span><span class="band ai" style="left:75.4%;width:22.3%"></span><span class="tk" style="left:0.0%">5</span><span class="tk" style="left:10.6%">10</span><span class="tk" style="left:22.0%">20</span><span class="tk" style="left:42.4%">45</span><span class="tk" style="left:64.4%">80</span><span class="tk" style="left:75.4%">100</span><span class="tk" style="left:100.0%">150</span><button type="button" class="mk a" data-kw="20" style="left:22.0%">air alone ends</button><button type="button" class="mk a" data-kw="80" style="left:64.4%">liquid required</button><button type="button" class="mk b" data-kw="45" style="left:42.4%">containment ends</button><button type="button" class="mk b end" data-kw="120" style="left:85.7%">NVL72 racks, GB200 and GB300</button></div>
+  <p id="x-scale-note" class="x-note">Scale stretched below 80 kW, where every threshold sits.
+  Tap a marker to jump to it. Thresholds are ranges in practice; these are the middle of them.</p></div>
+  <ol class="ripple" aria-label="The ripple: what the density decision re-sizes"><li class="stn" data-st="rack"><svg class="pic" data-pic="rack" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>The rack</h3><div class="kv"><span class="k">What fits</span><b class="n" data-x="fits"></b></div><a class="tp" href="index.html#t-compute">Topic 8</a></div></li><li class="stn" data-st="power"><svg class="pic" data-pic="power" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Power and grid</h3><div class="kv"><span class="k">IT load</span><b class="n" data-x="it"></b></div><div class="kv"><span class="k">At the fence</span><b class="n" data-x="fac"></b></div><div class="kv"><span class="k">UPS blocks</span><b class="n" data-x="ups"></b></div><div class="kv"><span class="k">Generators</span><b class="n" data-x="gens"></b></div><div class="kv"><span class="k">Grid connection</span><b class="n" data-x="tier"></b></div><a class="tp" href="index.html#t-power-1">Topics 3, 5, 6</a></div></li><li class="stn" data-st="cooling"><svg class="pic" data-pic="cooling" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Cooling</h3><div class="kv"><span class="k">Mode</span><b class="n" data-x="mode"></b></div><div class="kv"><span class="k">Heat path</span><b class="n" data-x="heat"></b></div><div class="kv"><span class="k">PUE</span><b class="n" data-x="pue"></b></div><a class="tp" href="index.html#t-cooling">Topic 7</a></div></li><li class="stn" data-st="building"><svg class="pic" data-pic="building" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Building</h3><div class="kv"><span class="k">Computer room</span><b class="n" data-x="white"></b></div><div class="kv"><span class="k">Whole building</span><b class="n" data-x="gross"></b></div><div class="kv"><span class="k">Computer room share</span><b class="n" data-x="share"></b></div><div class="kv"><span class="k">Per rack</span><b class="n" data-x="mass"></b></div><div class="kv"><span class="k">Floor</span><b class="n" data-x="floor"></b></div><a class="tp" href="index.html#t-building">Topic 4</a></div></li><li class="stn" data-st="network"><svg class="pic" data-pic="network" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Network</h3><div class="kv"><span class="k">Cabling</span><b class="n" data-x="net"></b></div><a class="tp" href="index.html#t-network">Topic 9</a></div></li><li class="stn" data-st="cost"><svg class="pic" data-pic="cost" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Cost and operations</h3><div class="kv"><span class="k">Build cost</span><b class="n" data-x="capex"></b></div><div class="kv"><span class="k">For the hall</span><b class="n" data-x="total"></b></div><div class="kv"><span class="k">Day two</span><b class="n" data-x="ops"></b></div><a class="tp" href="index.html#t-foundations">Topics 1, 2, 11</a></div></li></ol>
+  <p class="takeaway" data-x="takeaway"></p>
+</section>
+<details class="method"><summary>How these numbers are estimated</summary>
+<p>Indicative rules of thumb, not a design. Topics 2, 5, 7 and 8 refine every one
+of them; the model is the <code>estimate()</code> function in <code>site.js</code>.</p>
+<ul>
+<li><strong>IT load</strong>: kW per rack times 1,000 racks. <strong>At the fence</strong>: IT load times PUE,
+where PUE is 1.4 to 1.7 for room-level air, 1.25 to 1.45 with containment, 1.2 to 1.35 with
+rear doors, 1.1 to 1.2 with direct liquid. Regime PUE depends more on the heat-rejection
+strategy and the climate than on density: a warm-water loop on dry coolers beats a chilled
+air hall in the same building (Topic 7).</li>
+<li><strong>UPS blocks</strong>: IT load divided by 2.5 MW, rounded up, plus one (N+1).
+<strong>Generators</strong>: load at the fence (IT times the mid-range PUE) divided by 2.75 MW,
+rounded up, plus one, because the engines carry the mechanical plant that the UPS does not
+(Topic 5: 5 UPS blocks but 6 gensets for 10 MW of IT). Blocks of 2 to 3 MW are the common
+module; a real design also chooses the redundancy topology.</li>
+<li><strong>Grid connection</strong>: under about 15 MW at the fence, a distribution feeder
+(12 to 35 kV); 15 to 50 MW, a dedicated customer substation at 69 to 138 kV; 50 to 150 MW,
+a transmission-fed substation at 138 to 230 kV; above that, a transmission interconnect at
+230 to 345 kV, where the queue is measured in years. Boundaries vary by utility, and the
+interconnection study, not the table, decides (Topic 5).</li>
+<li><strong>Cooling mode</strong>: room-level air is comfortable to about 20 kW a rack; air with
+containment stretches to 40 to 50; rear-door heat exchangers and hybrids carry the contested
+middle to about 80 (some vendors claim 100); beyond that, direct-to-chip liquid, with 20 to 30%
+of the heat still leaving through air. Immersion is an alternative above 100. The thresholds
+drawn (20, 45, 80) follow the sourced scale in Topic 2, Design Requirements.</li>
+<li><strong>Computer room</strong>: 2.8 m&sup2; per rack with air (aisles included), 3.2 with rear
+doors, 4.0 with direct liquid (CDUs, manifolds, wider aisles). <strong>Plant and support</strong>:
+0.4 to 0.6 m&sup2; per kW of IT; the weakest rule here, it falls at campus scale.</li>
+<li><strong>Per rack</strong>: 400 kg plus 8 kg per kW, give or take 20%, below 80 kW; above it, no less
+than 1,400 kg, the vendor-published 1,400 to 1,600 kg for rack-scale AI (a GB200 NVL72 is about
+1,360 kg dry and about 1,500 kg with coolant). Storage racks are sized by drive count, not kW, so
+the rule does not serve them (Topic 8). Above 1,000 to 1,200 kg most raised floors are at their rating.</li>
+<li><strong>Build cost</strong>: from $8M plus $0.03M per kW-per-rack, to $12M plus $0.05M per kW-per-rack,
+per MW of IT, excluding the servers. Conventional halls land at $8 to 14M per MW; AI-dense
+halls higher. For a GPU rack the servers cost several times the building's share.</li>
+<li><strong>AI racks</strong>: the marked band is 100 to 145 kW, where shipping rack-scale systems
+sit (NVIDIA GB200 NVL72 at 120 to 132 kW, GB300 NVL72 at 132 to 142 kW). GB300 peaks near 155 kW;
+Vera Rubin is announced at 120 to 190 kW from H2 2026 and Kyber near 600 kW on 800 VDC in 2027.</li>
+</ul></details>
+<p class="x-back">Every one of these numbers has a chapter behind it. Back to <a href="index.html">the course map</a> to find the topic that explains why it moved.</p>
+  
+</main>
+<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Explorer</a></footer>
+<script src="./site.js" defer></script>
+</body>
+</html>

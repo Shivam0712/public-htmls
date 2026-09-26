@@ -444,12 +444,22 @@
       }); });
     }
     /* clicking a node in the diagram opens that topic's row */
+    var openRow = function (d, smooth) {
+      d.open = true; d.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+      d.querySelector('summary').focus({ preventScroll: true });
+    };
     document.querySelectorAll('a[data-open]').forEach(function (a) {
       a.addEventListener('click', function (ev) {
         var d = document.getElementById(a.getAttribute('data-open'));
-        if (d) { ev.preventDefault(); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); d.querySelector('summary').focus({ preventScroll: true }); }
+        if (d) { ev.preventDefault(); openRow(d, true); }
       });
     });
+    /* arriving with #t-<slug> (from the explorer's topic chips, or a shared link) opens that row */
+    var openHash = function () {
+      var d = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+      if (d && d.tagName === 'DETAILS') openRow(d, false);
+    };
+    openHash(); window.addEventListener('hashchange', openHash);
     /* export / import / reset progress */
     var ex = document.querySelector('[data-export]'), im = document.querySelector('[data-import]'),
         rs = document.querySelector('[data-reset]');
