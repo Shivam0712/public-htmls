@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'>
+<title>How rack density shapes a data center — Datacenter Course</title>
+<link rel='manifest' href='./manifest.json'>
+<meta name='theme-color' media='(prefers-color-scheme: light)' content='#F7F6F2'>
+<meta name='theme-color' media='(prefers-color-scheme: dark)' content='#121B1A'>
+<meta name='apple-mobile-web-app-capable' content='yes'>
+<meta name='mobile-web-app-capable' content='yes'>
+<meta name='apple-mobile-web-app-title' content='DC Course'>
+<meta name='apple-mobile-web-app-status-bar-style' content='default'>
+<link rel='apple-touch-icon' href='./icons/icon-180.png'>
+<link rel='icon' type='image/png' sizes='192x192' href='./icons/icon-192.png'>
+<link rel='preload' href='./fonts/IBMPlexSans-Regular.woff2' as='font' type='font/woff2' crossorigin>
+<style>
+
+@font-face{font-family:'Plex Sans';src:url('./fonts/IBMPlexSans-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Plex Sans';src:url('./fonts/IBMPlexSans-Italic.woff2') format('woff2');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'Plex Sans';src:url('./fonts/IBMPlexSans-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Plex Sans';src:url('./fonts/IBMPlexSans-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Plex Mono';src:url('./fonts/IBMPlexMono-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+:root{color-scheme:light;--page:#F7F6F2;--surface:#FFFFFF;--mist:#EDF3EE;--ink:#20302E;--muted:#53645E;--line:#D6DED7;--accent:#17685F;--accent-wash:#E3F2EC;--print:#143866;--print-ink:#E9EFF8;--print-dim:#9DB3D3;--print-rule:#2E5590;--live:#F2B705;--water:#7FD3FF;--sans:'Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'Plex Mono',ui-monospace,Menlo,monospace;--serif:Georgia,'Iowan Old Style','Palatino Linotype',serif}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--page:#121B1A;--surface:#1C2927;--mist:#23332E;--ink:#E8EFEB;--muted:#ADBDB4;--line:#40554C;--accent:#A7E0CC;--accent-wash:#254337;--print:#0D2547;--print-ink:#E9EFF8;--print-dim:#8FA6C8;--print-rule:#27467A;--live:#F2B705;--water:#7FD3FF}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:2rem}
+body{margin:0;background:var(--page);color:var(--ink);font:400 17px/1.6 var(--sans);font-feature-settings:"kern","liga"}
+@media (min-width:60rem){body{font-size:18px;line-height:1.65}}
+h1,h2,h3,h4{font-weight:600;line-height:1.15;margin:0;letter-spacing:0;text-wrap:balance}
+p,ul,ol{margin:0 0 1.1rem}
+a{color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.16em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.crumb :focus-visible,.hero :focus-visible,.below-tool :focus-visible,.site-footer :focus-visible{outline-width:3px}
+::selection{background:var(--accent-wash);color:var(--ink)}
+[hidden]{display:none!important}
+strong{font-weight:600}
+.crumb{border-bottom:1px solid var(--line);padding:calc(.85rem + env(safe-area-inset-top)) 1.25rem .85rem}
+.crumb nav{max-width:69.5rem;margin:auto;display:flex;align-items:center;flex-wrap:wrap;gap:.05rem .45rem;font-size:.79rem;line-height:1.45}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb a:hover{color:var(--accent);text-decoration:underline}
+.crumb .sep{color:var(--muted)}
+.crumb .here{color:var(--ink);font-weight:600}
+.page-main{max-width:72rem;min-width:0;margin:0 auto;padding:0 1.25rem 3.8rem}
+.hero{padding:2.05rem 0 1.4rem;overflow-wrap:break-word}
+.hero .eyebrow{margin:0 0 .75rem;color:var(--accent);font:400 .76rem/1.35 var(--mono);letter-spacing:.11em}
+.hero h1{max-width:21ch;margin:0 0 .75rem;font:400 clamp(2.45rem,5vw,3.85rem)/1.08 var(--serif);letter-spacing:-.038em;text-wrap:balance}
+.hero .intro{max-width:51ch;margin:0;color:var(--muted);font-size:1.08rem;line-height:1.6}
+.btn{min-height:44px;padding:.65rem .95rem;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink);font:600 .87rem/1.2 var(--sans);cursor:pointer}
+.btn:hover{border-color:var(--accent);background:var(--accent-wash);color:var(--accent)}
+.btn.quiet{border-color:transparent;background:transparent;color:var(--muted);font-weight:500}
+.btn.quiet:hover{color:var(--accent);background:var(--accent-wash);border-color:transparent}
+.below-tool{width:min(100%,45rem);margin:2.8rem 0 0;line-height:1.68;overflow-wrap:break-word}
+.method{margin:0;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.method summary{display:flex;align-items:center;justify-content:space-between;gap:.7rem;min-height:76px;padding:.7rem .75rem .7rem 1.1rem;list-style:none;cursor:pointer;background:var(--mist);border-radius:4px}
+.method summary::-webkit-details-marker{display:none}
+.method[open] summary{border-radius:4px 4px 0 0}
+.method .summary-text{display:grid;gap:.2rem;min-width:0}
+.method .method-label{color:var(--accent);font:400 .72rem/1.3 var(--mono);letter-spacing:.09em}
+.method .method-title{color:var(--ink);font:400 clamp(1.15rem,2vw,1.4rem)/1.25 var(--serif);letter-spacing:-.02em}
+.method summary:hover .method-title{color:var(--accent)}
+.method .method-sign{flex:none;display:grid;place-items:center;width:44px;height:44px;padding:0;font:400 1.4rem/1 var(--sans)}
+.method .method-sign::before{content:'+'}
+.method[open] .method-sign::before{content:'−'}
+.method summary:hover .method-sign{color:var(--accent);background:var(--accent-wash)}
+.method-body{padding:1.15rem clamp(1rem,3vw,1.5rem) 1.1rem;border-top:1px solid var(--line);font-size:.94rem;line-height:1.64}
+.method-body>p{margin:0 0 1.45rem;color:var(--muted)}
+.method-body code{padding:.08em .3em;border:1px solid var(--line);border-radius:3px;background:var(--mist);color:var(--ink);font:400 .86em/1.5 var(--mono);overflow-wrap:anywhere}
+.method-rules{list-style:none;counter-reset:rule;margin:0;padding:0}
+.method-rules li{position:relative;counter-increment:rule;margin:0;padding:.95rem 0 1rem 2.5rem;border-top:1px solid var(--line)}
+.method-rules li::before{content:counter(rule,decimal-leading-zero);position:absolute;top:1.12rem;left:0;color:var(--accent);font:400 .76rem/1.4 var(--mono)}
+.method-rules li:last-child{padding-bottom:.15rem}
+.way-back{margin:2.5rem 0 0;padding-top:1.35rem;border-top:1px solid var(--line)}
+.way-back .way-label{margin:0 0 .5rem;color:var(--accent);font:400 .76rem/1.35 var(--mono);letter-spacing:.11em}
+.way-back .x-back{max-width:56ch;margin:0;font-size:1.06rem;line-height:1.62}
+.site-footer{border-top:1px solid var(--line);color:var(--muted);font-size:.8rem;overflow-wrap:break-word}
+.site-footer .foot-inner{max-width:72rem;margin:0 auto;padding:1.35rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom));display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem 2rem}
+.site-footer p{margin:0}
+.site-footer nav{display:flex;flex-wrap:wrap;gap:.2rem 1.15rem}
+.site-footer a{color:var(--muted)}
+.site-footer a:hover{color:var(--accent)}
+@media (min-width:60rem){.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);column-gap:clamp(2rem,5vw,4rem);align-items:end;padding:3.4rem 0 2.1rem}.hero .eyebrow{grid-column:1/-1;margin-bottom:1rem}.hero h1{grid-column:1;max-width:18ch;margin:0}.hero .intro{grid-column:2;padding:.2rem 0 .2rem 1.15rem;border-left:2px solid var(--line);margin:0 0 .2rem;font-size:1.04rem;line-height:1.58}}
+/* ============ landing page: the density explorer ============
+   The one bold element. A blueprint sheet set into the drafting-film page:
+   white line-work on cyanotype blue, the energized bus in --live. Full-bleed
+   on phones, inset on desktop. Everything inside uses the print-* tokens. */
+.explorer{background:var(--print);color:var(--print-ink);margin:.2rem -1.25rem 0;
+  padding:1.4rem 1.25rem 1.6rem;position:relative;
+  background-image:linear-gradient(rgba(233,239,248,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(233,239,248,.055) 1px,transparent 1px);
+  background-size:24px 24px}
+/* the readout block: previous / next step buttons beside the number, then the
+   step line and the "what changed" summary under it */
+.x-read{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem}
+/* the control: a real range input, drawn as a bus with a breaker for a thumb */
+.x-ctl{margin-top:1.1rem}
+/* the annotated scale under the control: regime bands, kW ticks, threshold marks */
+.x-scale{position:relative;height:4.6rem;margin:0 17px;font-family:var(--mono);font-size:.72rem}
+/* one tick per step, labelled with its kW; a hairline joins it to the bands */
+.x-scale .tk{position:absolute;top:9px;transform:translateX(-50%);color:var(--print-dim);
+  font-variant-numeric:tabular-nums}
+/* every mark sits on a labelled step tick, so its hairline starts just under the tick label */
+.x-scale .mk::before{content:"";position:absolute;left:50%;width:1px;background:var(--print-dim);
+  top:-.3rem;height:.3rem}
+/* marks in the last fifth of the track hang left of their tick on phones so the label stays inside;
+   a mark with a short label shows only that on phones so neighbours on the same row do not overlap */
+.x-scale .mk .short{display:none}
+/* the ripple: a bus in --live whose thickness follows the IT load, stations tapped off it */
+.ripple{--bus-w:4px;--gap:1.5rem;list-style:none;margin:1.6rem 0 0;padding:0 0 0 var(--gap);
+  border-left:var(--bus-w) solid var(--live);display:grid;gap:1.4rem;transition:border-width .15s}
+/* a station value that changed at this step: a 1.2 s pulse from --live back to paper */
+.n.chg{animation:chg 1.2s ease-out}
+/* drawing classes used by the JS-built pictures */
+.pic .ln{fill:none;stroke:var(--print-ink);stroke-width:1.4;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){.sld .bus.energize{transition:none}
+}
+
+/* ============ landing page: the density explorer ============
+   The one bold element. A blueprint sheet set into the drafting-film page:
+   white line-work on cyanotype blue, the energized bus in --live. Full-bleed
+   on phones, inset on desktop. Everything inside uses the print-* tokens. */
+.explorer{background:var(--print);color:var(--print-ink);margin:.2rem -1.25rem 0;
+  padding:1.4rem 1.25rem 1.6rem;position:relative;
+  background-image:linear-gradient(rgba(233,239,248,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(233,239,248,.055) 1px,transparent 1px);
+  background-size:24px 24px}
+@media (min-width:60rem){.explorer{margin:.4rem 0 0;padding:2rem 2.2rem 2rem;border-radius:2px}}
+.explorer h2{color:var(--print-ink);font-size:1.56rem;margin:0 0 .5rem}
+.explorer h3{color:var(--print-ink);font-size:1rem;margin:0 0 .35rem}
+.explorer a{color:var(--print-ink)}
+.explorer :focus-visible{outline-color:var(--live)}
+.x-top{display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:flex-end;justify-content:space-between}
+.x-sub{color:var(--print-dim);max-width:52ch;margin:0;font-size:.94rem;line-height:1.5}
+.x-out{display:block;font-family:var(--sans);font-weight:600;line-height:.9;white-space:nowrap;
+  color:var(--print-ink);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.x-out b{font-size:clamp(3.4rem,10vw,5.2rem);font-weight:600;letter-spacing:-.02em}
+.x-out .u{display:block;font-family:var(--mono);font-weight:400;font-size:.9rem;
+  color:var(--print-dim);margin-top:.5rem}
+@media (min-width:60rem){.x-out{text-align:right}}
+/* the readout block: previous / next step buttons beside the number, then the
+   step line and the "what changed" summary under it */
+.x-read{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem}
+.x-row{display:flex;align-items:center;gap:.7rem}
+.x-step{width:44px;height:44px;flex:0 0 44px;padding:0;border:1.5px solid var(--print-ink);border-radius:50%;
+  background:transparent;color:var(--print-ink);display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .15s,color .15s}
+.x-step svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.x-step:hover:not([disabled]){background:var(--live);color:#17242F;border-color:var(--live)}
+.x-step[disabled]{opacity:.3;cursor:default}
+.x-stepn{margin:0;font-family:var(--mono);font-size:.78rem;color:var(--print-dim)}
+.x-changed{margin:0;font-size:.9rem;line-height:1.4;color:var(--print-ink);max-width:34ch;min-height:2.8em}
+@media (min-width:60rem){.x-read{align-items:flex-end}.x-stepn,.x-changed{text-align:right}}
+
+/* the control: a real range input, drawn as a bus with a breaker for a thumb */
+.x-ctl{margin-top:1.1rem}
+.x-ctl label{display:block;font-family:var(--mono);font-size:.82rem;color:var(--print-dim);margin-bottom:.1rem}
+.x-ctl input[type=range]{--p:37.5%;-webkit-appearance:none;appearance:none;width:100%;height:48px;
+  margin:0;background:transparent;cursor:ew-resize;display:block;touch-action:pan-y}
+.x-ctl input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:0;
+  background:linear-gradient(90deg,var(--live) var(--p),var(--print-rule) var(--p))}
+.x-ctl input[type=range]::-moz-range-track{height:4px;background:var(--print-rule)}
+.x-ctl input[type=range]::-moz-range-progress{height:4px;background:var(--live)}
+.x-ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:34px;height:34px;
+  margin-top:-15px;border-radius:50%;background:var(--live);border:3px solid var(--print);
+  box-shadow:0 0 0 2px var(--print-ink)}
+.x-ctl input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--live);
+  border:3px solid var(--print);box-shadow:0 0 0 2px var(--print-ink)}
+.x-ctl input[type=range]:focus-visible{outline:none}
+.x-ctl input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 2px var(--print-ink),0 0 0 6px var(--live)}
+.x-ctl input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 2px var(--print-ink),0 0 0 6px var(--live)}
+
+/* the annotated scale under the control: regime bands, kW ticks, threshold marks */
+.x-scale{position:relative;height:4.6rem;margin:0 17px;font-family:var(--mono);font-size:.72rem}
+.x-scale .band{position:absolute;top:0;height:6px;background:var(--print-rule)}
+.x-scale .band.air{background:transparent;box-shadow:inset 0 0 0 1px var(--print-dim)}
+.x-scale .band.contained{background:var(--print-dim);opacity:.55}
+.x-scale .band.rear-door{background:var(--water);opacity:.55}
+.x-scale .band.liquid{background:var(--water)}
+.x-scale .band.ai{top:-3px;height:12px;background:transparent;border:1.5px solid var(--live);border-radius:2px}
+/* one tick per step, labelled with its kW; a hairline joins it to the bands */
+.x-scale .tk{position:absolute;top:9px;transform:translateX(-50%);color:var(--print-dim);
+  font-variant-numeric:tabular-nums}
+.x-scale .tk::before{content:"";position:absolute;left:50%;top:-4px;width:1px;height:3px;background:var(--print-dim)}
+.x-scale .mk{position:absolute;transform:translateX(-50%);background:none;border:0;padding:.15rem .3rem;
+  color:var(--print-ink);font:inherit;font-size:.72rem;white-space:nowrap;cursor:pointer;line-height:1.1;
+  border-radius:2px;min-height:22px}
+/* every mark sits on a labelled step tick, so its hairline starts just under the tick label */
+.x-scale .mk::before{content:"";position:absolute;left:50%;width:1px;background:var(--print-dim);
+  top:-.3rem;height:.3rem}
+.x-scale .mk.a{top:1.75rem}
+.x-scale .mk.b{top:3.1rem}
+.x-scale .mk.b::before{top:-1.65rem;height:1.65rem}
+.x-scale .mk:hover{color:var(--live)}
+/* marks in the last fifth of the track hang left of their tick on phones so the label stays inside;
+   a mark with a short label shows only that on phones so neighbours on the same row do not overlap */
+.x-scale .mk .short{display:none}
+@media (max-width:40rem){
+  .x-scale .mk.end{transform:translateX(-100%)}
+  .x-scale .mk.end::before{left:auto;right:0}
+  .x-scale .mk .long{display:none}.x-scale .mk .short{display:inline}
+}
+.x-note{color:var(--print-dim);font-size:.82rem;margin:.6rem 0 0;max-width:60ch}
+@media (max-width:26rem){.x-scale{font-size:.66rem}.x-scale .mk{font-size:.66rem}}
+
+/* the ripple: a bus in --live whose thickness follows the IT load, stations tapped off it */
+.ripple{--bus-w:4px;--gap:1.5rem;list-style:none;margin:1.6rem 0 0;padding:0 0 0 var(--gap);
+  border-left:var(--bus-w) solid var(--live);display:grid;gap:1.4rem;transition:border-width .15s}
+.stn{position:relative;display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:0 .9rem;align-items:start;align-content:start}
+.stn::before{content:"";position:absolute;left:calc(-1 * var(--gap));top:1.1rem;width:var(--gap);height:2px;
+  background:var(--print-ink)}
+.stn .pic{width:100%;height:auto;display:block;overflow:visible}
+.stn .txt{min-width:0}
+.stn .kv{display:flex;flex-wrap:wrap;gap:0 .5rem;font-size:.88rem;line-height:1.35;
+  padding:.18rem 0;border-top:1px solid var(--print-rule)}
+.stn .kv:last-of-type{border-bottom:1px solid var(--print-rule)}
+.stn .kv .k{color:var(--print-dim)}
+.stn .kv .n{font-weight:500;color:var(--print-ink);font-variant-numeric:tabular-nums}
+.stn .tp{display:inline-block;margin-top:.45rem;font-family:var(--mono);font-size:.74rem;color:var(--print-dim);
+  text-decoration:none;border:1px solid var(--print-rule);border-radius:3px;padding:.1rem .45rem}
+.stn .tp:hover{color:var(--print-ink);border-color:var(--print-ink)}
+/* a station value that changed at this step: a 1.2 s pulse from --live back to paper */
+.n.chg{animation:chg 1.2s ease-out}
+@keyframes chg{0%{background:var(--live);color:#17242F;box-shadow:0 0 0 3px var(--live)}
+  100%{background:transparent;color:var(--print-ink);box-shadow:none}}
+@media (min-width:60rem){
+  .ripple{grid-template-columns:repeat(6,minmax(0,1fr));gap:0 1.1rem;padding:var(--gap) 0 0;border-left:0;
+    border-top:var(--bus-w) solid var(--live);margin-top:2rem}
+  .stn{grid-template-columns:1fr;gap:.4rem 0}
+  .stn::before{left:calc(50% - 1px);top:calc(-1 * var(--gap));width:2px;height:var(--gap)}
+  .stn .pic{max-width:none}
+  .stn .kv{display:grid;grid-template-columns:1fr;gap:0;font-size:.84rem}
+}
+/* drawing classes used by the JS-built pictures */
+.pic .ln{fill:none;stroke:var(--print-ink);stroke-width:1.4;stroke-linejoin:round}
+.pic .dm{fill:none;stroke:var(--print-dim);stroke-width:1.2;stroke-dasharray:3 2}
+.pic .dim{fill:var(--print-dim)}
+.pic .fl{fill:var(--live)}
+.pic .wt{fill:none;stroke:var(--water);stroke-width:1.6;stroke-linejoin:round}
+.pic .wf{fill:var(--water)}
+.pic .hatch{fill:var(--print-dim);fill-opacity:.25}
+.pic .tk{font-family:var(--mono);font-size:10px;fill:var(--print-dim)}
+.takeaway{margin:1.6rem 0 0;font-size:1.12rem;line-height:1.45;max-width:60ch;color:var(--print-ink);
+  border-left:3px solid var(--live);padding-left:.9rem;min-height:3.2em}
+
+@media (prefers-reduced-motion:reduce){
+  .ripple{transition:none}.n.chg{animation:none;text-decoration:underline;text-decoration-color:var(--live);text-decoration-thickness:2px}
+  .x-step{transition:none}.sld .bus.energize{transition:none}
+}
+</style>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
+    });
+  }
+</script>
+</head>
+<body data-page='explorer'>
+<header class='crumb'><nav aria-label='Breadcrumb'><a href='index.html'>Datacenter Course</a><span class='sep' aria-hidden='true'>›</span><span class='here' aria-current='page'>Rack density tool</span></nav></header>
+<main class='page-main'>
+<div class='hero'>
+  <p class='eyebrow'>INTERACTIVE / FIELD TOOL</p>
+  <h1>How rack density shapes a data center</h1>
+  <p class='intro'>Rack density is a building decision. In a 1,000-rack hall, it changes the grid connection, cooling approach, floor and cost.</p>
+</div>
+  <section class="explorer" data-regime="1" aria-label="One number decides the building" data-steps="[{&quot;kw&quot;: 5, &quot;name&quot;: &quot;the low end of the scale&quot;}, {&quot;kw&quot;: 20, &quot;name&quot;: &quot;air alone ends&quot;}, {&quot;kw&quot;: 45, &quot;name&quot;: &quot;containment ends&quot;}, {&quot;kw&quot;: 80, &quot;name&quot;: &quot;liquid required&quot;}, {&quot;kw&quot;: 120, &quot;name&quot;: &quot;the AI pods, NVL72&quot;}, {&quot;kw&quot;: 150, &quot;name&quot;: &quot;the top of the scale&quot;}]">
+  <div class="x-top"><div><p class="x-sub">Step rack density up or down. For the same 1,000-rack hall, power, cooling,
+  building and cost resize, and changed values light up.</p></div>
+  <div class="x-read"><div class="x-row">
+  <button type="button" class="x-step" data-step="-1" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button>
+  <output class="x-out" for="density"><b data-x="kw">45</b> <span class="u">kW per rack</span></output>
+  <button type="button" class="x-step" data-step="1" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  <p class="x-stepn" data-x="step">Step 3 of 6: containment ends</p>
+  <p class="x-changed" data-x="changed" aria-live="polite">Start here. Move one step; this line names what changed.</p></div></div>
+  <div class="x-ctl"><label for="density">Rack density</label>
+  <input type="range" id="density" min="0" max="5" step="1" value="2"
+   aria-valuetext="45 kilowatts per rack, step 3 of 6: containment ends" aria-describedby="x-scale-note">
+  <div class="x-scale"><span class="band air" style="left:0.0%;width:20.0%"></span><span class="band contained" style="left:20.0%;width:20.0%"></span><span class="band rear-door" style="left:40.0%;width:20.0%"></span><span class="band liquid" style="left:60.0%;width:40.0%"></span><span class="band ai" style="left:70.0%;width:26.7%"></span><span class="tk" style="left:0.0%">5</span><span class="tk odd" style="left:20.0%">20</span><span class="tk" style="left:40.0%">45</span><span class="tk odd" style="left:60.0%">80</span><span class="tk" style="left:80.0%">120</span><span class="tk odd" style="left:100.0%">150</span><button type="button" class="mk a" data-kw="20" style="left:20.0%">air alone ends</button><button type="button" class="mk a" data-kw="80" style="left:60.0%">liquid required</button><button type="button" class="mk b" data-kw="45" style="left:40.0%">containment ends</button><button type="button" class="mk b" data-kw="120" style="left:80.0%"><span class="long">NVL72 racks, GB200 and GB300</span><span class="short">NVL72</span></button></div>
+  <p id="x-scale-note" class="x-note">Six states mark design changes. They're evenly spaced, so the scale
+  isn't linear in kW. Tick labels show real kW. Tap a marker to jump.</p></div>
+  <ol class="ripple" aria-label="The ripple: what the density decision re-sizes"><li class="stn" data-st="rack"><svg class="pic" data-pic="rack" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>The rack</h3><div class="kv"><span class="k">What fits</span><b class="n" data-x="fits"></b></div><a class="tp" href="index.html#t-compute">Topic 8</a></div></li><li class="stn" data-st="power"><svg class="pic" data-pic="power" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Power and grid</h3><div class="kv"><span class="k">IT load</span><b class="n" data-x="it"></b></div><div class="kv"><span class="k">At the fence</span><b class="n" data-x="fac"></b></div><div class="kv"><span class="k">UPS blocks</span><b class="n" data-x="ups"></b></div><div class="kv"><span class="k">Generators</span><b class="n" data-x="gens"></b></div><div class="kv"><span class="k">Grid connection</span><b class="n" data-x="tier"></b></div><a class="tp" href="index.html#t-power-1">Topics 3, 5, 6</a></div></li><li class="stn" data-st="cooling"><svg class="pic" data-pic="cooling" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Cooling</h3><div class="kv"><span class="k">Mode</span><b class="n" data-x="mode"></b></div><div class="kv"><span class="k">Heat path</span><b class="n" data-x="heat"></b></div><div class="kv"><span class="k">PUE</span><b class="n" data-x="pue"></b></div><a class="tp" href="index.html#t-cooling">Topic 7</a></div></li><li class="stn" data-st="building"><svg class="pic" data-pic="building" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Building</h3><div class="kv"><span class="k">Computer room</span><b class="n" data-x="white"></b></div><div class="kv"><span class="k">Whole building</span><b class="n" data-x="gross"></b></div><div class="kv"><span class="k">Computer room share</span><b class="n" data-x="share"></b></div><div class="kv"><span class="k">Per rack</span><b class="n" data-x="mass"></b></div><div class="kv"><span class="k">Floor</span><b class="n" data-x="floor"></b></div><a class="tp" href="index.html#t-building">Topic 4</a></div></li><li class="stn" data-st="network"><svg class="pic" data-pic="network" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Network</h3><div class="kv"><span class="k">Cabling</span><b class="n" data-x="net"></b></div><a class="tp" href="index.html#t-network">Topic 9</a></div></li><li class="stn" data-st="cost"><svg class="pic" data-pic="cost" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Cost and operations</h3><div class="kv"><span class="k">Build cost</span><b class="n" data-x="capex"></b></div><div class="kv"><span class="k">For the hall</span><b class="n" data-x="total"></b></div><div class="kv"><span class="k">Day two</span><b class="n" data-x="ops"></b></div><a class="tp" href="index.html#t-foundations">Topics 1, 2, 11</a></div></li></ol>
+  <p class="takeaway" data-x="takeaway"></p>
+</section>
+<section class='below-tool' aria-label='Model and further reading'>
+<details class='method'><summary><span class='summary-text'><span class='method-label'>MODEL NOTES / 08 RULES</span><span class='method-title'>How these numbers are estimated</span></span><span class='method-sign btn quiet' aria-hidden='true'></span></summary>
+<div class='method-body'>
+<p>Indicative rules of thumb, not a design. Topics 2, 5, 7 and 8 refine every one
+of them; the model is the <code>estimate()</code> function in <code>site.js</code>.</p>
+<ol class='method-rules'>
+<li><strong>IT load</strong>: kW per rack times 1,000 racks. <strong>At the fence</strong>: IT load times PUE,
+where PUE is 1.4 to 1.7 for room-level air, 1.25 to 1.45 with containment, 1.2 to 1.35 with
+rear doors, 1.1 to 1.2 with direct liquid. Regime PUE depends more on the heat-rejection
+strategy and the climate than on density: a warm-water loop on dry coolers beats a chilled
+air hall in the same building (Topic 7).</li>
+<li><strong>UPS blocks</strong>: IT load divided by 2.5 MW, rounded up, plus one (N+1).
+<strong>Generators</strong>: load at the fence (IT times the mid-range PUE) divided by 2.75 MW,
+rounded up, plus one, because the engines carry the mechanical plant that the UPS does not
+(Topic 5: 5 UPS blocks but 6 gensets for 10 MW of IT). Blocks of 2 to 3 MW are the common
+module; a real design also chooses the redundancy topology.</li>
+<li><strong>Grid connection</strong>: under about 15 MW at the fence, a distribution feeder
+(12 to 35 kV); 15 to 50 MW, a dedicated customer substation at 69 to 138 kV; 50 to 150 MW,
+a transmission-fed substation at 138 to 230 kV; above that, a transmission interconnect at
+230 to 345 kV, where the queue is measured in years. Boundaries vary by utility, and the
+interconnection study, not the table, decides (Topic 5).</li>
+<li><strong>Cooling mode</strong>: room-level air is comfortable to about 20 kW a rack; air with
+containment stretches to 40 to 50; rear-door heat exchangers and hybrids carry the contested
+middle to about 80 (some vendors claim 100); beyond that, direct-to-chip liquid, with 20 to 30%
+of the heat still leaving through air. Immersion is an alternative above 100. The thresholds
+drawn (20, 45, 80) follow the sourced scale in Topic 2, Design Requirements.</li>
+<li><strong>Computer room</strong>: 2.8 m&sup2; per rack with air (aisles included), 3.2 with rear
+doors, 4.0 with direct liquid (CDUs, manifolds, wider aisles). <strong>Plant and support</strong>:
+0.4 to 0.6 m&sup2; per kW of IT; the weakest rule here, it falls at campus scale.</li>
+<li><strong>Per rack</strong>: 400 kg plus 8 kg per kW, give or take 20%, below 80 kW; above it, no less
+than 1,400 kg, the vendor-published 1,400 to 1,600 kg for rack-scale AI (a GB200 NVL72 is about
+1,360 kg dry and about 1,500 kg with coolant). Storage racks are sized by drive count, not kW, so
+the rule does not serve them (Topic 8). Above 1,000 to 1,200 kg most raised floors are at their rating.</li>
+<li><strong>Build cost</strong>: from $8M plus $0.03M per kW-per-rack, to $12M plus $0.05M per kW-per-rack,
+per MW of IT, excluding the servers. Conventional halls land at $8 to 14M per MW; AI-dense
+halls higher. For a GPU rack the servers cost several times the building's share.</li>
+<li><strong>Steps</strong>: the slider stops at six key densities, 5, 20, 45, 80, 120 and 150 kW: the three
+cooling thresholds, the NVL72 pod density and the ends of the scale. Between steps the numbers scale linearly
+and are not shown; the "Changed at this step" line names the design categories (cooling method, grid tier,
+what fits, floor) that flipped since the previous state. <code>scripts/explorer_steps.py</code> lists every
+density where the model changes category, for reference.</li>
+<li><strong>AI racks</strong>: the marked band is 100 to 145 kW, where shipping rack-scale systems
+sit (NVIDIA GB200 NVL72 at 120 to 132 kW, GB300 NVL72 at 132 to 142 kW). GB300 peaks near 155 kW;
+Vera Rubin is announced at 120 to 190 kW from H2 2026 and Kyber near 600 kW on 800 VDC in 2027.</li>
+</ol></div></details>
+<div class='way-back'><p class='way-label'>CONTINUE / THE LESSONS</p><p class="x-back">Every one of these numbers has a chapter behind it. Back to <a href="index.html">the course map</a> to find the topic that explains why it moved.</p></div>
+</section>
+</main>
+<footer class='site-footer'><div class='foot-inner'><p>Generated from the course markdown on 2026-09-26.</p><nav aria-label='Course links'><a href='index.html'>Course map</a><a href='overview.html'>Sixty-word overview</a><a href='glossary.html'>Glossary</a></nav></div></footer>
+<script>
+(function () {
+  'use strict';
+  /* ============ landing page: the density explorer ============
+     One decision, rack density, flows down a bus and re-sizes everything.
+     All numbers are rules of thumb an engineer would recognise, stated as
+     ranges; the assumptions block under the hero lists them and Topics 2,
+     5, 7, 8 refine them. Keep the model in estimate() and nowhere else. */
+  var RACKS = 1000;          // the hall we hold fixed: a room of 1,000 cabinets
+  var BLOCK_MW = 2.5;        // one UPS block, commonly 2 to 3 MW (Topic 5)
+  var GEN_MW = 2.75;         // one standby genset; generators carry IT x PUE, the UPS only IT (Topic 5)
+  var THRESH = [20, 45, 80]; // kW/rack: 20 is the comfort limit for air (containment reaches ~30 with discipline), 45 containment ends, 80 liquid required (Topics 2, 7)
+  var REGIME = [
+    { mode: 'Air, room-level', pue: [1.4, 1.7], liquid: [0, 0],     m2: 2.8 },
+    { mode: 'Air with containment', pue: [1.25, 1.45], liquid: [0, 0], m2: 2.8 },
+    { mode: 'Rear-door heat exchangers', pue: [1.2, 1.35], liquid: [0.8, 1.0], m2: 3.2 },
+    { mode: 'Direct-to-chip liquid', pue: [1.1, 1.2], liquid: [0.7, 0.8], m2: 4.0 }
+  ];
+  /* The slider is stepped: its value is an index into STEPS, the list of
+     densities where a categorical output flips (regime, grid tier, what
+     fits, floor) plus the reference hall's zone densities. The list comes
+     from the section's data-steps attribute (STEPS in build-docs.py, derived
+     by scripts/explorer_steps.py), so it lives in one place. */
+
+  function estimate(d) {
+    var r = d < THRESH[0] ? 0 : d < THRESH[1] ? 1 : d < THRESH[2] ? 2 : 3, R = REGIME[r];
+    var it = d * RACKS / 1000;                              // MW of IT load
+    var fac = [it * R.pue[0], it * R.pue[1]];               // MW at the fence
+    var ups = Math.ceil(it / BLOCK_MW) + 1;                 // N+1 UPS blocks, sized on IT load
+    var facMid = (fac[0] + fac[1]) / 2;
+    var gens = Math.ceil(facMid / GEN_MW) + 1;              // N+1 gensets, sized on IT x PUE (mechanical load too)
+    var tier = facMid <= 15 ? 0 : facMid <= 50 ? 1 : facMid <= 150 ? 2 : 3; // interconnect class (Topic 5)
+    var mass = d < THRESH[2] ? 400 + 8 * d : Math.max(400 + 8 * d, 1400); // kg per loaded rack, +-20%; vendor floor for rack-scale AI (Topic 8)
+    var white = RACKS * R.m2;                               // m2 of computer room
+    var plant = it * 1000 * 0.5;                            // m2 of plant, 0.4-0.6 m2/kW
+    var share = white / (white + plant);
+    var capex = [8 + 0.03 * d, 12 + 0.05 * d];              // $M per MW of IT, ex-servers
+    return { d: d, r: r, R: R, it: it, fac: fac, ups: ups, gens: gens, tier: tier, mass: mass,
+             white: white, gross: white + plant, share: share, capex: capex,
+             total: [it * capex[0], it * capex[1]] };
+  }
+
+  var TIER = ['a distribution feeder (12 to 35 kV)', 'a dedicated substation (69 to 138 kV)',
+              'a transmission-fed substation (138 to 230 kV)', 'a transmission interconnect (230 to 345 kV)'];
+  var TIER_SHORT = ['distribution feeder', 'dedicated substation', 'transmission-fed substation', 'transmission interconnect'];
+  var NET = ['Copper to a top-of-rack switch, a few fibre uplinks. Cabling is a trade, not a design driver.',
+             'Still copper in the rack; 25G to the server, fibre uplinks. Trays begin to fill.',
+             '100G to the rack, fibre everywhere above it; pathways are sized, not assumed.',
+             'A GPU fabric: hundreds of fibre strands and optics per rack. Pathways and optics are a design item and a cost line.'];
+  var OPS = ['Filters, hot spots, CRAC upkeep.', 'Containment discipline; airflow commissioning.',
+             'A coolant loop at every rack door joins the air routine.',
+             'Coolant chemistry, leak detection, CDU maintenance; each rack weighs more than a car.'];
+  function fmtMW(x) { return x < 10 ? x.toFixed(1) : Math.round(x).toString(); }
+  function fmtN(x) { return Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function fmtRange(a, b, f) { return f(a) + ' to ' + f(b); }
+  function fmtMoney(m) { return m >= 1000 ? '$' + (m / 1000).toFixed(1) + 'B' : '$' + fmtN(Math.round(m / 10) * 10) + 'M'; }
+  function fits(e) {
+    var d = e.d;
+    if (e.r === 0) return 'about ' + Math.min(42, Math.round(d / 0.7)) + ' general-purpose servers';
+    if (e.r === 1) return 'a full rack of dense two-socket servers, or ' + Math.round(d / 12) + ' eight-GPU servers';
+    if (e.r === 2) return Math.round(d / 12) + ' eight-GPU servers at 10 to 14 kW each';
+    if (d < 100) return 'a partial rack-scale GPU system, or ' + Math.round(d / 12) + ' eight-GPU servers';
+    if (d <= 145) return 'one rack-scale AI system (GB200 NVL72 120 to 132 kW, GB300 NVL72 132 to 142 kW)';
+    return 'GB300 peaks near 155 kW; Vera Rubin 120 to 190 kW from H2 2026; Kyber about 600 kW on 800 VDC in 2027';
+  }
+  function floorBand(m) { return m < 900 ? 0 : m < 1400 ? 1 : 2; }
+  function floorNote(m) {
+    return ['a standard raised floor carries it', 'at the rating of most raised floors; slab preferred',
+            'slab on grade, with a structural check per rack'][floorBand(m)];
+  }
+  /* the what-fits band: the three air/rear-door regimes, then partial rack-scale, one NVL72, past NVL72 */
+  function fitsBand(e) { return e.r < 3 ? e.r : e.d < 100 ? 3 : e.d <= 145 ? 4 : 5; }
+  /* the categorical outputs whose flips define the steps (mirrored in scripts/explorer_steps.py) */
+  function bands(e) { return { mode: e.r, tier: e.tier, fits: fitsBand(e), floor: floorBand(e.mass) }; }
+  function takeaway(e) {
+    var d = Math.round(e.d), pl = Math.round(100 - e.share * 100);
+    if (e.r === 0) return 'At ' + d + ' kW a rack this is a conventional hall: ' + fmtMW(e.it) + ' MW of IT, air-cooled, ' + e.ups + ' UPS blocks and ' + e.gens + ' generators, and roughly ' + Math.round(e.share * 100) + '% of the building is computer room.';
+    if (e.r === 1) return 'At ' + d + ' kW a rack air still works, but only with containment; ' + fmtMW(e.it) + ' MW of IT needs ' + e.ups + ' UPS blocks and ' + e.gens + ' generators, and the plant is already ' + pl + '% of the building.';
+    if (e.r === 2) return 'At ' + d + ' kW a rack air alone has given out: heat leaves through a liquid loop at the rack door, the grid connection is ' + TIER[e.tier].split(' (')[0] + ', and the building is ' + pl + '% plant.';
+    return 'At ' + d + ' kW a rack cold plates are mandatory; ' + fmtMW(e.it) + ' MW of IT becomes ' + fmtRange(e.fac[0], e.fac[1], fmtMW) + ' MW at the fence, and the computer room is ' + Math.round(e.share * 100) + '% of a building that is now a power and cooling plant.';
+  }
+
+  /* ---- drawings: 120 x 72 viewBox each, classes styled by site.css ---- */
+  function picRack(e) {
+    var s = '<rect class="ln" x="44" y="4" width="32" height="64"/>', i, n, h;
+    if (e.r < 2) {
+      n = Math.min(40, Math.round(e.d / 0.5)); h = 60 / 40;
+      for (i = 0; i < n; i++) s += '<rect class="dim" x="47" y="' + (66 - (i + 1) * h).toFixed(1) + '" width="26" height="' + (h * 0.6).toFixed(1) + '"/>';
+    } else {
+      n = Math.min(9, Math.round(e.d / 14));
+      for (i = 0; i < n; i++) s += '<rect class="fl" x="47" y="' + (66 - (i + 1) * 6.4).toFixed(1) + '" width="26" height="5"/>';
+    }
+    if (e.r === 2) s += '<rect class="wt" x="77" y="6" width="5" height="60"/>';
+    if (e.r === 3) s += '<path class="wt" d="M38 10 V66 M40 10 V66 M40 20 H44 M40 40 H44 M40 60 H44 M38 30 H44 M38 50 H44"/>';
+    return s;
+  }
+  function picPower(e) {
+    var s = '', i, cols = 9, bw = 8, bh = 5, gx = 9.4, gy = 6.6;
+    for (i = 0; i <= e.tier; i++) s += '<path class="ln" d="M' + (10 + i * 5) + ' 4 V16"/>';
+    s += '<circle class="ln" cx="15" cy="26" r="8"/><circle class="ln" cx="15" cy="38" r="8"/><path class="ln" d="M15 46 V60 H32"/>';
+    for (i = 0; i < e.ups; i++) {
+      s += '<rect class="fl" x="' + (34 + (i % cols) * gx).toFixed(1) + '" y="' + (8 + Math.floor(i / cols) * gy).toFixed(1) + '" width="' + bw + '" height="' + bh + '"/>';
+    }
+    return s;
+  }
+  function picCooling(e) {
+    var liq = (e.R.liquid[0] + e.R.liquid[1]) / 2, air = 1 - liq;
+    var s = '<rect class="ln" x="6" y="14" width="16" height="40"/>';
+    s += '<path class="ln" d="M22 24 H56 M50 20 l6 4 -6 4"/><rect class="ln" x="58" y="12" width="26" height="22"/><circle class="ln" cx="71" cy="23" r="7"/><path class="ln" d="M71 16 V30 M64 23 H78"/>';
+    if (liq > 0) s += '<path class="wt" d="M22 46 H56 M50 42 l6 4 -6 4"/><rect class="wt" x="58" y="38" width="26" height="18"/><path class="wt" d="M62 47 h18 M62 43 h18 M62 51 h18"/>';
+    else s += '<path class="dm" d="M22 46 H56"/>';
+    s += '<rect class="dim" x="6" y="62" width="' + (108 * air).toFixed(1) + '" height="6"/>';
+    s += '<rect class="wf" x="' + (6 + 108 * air).toFixed(1) + '" y="62" width="' + (108 * liq).toFixed(1) + '" height="6"/>';
+    return s;
+  }
+  function picBuilding(e) {
+    var W = 76, H = 56, k = Math.sqrt(e.share), w = W * k, h = H * k, t = 3 + 9 * Math.min(1, e.mass / 1600);
+    var s = '<rect class="hatch" x="4" y="6" width="' + W + '" height="' + H + '"/><rect class="ln" x="4" y="6" width="' + W + '" height="' + H + '"/>';
+    s += '<rect class="fl" x="' + (4 + W - w).toFixed(1) + '" y="' + (6 + H - h).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '"/>';
+    s += '<rect class="ln" x="94" y="' + (62 - t - 30).toFixed(1) + '" width="14" height="30"/><rect class="dim" x="86" y="' + (62 - t).toFixed(1) + '" width="30" height="' + t.toFixed(1) + '"/>';
+    return s;
+  }
+  function picNetwork(e) {
+    var n = [3, 5, 9, 16][e.r], cls = e.r < 2 ? 'ln' : 'wt', s = '<rect class="ln" x="40" y="6" width="40" height="10"/><rect class="ln" x="44" y="42" width="32" height="26"/>', i;
+    for (i = 0; i < n; i++) {
+      var x0 = 44 + 32 * (i + 0.5) / n, x1 = 46 + 28 * (i + 0.5) / n;
+      s += '<path class="' + cls + '" d="M' + x0.toFixed(1) + ' 16 L' + x1.toFixed(1) + ' 42"/>';
+    }
+    if (e.r === 3) s += '<rect class="dm" x="30" y="24" width="60" height="4"/>';
+    return s;
+  }
+  function picCost(e) {
+    var x = function (m) { return 8 + 104 * Math.min(1, m / 22); };
+    var s = '<path class="ln" d="M8 44 H112 M8 41 v6 M60 41 v6 M112 41 v6"/>';
+    s += '<text class="tk" x="8" y="60">0</text><text class="tk" x="60" y="60" text-anchor="middle">11</text><text class="tk" x="112" y="60" text-anchor="end">22</text>';
+    s += '<rect class="fl" x="' + x(e.capex[0]).toFixed(1) + '" y="26" width="' + (x(e.capex[1]) - x(e.capex[0])).toFixed(1) + '" height="12"/>';
+    return s;
+  }
+  var PICS = { rack: picRack, power: picPower, cooling: picCooling, building: picBuilding, network: picNetwork, cost: picCost };
+
+  var xp = document.querySelector('.explorer');
+  if (xp) {
+    var STEPS = JSON.parse(xp.getAttribute('data-steps') || '[]'), N = STEPS.length; // [{kw, name}]
+    var slider = xp.querySelector('input[type=range]'), out = {}, prevText = null, prevBands = null;
+    xp.querySelectorAll('[data-x]').forEach(function (el) { out[el.getAttribute('data-x')] = el; });
+    var pics = {}; xp.querySelectorAll('svg[data-pic]').forEach(function (el) { pics[el.getAttribute('data-pic')] = el; });
+    var bus = xp.querySelector('.ripple'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var stepBtns = xp.querySelectorAll('.x-step');
+    /* the fields whose flips define the steps; their labels feed the "Changed at this step" line */
+    var CATEG = [['mode', 'cooling mode'], ['tier', 'grid connection'], ['fits', 'what fits'], ['floor', 'floor']];
+    var set = function (k, v) { if (out[k]) out[k].textContent = v; };
+    var clampI = function (i) { return Math.max(0, Math.min(N - 1, Math.round(i))); };
+    var stepFor = function (kw) { var b = 0; STEPS.forEach(function (s, i) { if (Math.abs(s.kw - kw) < Math.abs(STEPS[b].kw - kw)) b = i; }); return b; };
+    var render = function () {
+      var i = clampI(+slider.value), s = STEPS[i], e = estimate(s.kw), d = s.kw;
+      slider.value = i;
+      slider.setAttribute('aria-valuetext', d + ' kilowatts per rack, step ' + (i + 1) + ' of ' + N + ': ' + s.name);
+      slider.style.setProperty('--p', (N > 1 ? 100 * i / (N - 1) : 0).toFixed(2) + '%');
+      xp.setAttribute('data-regime', e.r);
+      if (bus) bus.style.setProperty('--bus-w', (2 + 9 * e.it / 150).toFixed(1) + 'px');
+      set('kw', d);
+      set('fits', fits(e));
+      set('it', fmtMW(e.it) + ' MW');
+      set('fac', fmtRange(e.fac[0], e.fac[1], fmtMW) + ' MW');
+      set('ups', e.ups + ' blocks of ' + BLOCK_MW + ' MW');
+      set('gens', e.gens + ' sets of ' + GEN_MW + ' MW');
+      set('tier', TIER[e.tier]);
+      set('mode', e.R.mode);
+      set('heat', e.R.liquid[1] === 0 ? 'all of it to air'
+        : Math.round(e.R.liquid[0] * 100) + ' to ' + Math.round(e.R.liquid[1] * 100) + '% to liquid, the rest to air');
+      set('pue', fmtRange(e.R.pue[0], e.R.pue[1], function (x) { return x.toFixed(2); }));
+      set('white', fmtN(e.white) + ' m²');
+      set('gross', fmtN(e.gross / 1000 * 0.8) + ' to ' + fmtN(e.gross / 1000 * 1.2) + ' thousand m²');
+      set('share', Math.round(e.share * 100) + '%');
+      set('mass', fmtN(e.mass * 0.8) + ' to ' + fmtN(e.mass * 1.2) + ' kg');
+      set('floor', floorNote(e.mass));
+      set('net', NET[e.r]);
+      set('ops', OPS[e.r]);
+      set('capex', '$' + e.capex[0].toFixed(0) + ' to ' + e.capex[1].toFixed(0) + 'M per MW');
+      set('total', fmtMoney(e.total[0]) + ' to ' + fmtMoney(e.total[1]));
+      set('takeaway', takeaway(e));
+      Object.keys(PICS).forEach(function (k) { if (pics[k]) pics[k].innerHTML = PICS[k](e); });
+      /* what changed since the previous step: highlight every station value whose
+         text differs (.chg, a 1.2 s pulse; a plain state under reduced motion) and
+         name the categorical fields that flipped */
+      var text = {}, bd = bands(e);
+      Object.keys(out).forEach(function (k) { if (out[k].classList.contains('n')) text[k] = out[k].textContent; });
+      xp.querySelectorAll('.n.chg').forEach(function (el) { el.classList.remove('chg'); });
+      if (prevText) {
+        Object.keys(text).forEach(function (k) {
+          if (text[k] !== prevText[k]) { void out[k].offsetWidth; out[k].classList.add('chg'); }
+        });
+        var flipped = CATEG.filter(function (c) { return bd[c[0]] !== prevBands[c[0]]; }).map(function (c) { return c[1]; });
+        set('changed', flipped.length ? 'Changed at this step: ' + flipped.join(', ') + '.'
+          : 'Changed at this step: the numbers only; no design threshold crossed.');
+      }
+      prevText = text; prevBands = bd;
+      set('step', 'Step ' + (i + 1) + ' of ' + N + ': ' + s.name);
+      stepBtns.forEach(function (b) {
+        var off = +b.getAttribute('data-step') < 0 ? i === 0 : i === N - 1;
+        if (off && document.activeElement === b) slider.focus();
+        b.disabled = off;
+      });
+    };
+    slider.addEventListener('input', render);
+    stepBtns.forEach(function (b) {
+      b.addEventListener('click', function () { slider.value = clampI(+slider.value + +b.getAttribute('data-step')); render(); });
+    });
+    /* the threshold marks on the scale are also buttons: tap one to jump to its step */
+    xp.querySelectorAll('[data-kw]').forEach(function (b) {
+      b.addEventListener('click', function () { slider.value = stepFor(+b.getAttribute('data-kw')); render(); slider.focus(); });
+    });
+    render();
+  }
+})();
+</script>
+</body>
+</html>
