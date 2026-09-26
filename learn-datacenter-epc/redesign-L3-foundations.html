@@ -32,7 +32,7 @@ figure.fig{width:100%;min-width:0;margin:1.7rem auto 1.6rem;padding:clamp(1rem,3
 .page-bar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-top:.9rem}.page-bar .btn.quiet{border-color:transparent;background:transparent;color:var(--muted);font-weight:500;padding-left:.5rem;padding-right:.5rem;margin-left:-.5rem}.page-bar .btn.quiet:hover,.page-bar .btn.quiet[aria-pressed='true']{color:var(--accent);background:var(--accent-wash);border-color:transparent}.page-pos{color:var(--accent);font:400 .77rem/1.3 var(--mono);letter-spacing:.11em;white-space:nowrap}body:not([data-view='one']) .page-pos{display:none}.pidx{display:none;margin:2.1rem 0 .65rem;color:var(--accent);font:400 .77rem/1.3 var(--mono);letter-spacing:.11em}body[data-view='one'] .pidx{display:block}body[data-view='one'] .quiz-area .pidx{margin-top:0;margin-bottom:.4rem}body[data-view='one'] .opening{margin-top:0}body[data-view='one'] .chapter-section>h2::before{content:attr(data-pg) ' / ' attr(data-pn)}body[data-view='one'] .chapter-section{margin-top:1.4rem;padding-top:1.9rem}body[data-view='one'] .quiz-area{margin-top:1.4rem}body[data-view='one'] .editorial-notes{margin-top:2.6rem}.page-nav{position:sticky;bottom:0;z-index:5;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;margin-top:2.2rem;padding:.6rem 0 calc(.6rem + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--page)}.page-nav .btn{width:100%;padding-left:.4rem;padding-right:.4rem;white-space:nowrap}.page-nav .btn:disabled{opacity:.45;cursor:default;border-color:var(--line);background:var(--surface);color:var(--ink)}.page-nav .reset{border-color:transparent;background:transparent;color:var(--muted);font-weight:500}.page-nav .reset:hover{color:var(--danger);background:var(--danger-bg);border-color:transparent}body:not([data-view='one']) .page-nav{display:none}
 @media (max-width:43rem){.chapter-section{margin-top:2.9rem;padding-top:1.9rem}.numbers{grid-template-columns:1fr}.numbers li,.numbers li:not(:nth-child(3n+1)){display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr);column-gap:.8rem;padding:.85rem 0;border-left:0}.numbers .v{grid-row:span 2;margin:0;font-size:1.53rem}.numbers .lbl{margin-top:0}.breakdown .legend,.scale .legend{grid-template-columns:1fr}.scale .mv{display:none}.timeline li{grid-template-columns:1fr}.timeline .dur{justify-self:start;max-width:100%;text-align:left}.timeline .lock{grid-column:1}.quiz .result{flex-basis:100%;margin-left:0}}
 @media (min-width:60rem){body{font-size:18px;line-height:1.7}}
-@media (min-width:56.25rem){main{width:min(48rem,calc(100% - 2.5rem))}.crumb nav{max-width:48rem}.hero h1,.hero .aside,.hero .tools,.opening,.chapter-section>h2,.chapter-section>p,.chapter-section>details,.chapter-section>aside,.quiz-area,.editorial-notes,.chapter-foot,.callout.risk{margin-left:0;margin-right:0}figure.fig{width:min(57.5rem,max(100%,calc(100% + (100vw - 100%)/2 - 1.5rem)));margin-left:0;margin-right:0}footer{max-width:48rem;padding-left:0;padding-right:0}}
+@media (min-width:56.25rem){main{width:min(48rem,calc(100% - 2.5rem))}.crumb nav{max-width:48rem}.hero h1,.hero .aside,.hero .tools,.opening,.chapter-section>h2,.chapter-section>p,.chapter-section>details,.chapter-section>aside,.quiz-area,.editorial-notes,.chapter-foot,.callout.risk{margin-left:0;margin-right:0}figure.fig,.page-nav{width:min(57.5rem,max(100%,calc(100% + (100vw - 100%)/2 - 1.5rem)));margin-left:0;margin-right:0}footer{max-width:48rem;padding-left:0;padding-right:0}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media print{body{background:#fff;color:#000}.progress,.tools,.quiz .row,.image-enlarge::after,.figure-viewer,.page-bar,.page-nav,.pidx{display:none!important}main>[hidden],.chapter-body>[hidden]{display:block!important}.quiz .a[hidden],details.more .more-body{display:block!important}figure.fig,.quiz,details.more{break-inside:avoid}}
 </style>
@@ -173,7 +173,7 @@ pages.push({els:[quizArea,notes,foot].filter(Boolean),focus:quizArea,idx:section
 var N=pages.length;function pad(n){return(n<10?'0':'')+n}
 sections.forEach(function(section,i){var h=section.querySelector('h2');if(h){h.setAttribute('data-pg',pad(i+2));h.setAttribute('data-pn',pad(N))}});
 function pidx(n){var el=document.createElement('p');el.className='pidx';el.setAttribute('aria-hidden','true');el.textContent=pad(n)+' / '+pad(N);return el}
-opening.parentNode.insertBefore(pidx(1),opening);quizArea.insertBefore(pidx(N),quizArea.firstChild);
+var introIdx=pidx(1);opening.parentNode.insertBefore(introIdx,opening);pages[0].els.push(introIdx);quizArea.insertBefore(pidx(N),quizArea.firstChild);
 var topBar=document.createElement('div');topBar.className='page-bar';
 topBar.innerHTML="<button class='btn quiet' type='button' data-view-toggle aria-pressed='false'>Show all sections</button><span class='page-pos' data-page-pos aria-live='polite'></span>";
 main.insertBefore(topBar,main.firstChild);
@@ -194,7 +194,7 @@ posLabel.textContent='Page '+(pager.i+1)+' of '+N;
 toggle.textContent=one?'Show all sections':'One page at a time';toggle.setAttribute('aria-pressed',one?'false':'true');
 bBack.disabled=pager.i===0;bNext.textContent=pager.i===N-1?'Finish':'Next';
 var on=!!load(KEY_RS)[readKey(pager.i)];bRead.textContent=on?'Read ✓':'Read';bRead.setAttribute('aria-pressed',on?'true':'false');
-posStore[page]=pager.i;save(KEY_POS,posStore);viewStore[page]=pager.view;save(KEY_VIEW,viewStore);schedule()}
+posStore[page]=pager.i;save(KEY_POS,posStore);viewStore[page]=pager.view;save(KEY_VIEW,viewStore);update()}
 function go(d){var k=pager.i+d;if(k<0||k>=N)return;pager.i=k;render();
 var top=topBar.getBoundingClientRect().top+window.scrollY-8;if(window.scrollY>top)window.scrollTo(0,Math.max(0,top));
 var f=pages[k].focus;if(f){f.setAttribute('tabindex','-1');f.focus({preventScroll:true})}}
@@ -205,8 +205,8 @@ bRead.addEventListener('click',function(){var rs=load(KEY_RS);var key=readKey(pa
 var done=pages.every(function(p,k){return !!rs[readKey(k)]});if(done){var rd=load(KEY_READ);if(!rd[page]){rd[page]=new Date().toISOString();save(KEY_READ,rd)}}render()});
 bReset.addEventListener('click',function(){if(!window.confirm('Reset this page? Its read mark and any quiz scores on it will be cleared.'))return;
 var rs=load(KEY_RS);delete rs[readKey(pager.i)];save(KEY_RS,rs);var rd=load(KEY_READ);if(rd[page]){delete rd[page];save(KEY_READ,rd)}
-var touched=false;pages[pager.i].els.forEach(function(el){el.querySelectorAll('.quiz[data-q]').forEach(function(card){var key=page+'#'+card.getAttribute('data-q');if(key in saved){delete saved[key];touched=true}})});
-if(touched){storeQuiz();repaintQuiz()}render()});
+var live=load('dc-course:quiz');var touched=false;pages[pager.i].els.forEach(function(el){el.querySelectorAll('.quiz[data-q]').forEach(function(card){var key=page+'#'+card.getAttribute('data-q');if(key in live||key in saved){delete live[key];delete saved[key];touched=true}})});
+if(touched){saved=live;storeQuiz();repaintQuiz()}render()});
 document.addEventListener('keydown',function(ev){if(pager.view!=='one'||ev.altKey||ev.ctrlKey||ev.metaKey||ev.shiftKey)return;if(viewer&&viewer.open)return;
 var t=ev.target;if(/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(t.tagName)&&ev.key.indexOf('Arrow')!==0)return;if(t.closest&&t.closest('.compare-wrap'))return;
 if(ev.key==='ArrowRight'){ev.preventDefault();go(1)}else if(ev.key==='ArrowLeft'){ev.preventDefault();go(-1)}});
