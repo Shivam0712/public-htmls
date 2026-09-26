@@ -28,11 +28,13 @@ figure.fig{width:100%;min-width:0;margin:1.7rem auto 1.6rem;padding:clamp(1rem,3
 .quiz-area{margin-top:3.3rem;padding-top:1.25rem;border-top:3px solid var(--ink)}.quiz{margin:1rem 0;padding:1.15rem;border:1px solid var(--line);border-radius:5px;background:var(--surface)}.quiz::before{content:'QUESTION ' attr(data-q) ' / 06';display:block;margin-bottom:.5rem;color:var(--accent);font:400 .73rem/1.4 var(--mono);letter-spacing:.07em}.quiz .q{margin:0 0 .9rem;font:400 1.2rem/1.38 var(--serif)}.quiz .row{display:flex;align-items:center;flex-wrap:wrap;gap:.55rem}.quiz .reveal{border-color:var(--accent);background:var(--accent);color:var(--page)}.quiz .reveal:hover{background:var(--accent-wash);color:var(--accent)}.quiz .score{display:inline-flex;flex-wrap:wrap;gap:.5rem}.quiz .result{margin-left:auto;color:var(--muted);font-size:.81rem}.quiz .a{margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--line)}.quiz .a p:last-child{margin-bottom:0}.quiz.miss{border-left:3px solid var(--danger)}.quiz.miss [data-score='miss'][aria-pressed='true']{border-color:var(--danger);background:var(--danger-bg);color:var(--danger)}
 .editorial-notes{margin-top:3.4rem}.editorial-notes hr{margin:0 0 2rem;border:0;border-top:3px solid var(--line)}.editorial-notes h2{margin:2.3rem 0 .8rem;font:400 1.95rem/1.2 var(--serif);letter-spacing:-.025em}.editorial-notes h3{margin:2rem 0 .7rem;padding-top:.85rem;border-top:1px solid var(--line);font-size:1.05rem;line-height:1.35}.editorial-notes ul{padding-left:1.35rem}.editorial-notes li{margin:.55rem 0;line-height:1.6}.chapter-foot{margin-top:3.5rem;padding-top:1.25rem;border-top:1px solid var(--line)}.pn{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}.pn a{display:block;padding:.8rem .9rem;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink);font-size:.88rem;line-height:1.45;text-decoration:none}.pn a:hover{border-color:var(--accent);color:var(--accent)}.pn .dir{display:block;margin-bottom:.15rem;color:var(--muted);font-size:.75rem}.pn .next{text-align:right}footer{max-width:60rem;margin:auto;padding:0 1.25rem 3rem;color:var(--muted);font-size:.8rem}footer a+ a{margin-left:.6rem}
 .viewer-open{overflow:hidden}.figure-viewer{position:fixed;inset:0;width:min(70rem,calc(100% - 1rem));max-height:calc(100vh - 1rem);max-height:calc(100dvh - 1rem);margin:auto;padding:0;overflow:hidden;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);box-shadow:0 20px 70px #0008}.figure-viewer::backdrop{background:#07100FC9}.viewer-bar{display:flex;justify-content:flex-end;padding:.5rem;border-bottom:1px solid var(--line)}.viewer-canvas{max-height:calc(100vh - 9rem);max-height:calc(100dvh - 9rem);overflow:auto;overscroll-behavior:contain}.viewer-zoom{display:block;width:100%;max-width:1280px;margin:0;padding:0;border:0;background:var(--surface);cursor:zoom-in}.viewer-canvas.zoomed .viewer-zoom{width:200%;max-width:1280px;cursor:zoom-out}.viewer-zoom img{display:block;width:100%;max-width:none;height:auto}.viewer-caption{margin:0;padding:.8rem 1rem;color:var(--muted);font-size:.85rem;line-height:1.45;border-top:1px solid var(--line)}
+/* paged reading: one section per page, built by the script; without JS the page is the plain scroll view */
+.page-bar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-top:.9rem}.page-bar .btn.quiet{border-color:transparent;background:transparent;color:var(--muted);font-weight:500;padding-left:.5rem;padding-right:.5rem;margin-left:-.5rem}.page-bar .btn.quiet:hover,.page-bar .btn.quiet[aria-pressed='true']{color:var(--accent);background:var(--accent-wash);border-color:transparent}.page-pos{color:var(--accent);font:400 .77rem/1.3 var(--mono);letter-spacing:.11em;white-space:nowrap}body:not([data-view='one']) .page-pos{display:none}.pidx{display:none;margin:2.1rem 0 .65rem;color:var(--accent);font:400 .77rem/1.3 var(--mono);letter-spacing:.11em}body[data-view='one'] .pidx{display:block}body[data-view='one'] .quiz-area .pidx{margin-top:0;margin-bottom:.4rem}body[data-view='one'] .opening{margin-top:0}body[data-view='one'] .chapter-section>h2::before{content:attr(data-pg) ' / ' attr(data-pn)}body[data-view='one'] .chapter-section{margin-top:1.4rem;padding-top:1.9rem}body[data-view='one'] .quiz-area{margin-top:1.4rem}body[data-view='one'] .editorial-notes{margin-top:2.6rem}.page-nav{position:sticky;bottom:0;z-index:5;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;margin-top:2.2rem;padding:.6rem 0 calc(.6rem + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--page)}.page-nav .btn{width:100%;padding-left:.4rem;padding-right:.4rem;white-space:nowrap}.page-nav .btn:disabled{opacity:.45;cursor:default;border-color:var(--line);background:var(--surface);color:var(--ink)}.page-nav .reset{border-color:transparent;background:transparent;color:var(--muted);font-weight:500}.page-nav .reset:hover{color:var(--danger);background:var(--danger-bg);border-color:transparent}body:not([data-view='one']) .page-nav{display:none}
 @media (max-width:43rem){.chapter-section{margin-top:2.9rem;padding-top:1.9rem}.numbers{grid-template-columns:1fr}.numbers li,.numbers li:not(:nth-child(3n+1)){display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr);column-gap:.8rem;padding:.85rem 0;border-left:0}.numbers .v{grid-row:span 2;margin:0;font-size:1.53rem}.numbers .lbl{margin-top:0}.breakdown .legend,.scale .legend{grid-template-columns:1fr}.scale .mv{display:none}.timeline li{grid-template-columns:1fr}.timeline .dur{justify-self:start;max-width:100%;text-align:left}.timeline .lock{grid-column:1}.quiz .result{flex-basis:100%;margin-left:0}}
 @media (min-width:60rem){body{font-size:18px;line-height:1.7}}
 @media (min-width:56.25rem){main{width:min(48rem,calc(100% - 2.5rem))}.crumb nav{max-width:48rem}.hero h1,.hero .aside,.hero .tools,.opening,.chapter-section>h2,.chapter-section>p,.chapter-section>details,.chapter-section>aside,.quiz-area,.editorial-notes,.chapter-foot,.callout.risk{margin-left:0;margin-right:0}figure.fig{width:min(57.5rem,max(100%,calc(100% + (100vw - 100%)/2 - 1.5rem)));margin-left:0;margin-right:0}footer{max-width:48rem;padding-left:0;padding-right:0}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-@media print{body{background:#fff;color:#000}.progress,.tools,.quiz .row,.image-enlarge::after,.figure-viewer{display:none!important}.quiz .a[hidden],details.more .more-body{display:block!important}figure.fig,.quiz,details.more{break-inside:avoid}}
+@media print{body{background:#fff;color:#000}.progress,.tools,.quiz .row,.image-enlarge::after,.figure-viewer,.page-bar,.page-nav,.pidx{display:none!important}main>[hidden],.chapter-body>[hidden]{display:block!important}.quiz .a[hidden],details.more .more-body{display:block!important}figure.fig,.quiz,details.more{break-inside:avoid}}
 </style>
 </head>
 <body class='chapter' data-page='preview-L3-foundations'>
@@ -119,7 +121,102 @@ figure.fig{width:100%;min-width:0;margin:1.7rem auto 1.6rem;padding:clamp(1rem,3
 <footer>Generated from the course markdown on 2026-09-26. <a href='overview.html'>Sixty-word overview</a> <a href='glossary.html'>Glossary</a></footer>
 <dialog class='figure-viewer' id='figure-viewer' aria-label='Enlarged figure'><div class='viewer-bar'><button class='btn' type='button' data-close>Close image ×</button></div><div class='viewer-canvas'><button class='viewer-zoom' type='button' data-zoom aria-label='Zoom image' aria-pressed='false'><img data-large-image alt=''></button></div><p class='viewer-caption' data-large-caption></p></dialog>
 <script>
-(function(){'use strict';var page=document.body.getAttribute('data-page')||'';var saved;try{saved=JSON.parse(localStorage.getItem('dc-course:quiz')||'{}');if(!saved||typeof saved!=='object'||Array.isArray(saved))saved={}}catch(error){saved={}}function store(){try{localStorage.setItem('dc-course:quiz',JSON.stringify(saved))}catch(error){}}document.querySelectorAll('.quiz').forEach(function(card){var key=page+'#'+card.getAttribute('data-q');var reveal=card.querySelector('.reveal');var answer=card.querySelector('.a');var score=card.querySelector('.score');var result=card.querySelector('.result');function paint(){var value=saved[key];card.classList.toggle('hit',value==='hit');card.classList.toggle('miss',value==='miss');result.textContent=value==='hit'?'Got it last time':value==='miss'?'Missed last time':'';card.querySelectorAll('[data-score]').forEach(function(button){button.setAttribute('aria-pressed',button.getAttribute('data-score')===value?'true':'false')})}reveal.addEventListener('click',function(){var opening=answer.hidden;answer.hidden=!opening;score.hidden=!opening;reveal.setAttribute('aria-expanded',opening?'true':'false');reveal.textContent=opening?'Hide answer':'Show answer'});card.querySelectorAll('[data-score]').forEach(function(button){button.addEventListener('click',function(){saved[key]=button.getAttribute('data-score');store();paint()})});paint()});var all=document.querySelector('[data-expand-all]');var mores=Array.from(document.querySelectorAll('details.more'));function paintAll(){var open=mores.every(function(item){return item.open});all.textContent=open?'Collapse all':'Expand all';all.setAttribute('aria-pressed',open?'true':'false')}if(all){all.addEventListener('click',function(){var open=mores.every(function(item){return item.open});mores.forEach(function(item){item.open=!open});paintAll()});mores.forEach(function(item){item.addEventListener('toggle',paintAll)});paintAll()}var viewer=document.getElementById('figure-viewer');if(viewer&&typeof viewer.showModal==='function'){var opener=null;var canvas=viewer.querySelector('.viewer-canvas');var zoom=viewer.querySelector('[data-zoom]');document.querySelectorAll('[data-enlarge]').forEach(function(button){button.addEventListener('click',function(){opener=button;var figure=button.closest('figure');var image=button.querySelector('img');var large=viewer.querySelector('[data-large-image]');large.src=image.getAttribute('src');large.alt=image.alt;viewer.querySelector('[data-large-caption]').textContent=figure.querySelector('figcaption').textContent.trim();canvas.classList.remove('zoomed');zoom.setAttribute('aria-pressed','false');zoom.setAttribute('aria-label','Zoom image');viewer.showModal();document.body.classList.add('viewer-open');viewer.querySelector('[data-close]').focus()})});viewer.querySelector('[data-close]').addEventListener('click',function(){viewer.close()});zoom.addEventListener('click',function(){var active=canvas.classList.toggle('zoomed');zoom.setAttribute('aria-pressed',active?'true':'false');zoom.setAttribute('aria-label',active?'Fit image':'Zoom image');if(!active){canvas.scrollTop=0;canvas.scrollLeft=0}});viewer.addEventListener('click',function(event){if(event.target===viewer)viewer.close()});viewer.addEventListener('close',function(){document.body.classList.remove('viewer-open');if(opener)opener.focus({preventScroll:true})})}var bar=document.querySelector('.progress');var frame=0;function update(){frame=0;var root=document.documentElement;var length=root.scrollHeight-root.clientHeight;bar.style.width=(length>0?Math.min(100,100*root.scrollTop/length):0)+'%'}function schedule(){if(!frame)frame=requestAnimationFrame(update)}addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);addEventListener('load',schedule);document.querySelectorAll('details.more,figure.fig img').forEach(function(item){item.addEventListener(item.tagName==='DETAILS'?'toggle':'load',schedule)});schedule()})();
+(function(){'use strict';
+var page=document.body.getAttribute('data-page')||'';
+function load(k){try{var v=JSON.parse(localStorage.getItem(k)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch(error){return{}}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(error){}}
+
+/* ---- quiz cards: reveal, self-score, remembered under dc-course:quiz as <page>#<q> ---- */
+var saved=load('dc-course:quiz');var quizPaints=[];
+function storeQuiz(){save('dc-course:quiz',saved)}
+document.querySelectorAll('.quiz').forEach(function(card){var key=page+'#'+card.getAttribute('data-q');var reveal=card.querySelector('.reveal');var answer=card.querySelector('.a');var score=card.querySelector('.score');var result=card.querySelector('.result');
+function paint(){var value=saved[key];card.classList.toggle('hit',value==='hit');card.classList.toggle('miss',value==='miss');result.textContent=value==='hit'?'Got it last time':value==='miss'?'Missed last time':'';card.querySelectorAll('[data-score]').forEach(function(button){button.setAttribute('aria-pressed',button.getAttribute('data-score')===value?'true':'false')})}
+reveal.addEventListener('click',function(){var opening=answer.hidden;answer.hidden=!opening;score.hidden=!opening;reveal.setAttribute('aria-expanded',opening?'true':'false');reveal.textContent=opening?'Hide answer':'Show answer'});
+card.querySelectorAll('[data-score]').forEach(function(button){button.addEventListener('click',function(){saved[key]=button.getAttribute('data-score');storeQuiz();paint()})});
+paint();quizPaints.push(paint)});
+function repaintQuiz(){quizPaints.forEach(function(paint){paint()})}
+
+/* ---- expand / collapse every read-more ---- */
+var all=document.querySelector('[data-expand-all]');var mores=Array.from(document.querySelectorAll('details.more'));
+function paintAll(){var open=mores.every(function(item){return item.open});all.textContent=open?'Collapse all':'Expand all';all.setAttribute('aria-pressed',open?'true':'false')}
+if(all){all.addEventListener('click',function(){var open=mores.every(function(item){return item.open});mores.forEach(function(item){item.open=!open});paintAll()});mores.forEach(function(item){item.addEventListener('toggle',paintAll)});paintAll()}
+
+/* ---- figure lightbox ---- */
+var viewer=document.getElementById('figure-viewer');
+if(viewer&&typeof viewer.showModal==='function'){var opener=null;var canvas=viewer.querySelector('.viewer-canvas');var zoom=viewer.querySelector('[data-zoom]');
+document.querySelectorAll('[data-enlarge]').forEach(function(button){button.addEventListener('click',function(){opener=button;var figure=button.closest('figure');var image=button.querySelector('img');var large=viewer.querySelector('[data-large-image]');large.src=image.getAttribute('src');large.alt=image.alt;viewer.querySelector('[data-large-caption]').textContent=figure.querySelector('figcaption').textContent.trim();canvas.classList.remove('zoomed');zoom.setAttribute('aria-pressed','false');zoom.setAttribute('aria-label','Zoom image');viewer.showModal();document.body.classList.add('viewer-open');viewer.querySelector('[data-close]').focus()})});
+viewer.querySelector('[data-close]').addEventListener('click',function(){viewer.close()});
+zoom.addEventListener('click',function(){var active=canvas.classList.toggle('zoomed');zoom.setAttribute('aria-pressed',active?'true':'false');zoom.setAttribute('aria-label',active?'Fit image':'Zoom image');if(!active){canvas.scrollTop=0;canvas.scrollLeft=0}});
+viewer.addEventListener('click',function(event){if(event.target===viewer)viewer.close()});
+viewer.addEventListener('close',function(){document.body.classList.remove('viewer-open');if(opener)opener.focus({preventScroll:true})})}
+
+/* ---- progress line: by page when paging, by scroll otherwise ---- */
+var bar=document.querySelector('.progress');var frame=0;var pager=null;
+function update(){frame=0;if(pager&&pager.view==='one'){bar.style.width=(100*(pager.i+1)/pager.n).toFixed(2)+'%';return}var root=document.documentElement;var length=root.scrollHeight-root.clientHeight;bar.style.width=(length>0?Math.min(100,100*root.scrollTop/length):0)+'%'}
+function schedule(){if(!frame)frame=requestAnimationFrame(update)}
+addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);addEventListener('load',schedule);
+document.querySelectorAll('details.more,figure.fig img').forEach(function(item){item.addEventListener(item.tagName==='DETAILS'?'toggle':'load',schedule)});
+
+/* ---- paged reading: intro, one page per section, quiz last ----
+   Position: dc-course:page-pos[page] (index). View: dc-course:page-view[page] ('one'|'all').
+   Read marks: dc-course:read-sections[<page>#<section-index>], intro 0, sections 1..9, quiz 10;
+   when every page is marked the chapter is also set in dc-course:read[page] like the rest of the site. */
+var main=document.querySelector('main');var hero=main&&main.querySelector('.hero');var opening=main&&main.querySelector('.opening');
+var sections=main?Array.from(main.querySelectorAll('.chapter-section')):[];var quizArea=main&&main.querySelector('.quiz-area');
+if(main&&opening&&quizArea&&sections.length){
+var KEY_POS='dc-course:page-pos',KEY_VIEW='dc-course:page-view',KEY_RS='dc-course:read-sections',KEY_READ='dc-course:read';
+var notes=main.querySelector('.editorial-notes'),foot=main.querySelector('.chapter-foot');
+var mapLink=foot&&foot.querySelector('a.next');var mapHref=mapLink?mapLink.getAttribute('href'):'index.html';
+var pages=[{els:[hero,opening].filter(Boolean),focus:opening,idx:0}];
+sections.forEach(function(section,i){pages.push({els:[section],focus:section.querySelector('h2'),idx:i+1})});
+pages.push({els:[quizArea,notes,foot].filter(Boolean),focus:quizArea,idx:sections.length+1});
+var N=pages.length;function pad(n){return(n<10?'0':'')+n}
+sections.forEach(function(section,i){var h=section.querySelector('h2');if(h){h.setAttribute('data-pg',pad(i+2));h.setAttribute('data-pn',pad(N))}});
+function pidx(n){var el=document.createElement('p');el.className='pidx';el.setAttribute('aria-hidden','true');el.textContent=pad(n)+' / '+pad(N);return el}
+opening.parentNode.insertBefore(pidx(1),opening);quizArea.insertBefore(pidx(N),quizArea.firstChild);
+var topBar=document.createElement('div');topBar.className='page-bar';
+topBar.innerHTML="<button class='btn quiet' type='button' data-view-toggle aria-pressed='false'>Show all sections</button><span class='page-pos' data-page-pos aria-live='polite'></span>";
+main.insertBefore(topBar,main.firstChild);
+var nav=document.createElement('nav');nav.className='page-nav';nav.setAttribute('aria-label','Pages');
+nav.innerHTML="<button class='btn' type='button' data-back>Back</button><button class='btn' type='button' data-read aria-pressed='false'>Read</button><button class='btn reset' type='button' data-reset>Reset</button><button class='btn' type='button' data-next>Next</button>";
+main.appendChild(nav);
+var toggle=topBar.querySelector('[data-view-toggle]'),posLabel=topBar.querySelector('[data-page-pos]');
+var bBack=nav.querySelector('[data-back]'),bRead=nav.querySelector('[data-read]'),bReset=nav.querySelector('[data-reset]'),bNext=nav.querySelector('[data-next]');
+var posStore=load(KEY_POS),viewStore=load(KEY_VIEW);
+function clamp(k){k=parseInt(k,10);return isNaN(k)?0:Math.min(Math.max(k,0),N-1)}
+pager={i:clamp(posStore[page]),n:N,view:viewStore[page]==='all'?'all':'one'};
+function hashTarget(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return null;return document.getElementById(h)||document.getElementsByName(h)[0]||null}
+function pageOf(el){for(var k=0;k<N;k++){if(pages[k].els.some(function(e){return e.contains(el)}))return k}return -1}
+function readKey(k){return page+'#'+pages[k].idx}
+function render(){var one=pager.view==='one';document.body.setAttribute('data-view',pager.view);
+pages.forEach(function(p,k){p.els.forEach(function(el){el.hidden=one&&k!==pager.i})});
+posLabel.textContent='Page '+(pager.i+1)+' of '+N;
+toggle.textContent=one?'Show all sections':'One page at a time';toggle.setAttribute('aria-pressed',one?'false':'true');
+bBack.disabled=pager.i===0;bNext.textContent=pager.i===N-1?'Finish':'Next';
+var on=!!load(KEY_RS)[readKey(pager.i)];bRead.textContent=on?'Read ✓':'Read';bRead.setAttribute('aria-pressed',on?'true':'false');
+posStore[page]=pager.i;save(KEY_POS,posStore);viewStore[page]=pager.view;save(KEY_VIEW,viewStore);schedule()}
+function go(d){var k=pager.i+d;if(k<0||k>=N)return;pager.i=k;render();
+var top=topBar.getBoundingClientRect().top+window.scrollY-8;if(window.scrollY>top)window.scrollTo(0,Math.max(0,top));
+var f=pages[k].focus;if(f){f.setAttribute('tabindex','-1');f.focus({preventScroll:true})}}
+bBack.addEventListener('click',function(){go(-1)});
+bNext.addEventListener('click',function(){if(pager.i===N-1)location.href=mapHref;else go(1)});
+toggle.addEventListener('click',function(){pager.view=pager.view==='one'?'all':'one';render();if(pager.view==='one')go(0)});
+bRead.addEventListener('click',function(){var rs=load(KEY_RS);var key=readKey(pager.i);if(rs[key])return;rs[key]=new Date().toISOString();save(KEY_RS,rs);
+var done=pages.every(function(p,k){return !!rs[readKey(k)]});if(done){var rd=load(KEY_READ);if(!rd[page]){rd[page]=new Date().toISOString();save(KEY_READ,rd)}}render()});
+bReset.addEventListener('click',function(){if(!window.confirm('Reset this page? Its read mark and any quiz scores on it will be cleared.'))return;
+var rs=load(KEY_RS);delete rs[readKey(pager.i)];save(KEY_RS,rs);var rd=load(KEY_READ);if(rd[page]){delete rd[page];save(KEY_READ,rd)}
+var touched=false;pages[pager.i].els.forEach(function(el){el.querySelectorAll('.quiz[data-q]').forEach(function(card){var key=page+'#'+card.getAttribute('data-q');if(key in saved){delete saved[key];touched=true}})});
+if(touched){storeQuiz();repaintQuiz()}render()});
+document.addEventListener('keydown',function(ev){if(pager.view!=='one'||ev.altKey||ev.ctrlKey||ev.metaKey||ev.shiftKey)return;if(viewer&&viewer.open)return;
+var t=ev.target;if(/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(t.tagName)&&ev.key.indexOf('Arrow')!==0)return;if(t.closest&&t.closest('.compare-wrap'))return;
+if(ev.key==='ArrowRight'){ev.preventDefault();go(1)}else if(ev.key==='ArrowLeft'){ev.preventDefault();go(-1)}});
+var tx=0,ty=0,touching=false;
+main.addEventListener('touchstart',function(ev){var t=ev.changedTouches[0];tx=t.clientX;ty=t.clientY;var wrap=ev.target.closest&&ev.target.closest('.compare-wrap');touching=!(wrap&&wrap.scrollWidth>wrap.clientWidth+1)},{passive:true});
+main.addEventListener('touchend',function(ev){if(!touching)return;touching=false;if(pager.view!=='one')return;var t=ev.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;if(Math.abs(dx)>=40&&Math.abs(dx)>Math.abs(dy))go(dx<0?1:-1)},{passive:true});
+function openHash(){var el=hashTarget();if(!el)return false;var k=pageOf(el);if(k>=0&&k!==pager.i){pager.i=k;render()}el.scrollIntoView();return true}
+addEventListener('hashchange',openHash);
+render();if(!openHash())addEventListener('load',schedule);else addEventListener('load',function(){var el=hashTarget();if(el)el.scrollIntoView()})}
+schedule()})();
 </script>
 </body>
 </html>
