@@ -294,10 +294,13 @@ dl.gloss .hide{display:none}
 .x-scale .mk.b{top:3.1rem}
 .x-scale .mk.b::before{top:-1.9rem;height:1.9rem}
 .x-scale .mk:hover{color:var(--live)}
-/* marks in the last fifth of the track hang left of their tick on phones so the label stays inside */
+/* marks in the last fifth of the track hang left of their tick on phones so the label stays inside;
+   a mark with a short label shows only that on phones so neighbours on the same row do not overlap */
+.x-scale .mk .short{display:none}
 @media (max-width:40rem){
   .x-scale .mk.end{transform:translateX(-100%)}
   .x-scale .mk.end::before{left:auto;right:0}
+  .x-scale .mk .long{display:none}.x-scale .mk .short{display:inline}
 }
 .x-note{color:var(--print-dim);font-size:.82rem;margin:.6rem 0 0;max-width:60ch}
 @media (max-width:26rem){.x-scale{font-size:.66rem}.x-scale .mk{font-size:.66rem}}
