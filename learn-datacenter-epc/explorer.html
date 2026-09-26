@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>One number decides the building — Datacenter Course</title>
+<title>How rack density shapes a data center — Datacenter Course</title>
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F1F4F5">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111B22">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
@@ -17,6 +17,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <link rel="preload" href="./fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./site.css">
+<link rel="stylesheet" href="./explorer.css">
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
@@ -25,12 +26,15 @@
   }
 </script>
 </head>
-<body class="landing explorer-page" data-page="explorer">
-
-<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><span class="here">Explorer</span></header>
-<main class="wide">
-  <h1>One number decides the building</h1>
-  <section class="explorer" data-regime="1" aria-label="One number decides the building" data-steps="[{&quot;kw&quot;: 5, &quot;name&quot;: &quot;the low end of the scale&quot;}, {&quot;kw&quot;: 20, &quot;name&quot;: &quot;air alone ends&quot;}, {&quot;kw&quot;: 45, &quot;name&quot;: &quot;containment ends&quot;}, {&quot;kw&quot;: 80, &quot;name&quot;: &quot;liquid required&quot;}, {&quot;kw&quot;: 120, &quot;name&quot;: &quot;the AI pods, NVL72&quot;}, {&quot;kw&quot;: 150, &quot;name&quot;: &quot;the top of the scale&quot;}]">
+<body class="explorer-page" data-page="explorer">
+<header class="crumb"><nav aria-label="Breadcrumb"><a href="index.html">Datacenter Course</a><span class="sep" aria-hidden="true">›</span><span class="here" aria-current="page">Rack density tool</span></nav></header>
+<main class="page-main">
+<div class="hero">
+  <p class="eyebrow">Interactive tool</p>
+  <h1>How rack density shapes a data center</h1>
+  <p class="intro">Rack density is a building decision. In a 1,000-rack hall, it changes the grid connection, cooling approach, floor and cost.</p>
+</div>
+<section class="explorer" data-regime="1" aria-label="How rack density shapes a data center" data-steps="[{&quot;kw&quot;: 5, &quot;name&quot;: &quot;the low end of the scale&quot;}, {&quot;kw&quot;: 20, &quot;name&quot;: &quot;air alone ends&quot;}, {&quot;kw&quot;: 45, &quot;name&quot;: &quot;containment ends&quot;}, {&quot;kw&quot;: 80, &quot;name&quot;: &quot;liquid required&quot;}, {&quot;kw&quot;: 120, &quot;name&quot;: &quot;the AI pods, NVL72&quot;}, {&quot;kw&quot;: 150, &quot;name&quot;: &quot;the top of the scale&quot;}]">
   <div class="x-top"><div><p class="x-sub">Step rack density up or down. For the same 1,000-rack hall, power, cooling,
   building and cost resize, and changed values light up.</p></div>
   <div class="x-read"><div class="x-row">
@@ -48,10 +52,11 @@
   <ol class="ripple" aria-label="The ripple: what the density decision re-sizes"><li class="stn" data-st="rack"><svg class="pic" data-pic="rack" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>The rack</h3><div class="kv"><span class="k">What fits</span><b class="n" data-x="fits"></b></div><a class="tp" href="index.html#t-compute">Topic 8</a></div></li><li class="stn" data-st="power"><svg class="pic" data-pic="power" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Power and grid</h3><div class="kv"><span class="k">IT load</span><b class="n" data-x="it"></b></div><div class="kv"><span class="k">At the fence</span><b class="n" data-x="fac"></b></div><div class="kv"><span class="k">UPS blocks</span><b class="n" data-x="ups"></b></div><div class="kv"><span class="k">Generators</span><b class="n" data-x="gens"></b></div><div class="kv"><span class="k">Grid connection</span><b class="n" data-x="tier"></b></div><a class="tp" href="index.html#t-power-1">Topics 3, 5, 6</a></div></li><li class="stn" data-st="cooling"><svg class="pic" data-pic="cooling" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Cooling</h3><div class="kv"><span class="k">Mode</span><b class="n" data-x="mode"></b></div><div class="kv"><span class="k">Heat path</span><b class="n" data-x="heat"></b></div><div class="kv"><span class="k">PUE</span><b class="n" data-x="pue"></b></div><a class="tp" href="index.html#t-cooling">Topic 7</a></div></li><li class="stn" data-st="building"><svg class="pic" data-pic="building" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Building</h3><div class="kv"><span class="k">Computer room</span><b class="n" data-x="white"></b></div><div class="kv"><span class="k">Whole building</span><b class="n" data-x="gross"></b></div><div class="kv"><span class="k">Computer room share</span><b class="n" data-x="share"></b></div><div class="kv"><span class="k">Per rack</span><b class="n" data-x="mass"></b></div><div class="kv"><span class="k">Floor</span><b class="n" data-x="floor"></b></div><a class="tp" href="index.html#t-building">Topic 4</a></div></li><li class="stn" data-st="network"><svg class="pic" data-pic="network" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Network</h3><div class="kv"><span class="k">Cabling</span><b class="n" data-x="net"></b></div><a class="tp" href="index.html#t-network">Topic 9</a></div></li><li class="stn" data-st="cost"><svg class="pic" data-pic="cost" viewBox="0 0 120 72" aria-hidden="true"></svg><div class="txt"><h3>Cost and operations</h3><div class="kv"><span class="k">Build cost</span><b class="n" data-x="capex"></b></div><div class="kv"><span class="k">For the hall</span><b class="n" data-x="total"></b></div><div class="kv"><span class="k">Day two</span><b class="n" data-x="ops"></b></div><a class="tp" href="index.html#t-foundations">Topics 1, 2, 11</a></div></li></ol>
   <p class="takeaway" data-x="takeaway"></p>
 </section>
-<details class="method"><summary>How these numbers are estimated</summary>
+<section class="below-tool" aria-label="Model and further reading">
+<details class="method"><summary><span class="summary-text"><span class="method-label">Model notes / 9 rules</span><span class="method-title">How these numbers are estimated</span></span><span class="method-sign" aria-hidden="true"></span></summary><div class="method-body">
 <p>Indicative rules of thumb, not a design. Topics 2, 5, 7 and 8 refine every one
 of them; the model is the <code>estimate()</code> function in <code>site.js</code>.</p>
-<ul>
+<ol class="method-rules">
 <li><strong>IT load</strong>: kW per rack times 1,000 racks. <strong>At the fence</strong>: IT load times PUE,
 where PUE is 1.4 to 1.7 for room-level air, 1.25 to 1.45 with containment, 1.2 to 1.35 with
 rear doors, 1.1 to 1.2 with direct liquid. Regime PUE depends more on the heat-rejection
@@ -90,11 +95,12 @@ density where the model changes category, for reference.</li>
 <li><strong>AI racks</strong>: the marked band is 100 to 145 kW, where shipping rack-scale systems
 sit (NVIDIA GB200 NVL72 at 120 to 132 kW, GB300 NVL72 at 132 to 142 kW). GB300 peaks near 155 kW;
 Vera Rubin is announced at 120 to 190 kW from H2 2026 and Kyber near 600 kW on 800 VDC in 2027.</li>
-</ul></details>
-<p class="x-back">Every one of these numbers has a chapter behind it. Back to <a href="index.html">the course map</a> to find the topic that explains why it moved.</p>
-  
+</ol>
+</div></details>
+<div class="way-back"><p class="way-label">Continue / the lessons</p><p class="x-back">Every one of these numbers has a chapter behind it. Back to <a href="index.html">the course map</a> to find the topic that explains why it moved.</p></div>
+</section>
 </main>
-<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Explorer</a></footer>
+<footer class="site-footer"><div class="foot-inner"><p>Generated from the course markdown on 2026-09-26.</p><nav aria-label="Course links"><a href="index.html">Course map</a><a href="overview.html">Sixty-word overview</a><a href="glossary.html">Glossary</a></nav></div></footer>
 <script src="./site.js" defer></script>
 </body>
 </html>

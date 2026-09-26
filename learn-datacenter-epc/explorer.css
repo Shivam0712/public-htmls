@@ -1,0 +1,112 @@
+/* explorer.css — the page AROUND the density explorer on docs/explorer.html:
+   crumb, hero (eyebrow, title, intro), the method disclosure, the way back
+   and the footer. Loaded after site.css, which owns the box itself
+   (section.explorer: cyanotype blue, safety yellow; never restyled here).
+   Every selector is scoped to body.explorer-page so it outranks site.css's
+   header.crumb / main / footer / details.method / .x-back rules.
+   Design: rewrite/redesign-explorer-rationale.md (gpt-6-sol, 2026-09-26,
+   post-review: palette and width). Copied verbatim into docs/ by
+   scripts/build-docs.py. */
+
+/* ---- tokens: the front-page palette (gpt-6-sol's choice for the page
+   around the blue box, rewrite/explorer-palette-sol.json). Redefining the
+   site tokens here is safe: the box CSS uses only --print-*, --live and
+   --water. --steel and --copper are aliased so site.css's generic rules
+   (body, a, :focus-visible, header.crumb colours) follow the palette. ---- */
+body.explorer-page{
+  --paper:#F1F4F5;          /* cool mineral paper: page background, theme-color */
+  --sheet:#FFFFFF;          /* method-card body */
+  --quiet:#E6ECEF;          /* method-card header, subdued panels */
+  --ink:#1B2931;            /* graphite ink */
+  --muted:#50616B;          /* secondary text */
+  --rule:#C9D3D8;           /* card border and dividers; never the accent */
+  --accent:#755024;         /* walnut: links, eyebrows, rule indices, disclosure sign */
+  --accent-tint:#F2E9DD;    /* hover washes only */
+  --steel:var(--muted); --copper:var(--accent);
+  --serif:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+@media (prefers-color-scheme:dark){
+  body.explorer-page{
+    --paper:#111B22; --sheet:#192630; --quiet:#21333E;
+    --ink:#ECF2F3; --muted:#ACBDC5; --rule:#3A505B;
+    --accent:#E8C296; --accent-tint:#302920}
+}
+
+body.explorer-page ::selection{background:var(--accent-tint);color:var(--ink)}
+.explorer-page .crumb :focus-visible,.explorer-page .hero :focus-visible,
+.explorer-page .below-tool :focus-visible,.explorer-page .site-footer :focus-visible{outline-width:3px}
+
+/* ---- crumb: compact, the same 72rem measure as the page ---- */
+.explorer-page .crumb{border-bottom:1px solid var(--rule);padding:calc(.85rem + env(safe-area-inset-top)) 1.25rem .85rem;
+  font-size:.79rem;line-height:1.45;color:var(--muted)}
+.explorer-page .crumb nav{max-width:69.5rem;margin:auto;display:flex;align-items:center;flex-wrap:wrap;gap:.05rem .45rem}
+.explorer-page .crumb a{color:var(--muted);text-decoration:none}
+.explorer-page .crumb a:hover{color:var(--accent);text-decoration:underline}
+.explorer-page .crumb .sep{margin:0;color:var(--muted);opacity:1}
+.explorer-page .crumb .here{color:var(--ink);font-weight:600}
+
+/* ---- the page column: 72rem, the box's own width. The hero and everything
+   under the box (.below-tool) are the full column, so their edges line up
+   with the box wherever the box is inset (>= 60rem). Below that the box is
+   full-bleed by its own rule and its 1.25rem inner padding lines its text up
+   with the page text. ---- */
+.explorer-page .page-main{max-width:72rem;min-width:0;margin:0 auto;padding:0 1.25rem 3.8rem}
+.explorer-page .hero{width:100%;padding:2.05rem 0 1.4rem;overflow-wrap:break-word}
+.explorer-page .eyebrow,.explorer-page .method-label,.explorer-page .way-label{
+  margin:0 0 .75rem;color:var(--accent);font:400 .76rem/1.35 var(--mono);letter-spacing:.04em}
+.explorer-page .hero h1{max-width:21ch;margin:0 0 .75rem;font:400 clamp(2.45rem,5vw,3.85rem)/1.08 var(--serif);
+  letter-spacing:-.038em;text-wrap:balance}
+.explorer-page .hero .intro{max-width:51ch;margin:0;color:var(--muted);font-size:1.08rem;line-height:1.6}
+
+/* ---- under the box: the method disclosure and the way back, full width ---- */
+.explorer-page .below-tool{width:100%;margin:2.8rem 0 0;line-height:1.68;overflow-wrap:break-word}
+.explorer-page .method{margin:0;border:1px solid var(--rule);border-radius:4px;background:var(--sheet);font-size:1rem}
+.explorer-page .method summary{display:flex;align-items:center;justify-content:space-between;gap:.7rem;min-height:76px;
+  padding:.7rem .75rem .7rem 1.1rem;list-style:none;cursor:pointer;color:inherit;background:var(--quiet);border-radius:4px}
+.explorer-page .method summary::-webkit-details-marker{display:none}
+.explorer-page .method[open] summary{border-radius:4px 4px 0 0}
+.explorer-page .method summary:hover{color:inherit}
+.explorer-page .method .summary-text{display:grid;gap:.2rem;min-width:0}
+.explorer-page .method .method-label{margin:0;font-size:.72rem;line-height:1.3}
+.explorer-page .method .method-title{color:var(--ink);font:400 clamp(1.15rem,2vw,1.4rem)/1.25 var(--serif);letter-spacing:-.02em}
+.explorer-page .method summary:hover .method-title{color:var(--accent)}
+.explorer-page .method .method-sign{flex:none;display:grid;place-items:center;width:44px;height:44px;
+  border-radius:4px;color:var(--accent);font:400 1.4rem/1 var(--sans)}
+.explorer-page .method .method-sign::before{content:"+"}
+.explorer-page .method[open] .method-sign::before{content:"−"}
+.explorer-page .method summary:hover .method-sign{background:var(--accent-tint)}
+.explorer-page .method-body{padding:1.15rem clamp(1rem,3vw,1.5rem) 1.1rem;border-top:1px solid var(--rule);
+  font-size:.94rem;line-height:1.64}
+.explorer-page .method-body>p{max-width:62ch;margin:0 0 1.45rem;color:var(--muted)}
+.explorer-page .method-body code{padding:.08em .3em;border:1px solid var(--rule);border-radius:3px;background:var(--quiet);
+  color:var(--ink);font:400 .86em/1.5 var(--mono);overflow-wrap:anywhere}
+.explorer-page .method-rules{list-style:none;counter-reset:rule;margin:0;padding:0}
+.explorer-page .method-rules li{position:relative;counter-increment:rule;margin:0;padding:.95rem 0 1rem 2.5rem;
+  border-top:1px solid var(--rule);break-inside:avoid;page-break-inside:avoid}
+.explorer-page .method-rules li::before{content:counter(rule);position:absolute;top:1.12rem;left:0;
+  color:var(--accent);font:400 .76rem/1.4 var(--mono)}
+.explorer-page .method-rules li:last-child{padding-bottom:.15rem}
+.explorer-page .way-back{margin:2.5rem 0 0;padding-top:1.35rem;border-top:1px solid var(--rule)}
+.explorer-page .way-back .way-label{margin:0 0 .5rem}
+.explorer-page .way-back .x-back{max-width:56ch;margin:0;color:var(--ink);font-size:1.06rem;line-height:1.62}
+
+/* ---- footer ---- */
+.explorer-page .site-footer{max-width:none;margin:0;padding:0;border-top:1px solid var(--rule);color:var(--muted);
+  font-size:.8rem;overflow-wrap:break-word}
+.explorer-page .site-footer .foot-inner{max-width:72rem;margin:0 auto;padding:1.35rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom));
+  display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem 2rem}
+.explorer-page .site-footer p{margin:0}
+.explorer-page .site-footer nav{display:flex;flex-wrap:wrap;gap:.2rem 1.15rem}
+.explorer-page .site-footer a{color:var(--muted)}
+.explorer-page .site-footer a:hover{color:var(--accent)}
+
+/* ---- wide screens: title beside intro; the rules in two columns so lines
+   stay readable inside the full-width card (each rule one unsplit item) ---- */
+@media (min-width:60rem){
+  .explorer-page .hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);column-gap:clamp(2rem,5vw,4rem);
+    align-items:end;padding:3.4rem 0 2.1rem}
+  .explorer-page .hero .eyebrow{grid-column:1/-1;margin-bottom:1rem}
+  .explorer-page .hero h1{grid-column:1;max-width:18ch;margin:0}
+  .explorer-page .hero .intro{grid-column:2;padding:.2rem 0 .2rem 1.15rem;border-left:2px solid var(--rule);
+    margin:0 0 .2rem;font-size:1.04rem;line-height:1.58}
+  .explorer-page .method-rules{columns:2;column-gap:2.75rem}
+}
