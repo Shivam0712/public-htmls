@@ -301,11 +301,15 @@
     if (d <= 145) return 'one rack-scale AI system (GB200 NVL72 120 to 132 kW, GB300 NVL72 132 to 142 kW)';
     return 'GB300 peaks near 155 kW; Vera Rubin 120 to 190 kW from H2 2026; Kyber about 600 kW on 800 VDC in 2027';
   }
+  function floorBand(m) { return m < 900 ? 0 : m < 1400 ? 1 : 2; }
   function floorNote(m) {
-    return m < 900 ? 'a standard raised floor carries it'
-         : m < 1400 ? 'at the rating of most raised floors; slab preferred'
-         : 'slab on grade, with a structural check per rack';
+    return ['a standard raised floor carries it', 'at the rating of most raised floors; slab preferred',
+            'slab on grade, with a structural check per rack'][floorBand(m)];
   }
+  /* the what-fits band: the three air/rear-door regimes, then partial rack-scale, one NVL72, past NVL72 */
+  function fitsBand(e) { return e.r < 3 ? e.r : e.d < 100 ? 3 : e.d <= 145 ? 4 : 5; }
+  /* the categorical outputs whose flips define the steps (mirrored in scripts/explorer_steps.py) */
+  function bands(e) { return { mode: e.r, tier: e.tier, fits: fitsBand(e), floor: floorBand(e.mass) }; }
   function takeaway(e) {
     var d = Math.round(e.d), pl = Math.round(100 - e.share * 100);
     if (e.r === 0) return 'At ' + d + ' kW a rack this is a conventional hall: ' + fmtMW(e.it) + ' MW of IT, air-cooled, ' + e.ups + ' UPS blocks and ' + e.gens + ' generators, and roughly ' + Math.round(e.share * 100) + '% of the building is computer room.';
@@ -375,7 +379,7 @@
   var xp = document.querySelector('.explorer');
   if (xp) {
     var STEPS = JSON.parse(xp.getAttribute('data-steps') || '[]'), N = STEPS.length; // [{kw, name}]
-    var slider = xp.querySelector('input[type=range]'), out = {}, prevText = null;
+    var slider = xp.querySelector('input[type=range]'), out = {}, prevText = null, prevBands = null;
     xp.querySelectorAll('[data-x]').forEach(function (el) { out[el.getAttribute('data-x')] = el; });
     var pics = {}; xp.querySelectorAll('svg[data-pic]').forEach(function (el) { pics[el.getAttribute('data-pic')] = el; });
     var bus = xp.querySelector('.ripple'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -417,18 +421,18 @@
       /* what changed since the previous step: highlight every station value whose
          text differs (.chg, a 1.2 s pulse; a plain state under reduced motion) and
          name the categorical fields that flipped */
-      var text = {};
+      var text = {}, bd = bands(e);
       Object.keys(out).forEach(function (k) { if (out[k].classList.contains('n')) text[k] = out[k].textContent; });
       xp.querySelectorAll('.n.chg').forEach(function (el) { el.classList.remove('chg'); });
       if (prevText) {
         Object.keys(text).forEach(function (k) {
           if (text[k] !== prevText[k]) { void out[k].offsetWidth; out[k].classList.add('chg'); }
         });
-        var flipped = CATEG.filter(function (c) { return text[c[0]] !== prevText[c[0]]; }).map(function (c) { return c[1]; });
+        var flipped = CATEG.filter(function (c) { return bd[c[0]] !== prevBands[c[0]]; }).map(function (c) { return c[1]; });
         set('changed', flipped.length ? 'Changed at this step: ' + flipped.join(', ') + '.'
           : 'Changed at this step: the numbers only; no design threshold crossed.');
       }
-      prevText = text;
+      prevText = text; prevBands = bd;
       set('step', 'Step ' + (i + 1) + ' of ' + N + ': ' + s.name);
       stepBtns.forEach(function (b) {
         var off = +b.getAttribute('data-step') < 0 ? i === 0 : i === N - 1;

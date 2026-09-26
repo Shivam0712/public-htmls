@@ -288,11 +288,12 @@ dl.gloss .hide{display:none}
 .x-scale .mk{position:absolute;transform:translateX(-50%);background:none;border:0;padding:.15rem .3rem;
   color:var(--print-ink);font:inherit;font-size:.72rem;white-space:nowrap;cursor:pointer;line-height:1.1;
   border-radius:2px;min-height:22px}
+/* every mark sits on a labelled step tick, so its hairline starts just under the tick label */
 .x-scale .mk::before{content:"";position:absolute;left:50%;width:1px;background:var(--print-dim);
-  top:-.5rem;height:.5rem}
+  top:-.3rem;height:.3rem}
 .x-scale .mk.a{top:1.75rem}
 .x-scale .mk.b{top:3.1rem}
-.x-scale .mk.b::before{top:-1.9rem;height:1.9rem}
+.x-scale .mk.b::before{top:-1.65rem;height:1.65rem}
 .x-scale .mk:hover{color:var(--live)}
 /* marks in the last fifth of the track hang left of their tick on phones so the label stays inside;
    a mark with a short label shows only that on phones so neighbours on the same row do not overlap */
