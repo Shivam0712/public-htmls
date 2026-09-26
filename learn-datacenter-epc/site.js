@@ -254,10 +254,11 @@
     { mode: 'Rear-door heat exchangers', pue: [1.2, 1.35], liquid: [0.8, 1.0], m2: 3.2 },
     { mode: 'Direct-to-chip liquid', pue: [1.1, 1.2], liquid: [0.7, 0.8], m2: 4.0 }
   ];
-  /* Slider position 0..200 -> kW. The scale is stretched (power 1.5) so the
-     5-80 kW range where every threshold sits gets ~60% of the track. */
-  function kwFromPos(p) { return 5 + 145 * Math.pow(p / 200, 1.5); }
-  function posFromKw(kw) { return 200 * Math.pow((kw - 5) / 145, 1 / 1.5); }
+  /* The slider is stepped: its value is an index into STEPS, the list of
+     densities where a categorical output flips (regime, grid tier, what
+     fits, floor) plus the reference hall's zone densities. The list comes
+     from the section's data-steps attribute (STEPS in build-docs.py, derived
+     by scripts/explorer_steps.py), so it lives in one place. */
 
   function estimate(d) {
     var r = d < THRESH[0] ? 0 : d < THRESH[1] ? 1 : d < THRESH[2] ? 2 : 3, R = REGIME[r];
@@ -373,15 +374,22 @@
 
   var xp = document.querySelector('.explorer');
   if (xp) {
-    var slider = xp.querySelector('input[type=range]'), out = {}, lastR = -1;
+    var STEPS = JSON.parse(xp.getAttribute('data-steps') || '[]'), N = STEPS.length; // [{kw, name}]
+    var slider = xp.querySelector('input[type=range]'), out = {}, prevText = null;
     xp.querySelectorAll('[data-x]').forEach(function (el) { out[el.getAttribute('data-x')] = el; });
     var pics = {}; xp.querySelectorAll('svg[data-pic]').forEach(function (el) { pics[el.getAttribute('data-pic')] = el; });
     var bus = xp.querySelector('.ripple'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var stepBtns = xp.querySelectorAll('.x-step');
+    /* the fields whose flips define the steps; their labels feed the "Changed at this step" line */
+    var CATEG = [['mode', 'cooling mode'], ['tier', 'grid connection'], ['fits', 'what fits'], ['floor', 'floor']];
     var set = function (k, v) { if (out[k]) out[k].textContent = v; };
+    var clampI = function (i) { return Math.max(0, Math.min(N - 1, Math.round(i))); };
+    var stepFor = function (kw) { var b = 0; STEPS.forEach(function (s, i) { if (Math.abs(s.kw - kw) < Math.abs(STEPS[b].kw - kw)) b = i; }); return b; };
     var render = function () {
-      var e = estimate(kwFromPos(+slider.value)), d = Math.round(e.d);
-      slider.setAttribute('aria-valuetext', d + ' kilowatts per rack');
-      slider.style.setProperty('--p', (100 * slider.value / 200).toFixed(2) + '%');
+      var i = clampI(+slider.value), s = STEPS[i], e = estimate(s.kw), d = s.kw;
+      slider.value = i;
+      slider.setAttribute('aria-valuetext', d + ' kilowatts per rack, step ' + (i + 1) + ' of ' + N + ': ' + s.name);
+      slider.style.setProperty('--p', (N > 1 ? 100 * i / (N - 1) : 0).toFixed(2) + '%');
       xp.setAttribute('data-regime', e.r);
       if (bus) bus.style.setProperty('--bus-w', (2 + 9 * e.it / 150).toFixed(1) + 'px');
       set('kw', d);
@@ -406,15 +414,35 @@
       set('total', fmtMoney(e.total[0]) + ' to ' + fmtMoney(e.total[1]));
       set('takeaway', takeaway(e));
       Object.keys(PICS).forEach(function (k) { if (pics[k]) pics[k].innerHTML = PICS[k](e); });
-      if (lastR >= 0 && lastR !== e.r && !reduce && out.mode) {
-        out.mode.classList.remove('flip'); void out.mode.offsetWidth; out.mode.classList.add('flip');
+      /* what changed since the previous step: highlight every station value whose
+         text differs (.chg, a 1.2 s pulse; a plain state under reduced motion) and
+         name the categorical fields that flipped */
+      var text = {};
+      Object.keys(out).forEach(function (k) { if (out[k].classList.contains('n')) text[k] = out[k].textContent; });
+      xp.querySelectorAll('.n.chg').forEach(function (el) { el.classList.remove('chg'); });
+      if (prevText) {
+        Object.keys(text).forEach(function (k) {
+          if (text[k] !== prevText[k]) { void out[k].offsetWidth; out[k].classList.add('chg'); }
+        });
+        var flipped = CATEG.filter(function (c) { return text[c[0]] !== prevText[c[0]]; }).map(function (c) { return c[1]; });
+        set('changed', flipped.length ? 'Changed at this step: ' + flipped.join(', ') + '.'
+          : 'Changed at this step: the numbers only; no design threshold crossed.');
       }
-      lastR = e.r;
+      prevText = text;
+      set('step', 'Step ' + (i + 1) + ' of ' + N + ': ' + s.name);
+      stepBtns.forEach(function (b) {
+        var off = +b.getAttribute('data-step') < 0 ? i === 0 : i === N - 1;
+        if (off && document.activeElement === b) slider.focus();
+        b.disabled = off;
+      });
     };
     slider.addEventListener('input', render);
-    /* the threshold marks on the scale are also buttons: tap one to jump there */
+    stepBtns.forEach(function (b) {
+      b.addEventListener('click', function () { slider.value = clampI(+slider.value + +b.getAttribute('data-step')); render(); });
+    });
+    /* the threshold marks on the scale are also buttons: tap one to jump to its step */
     xp.querySelectorAll('[data-kw]').forEach(function (b) {
-      b.addEventListener('click', function () { slider.value = Math.ceil(posFromKw(+b.getAttribute('data-kw'))); render(); slider.focus(); });
+      b.addEventListener('click', function () { slider.value = stepFor(+b.getAttribute('data-kw')); render(); slider.focus(); });
     });
     render();
   }
