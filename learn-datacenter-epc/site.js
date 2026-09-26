@@ -79,13 +79,14 @@
      ranges; the assumptions block under the hero lists them and Topics 2,
      5, 7, 8 refine them. Keep the model in estimate() and nowhere else. */
   var RACKS = 1000;          // the hall we hold fixed: a room of 1,000 cabinets
-  var BLOCK_MW = 2.5;        // one UPS + generator block, commonly 2 to 3 MW
-  var THRESH = [20, 45, 80]; // kW/rack: air alone ends, containment ends, liquid required (Topic 2 scale)
+  var BLOCK_MW = 2.5;        // one UPS block, commonly 2 to 3 MW (Topic 5)
+  var GEN_MW = 2.75;         // one standby genset; generators carry IT x PUE, the UPS only IT (Topic 5)
+  var THRESH = [20, 45, 80]; // kW/rack: 20 is the comfort limit for air (containment reaches ~30 with discipline), 45 containment ends, 80 liquid required (Topics 2, 7)
   var REGIME = [
     { mode: 'Air, room-level', pue: [1.4, 1.7], liquid: [0, 0],     m2: 2.8 },
     { mode: 'Air with containment', pue: [1.25, 1.45], liquid: [0, 0], m2: 2.8 },
-    { mode: 'Rear-door heat exchangers', pue: [1.2, 1.35], liquid: [0.5, 0.8], m2: 3.2 },
-    { mode: 'Direct-to-chip liquid', pue: [1.1, 1.25], liquid: [0.7, 0.8], m2: 4.0 }
+    { mode: 'Rear-door heat exchangers', pue: [1.2, 1.35], liquid: [0.8, 1.0], m2: 3.2 },
+    { mode: 'Direct-to-chip liquid', pue: [1.1, 1.2], liquid: [0.7, 0.8], m2: 4.0 }
   ];
   /* Slider position 0..200 -> kW. The scale is stretched (power 1.5) so the
      5-80 kW range where every threshold sits gets ~60% of the track. */
@@ -96,22 +97,23 @@
     var r = d < THRESH[0] ? 0 : d < THRESH[1] ? 1 : d < THRESH[2] ? 2 : 3, R = REGIME[r];
     var it = d * RACKS / 1000;                              // MW of IT load
     var fac = [it * R.pue[0], it * R.pue[1]];               // MW at the fence
-    var blocks = Math.ceil(it / BLOCK_MW) + 1;              // N+1 UPS/gen blocks
+    var ups = Math.ceil(it / BLOCK_MW) + 1;                 // N+1 UPS blocks, sized on IT load
     var facMid = (fac[0] + fac[1]) / 2;
-    var tier = facMid <= 15 ? 0 : facMid <= 80 ? 1 : 2;     // interconnect class
-    var mass = 400 + 8 * d;                                 // kg per loaded rack, +-20%
+    var gens = Math.ceil(facMid / GEN_MW) + 1;              // N+1 gensets, sized on IT x PUE (mechanical load too)
+    var tier = facMid <= 15 ? 0 : facMid <= 50 ? 1 : facMid <= 150 ? 2 : 3; // interconnect class (Topic 5)
+    var mass = d < THRESH[2] ? 400 + 8 * d : Math.max(400 + 8 * d, 1400); // kg per loaded rack, +-20%; vendor floor for rack-scale AI (Topic 8)
     var white = RACKS * R.m2;                               // m2 of computer room
     var plant = it * 1000 * 0.5;                            // m2 of plant, 0.4-0.6 m2/kW
     var share = white / (white + plant);
     var capex = [8 + 0.03 * d, 12 + 0.05 * d];              // $M per MW of IT, ex-servers
-    return { d: d, r: r, R: R, it: it, fac: fac, blocks: blocks, tier: tier, mass: mass,
+    return { d: d, r: r, R: R, it: it, fac: fac, ups: ups, gens: gens, tier: tier, mass: mass,
              white: white, gross: white + plant, share: share, capex: capex,
              total: [it * capex[0], it * capex[1]] };
   }
 
   var TIER = ['a distribution feeder (12 to 35 kV)', 'a dedicated substation (69 to 138 kV)',
-              'a transmission-level substation (230 kV and up)'];
-  var TIER_SHORT = ['distribution feeder', 'dedicated substation', 'transmission-level'];
+              'a transmission-fed substation (138 to 230 kV)', 'a transmission interconnect (230 to 345 kV)'];
+  var TIER_SHORT = ['distribution feeder', 'dedicated substation', 'transmission-fed substation', 'transmission interconnect'];
   var NET = ['Copper to a top-of-rack switch, a few fibre uplinks. Cabling is a trade, not a design driver.',
              'Still copper in the rack; 25G to the server, fibre uplinks. Trays begin to fill.',
              '100G to the rack, fibre everywhere above it; pathways are sized, not assumed.',
@@ -125,12 +127,12 @@
   function fmtMoney(m) { return m >= 1000 ? '$' + (m / 1000).toFixed(1) + 'B' : '$' + fmtN(Math.round(m / 10) * 10) + 'M'; }
   function fits(e) {
     var d = e.d;
-    if (e.r === 0) return 'about ' + Math.min(42, Math.round(d / 0.35)) + ' general-purpose servers';
-    if (e.r === 1) return 'a full rack of dense two-socket servers, or ' + Math.round(d / 9) + ' eight-GPU servers';
-    if (e.r === 2) return Math.round(d / 9) + ' eight-GPU servers at roughly 9 kW each';
-    if (d < 100) return 'a partial rack-scale GPU system, or ' + Math.round(d / 9) + ' eight-GPU servers';
-    if (d <= 135) return 'one rack-scale AI system (a GB200 NVL72 draws about 120 to 132 kW)';
-    return 'beyond racks shipping in 2025; next-generation systems are announced at this level';
+    if (e.r === 0) return 'about ' + Math.min(42, Math.round(d / 0.7)) + ' general-purpose servers';
+    if (e.r === 1) return 'a full rack of dense two-socket servers, or ' + Math.round(d / 12) + ' eight-GPU servers';
+    if (e.r === 2) return Math.round(d / 12) + ' eight-GPU servers at 10 to 14 kW each';
+    if (d < 100) return 'a partial rack-scale GPU system, or ' + Math.round(d / 12) + ' eight-GPU servers';
+    if (d <= 145) return 'one rack-scale AI system (GB200 NVL72 120 to 132 kW, GB300 NVL72 132 to 142 kW)';
+    return 'GB300 peaks near 155 kW; Vera Rubin 120 to 190 kW from H2 2026; Kyber about 600 kW on 800 VDC in 2027';
   }
   function floorNote(m) {
     return m < 900 ? 'a standard raised floor carries it'
@@ -139,8 +141,8 @@
   }
   function takeaway(e) {
     var d = Math.round(e.d), pl = Math.round(100 - e.share * 100);
-    if (e.r === 0) return 'At ' + d + ' kW a rack this is a conventional hall: ' + fmtMW(e.it) + ' MW of IT, air-cooled, ' + e.blocks + ' power blocks, and roughly ' + Math.round(e.share * 100) + '% of the building is computer room.';
-    if (e.r === 1) return 'At ' + d + ' kW a rack air still works, but only with containment; ' + fmtMW(e.it) + ' MW of IT needs ' + e.blocks + ' power blocks and the plant is already ' + pl + '% of the building.';
+    if (e.r === 0) return 'At ' + d + ' kW a rack this is a conventional hall: ' + fmtMW(e.it) + ' MW of IT, air-cooled, ' + e.ups + ' UPS blocks and ' + e.gens + ' generators, and roughly ' + Math.round(e.share * 100) + '% of the building is computer room.';
+    if (e.r === 1) return 'At ' + d + ' kW a rack air still works, but only with containment; ' + fmtMW(e.it) + ' MW of IT needs ' + e.ups + ' UPS blocks and ' + e.gens + ' generators, and the plant is already ' + pl + '% of the building.';
     if (e.r === 2) return 'At ' + d + ' kW a rack air alone has given out: heat leaves through a liquid loop at the rack door, the grid connection is ' + TIER[e.tier].split(' (')[0] + ', and the building is ' + pl + '% plant.';
     return 'At ' + d + ' kW a rack cold plates are mandatory; ' + fmtMW(e.it) + ' MW of IT becomes ' + fmtRange(e.fac[0], e.fac[1], fmtMW) + ' MW at the fence, and the computer room is ' + Math.round(e.share * 100) + '% of a building that is now a power and cooling plant.';
   }
@@ -163,7 +165,7 @@
     var s = '', i, cols = 9, bw = 8, bh = 5, gx = 9.4, gy = 6.6;
     for (i = 0; i <= e.tier; i++) s += '<path class="ln" d="M' + (10 + i * 5) + ' 4 V16"/>';
     s += '<circle class="ln" cx="15" cy="26" r="8"/><circle class="ln" cx="15" cy="38" r="8"/><path class="ln" d="M15 46 V60 H32"/>';
-    for (i = 0; i < e.blocks; i++) {
+    for (i = 0; i < e.ups; i++) {
       s += '<rect class="fl" x="' + (34 + (i % cols) * gx).toFixed(1) + '" y="' + (8 + Math.floor(i / cols) * gy).toFixed(1) + '" width="' + bw + '" height="' + bh + '"/>';
     }
     return s;
@@ -220,7 +222,8 @@
       set('fits', fits(e));
       set('it', fmtMW(e.it) + ' MW');
       set('fac', fmtRange(e.fac[0], e.fac[1], fmtMW) + ' MW');
-      set('blocks', e.blocks + ' blocks of ' + BLOCK_MW + ' MW');
+      set('ups', e.ups + ' blocks of ' + BLOCK_MW + ' MW');
+      set('gens', e.gens + ' sets of ' + GEN_MW + ' MW');
       set('tier', TIER[e.tier]);
       set('mode', e.R.mode);
       set('heat', e.R.liquid[1] === 0 ? 'all of it to air'

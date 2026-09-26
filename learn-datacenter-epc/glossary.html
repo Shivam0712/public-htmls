@@ -143,6 +143,189 @@
 <dt id="system-impact-study-sis-facilities-study">System impact study (SIS) / facilities study</dt><dd>the utility's model of a new load's effect on the grid and the upgrades it triggers / the engineered and priced design of the substation, tie and metering.</dd>
 <dt id="wue-water-usage-effectiveness">WUE (water usage effectiveness)</dt><dd>litres of water per kWh of IT energy; ~1.8 industry average, 0.15 at best, ≤ 0.2 the reference campus target.</dd>
 </dl></section>
+<section class="gloss-group"><h2>Topic 9 — Network and structured cabling</h2><dl class="gloss">
+<dt id="base-8-trunk-mpo-vsff">Base-8 trunk / MPO / VSFF</dt><dd>a pre-terminated fiber cable in multiples of eight fibers, matching 8-fiber parallel optics such as DR4; MPO-12/16 are the multi-fiber push-on connectors it ends in; VSFF (SN, MMC, CS) are the very-small-form-factor successors at about three times the density.</dd>
+<dt id="bmc-ipmi-redfish">BMC / IPMI / Redfish</dt><dd>the baseboard management controller inside every server and switch, and the two interfaces used to reach it over the OOB.</dd>
+<dt id="cat6a-cat8">Cat6A / Cat8</dt><dd>twisted-pair copper for 10G to 100 m (also PoE) / 25–40G to 30 m; in the reference facility Cat6A is for OOB, cameras and sensors only.</dd>
+<dt id="co-packaged-optics-cpo-lpo">Co-packaged optics (CPO) / LPO</dt><dd>the optical engine moved onto the switch package / a pluggable with the DSP removed; both attack the fact that optics are about half a switch's power.</dd>
+<dt id="cross-connect-interconnect">Cross-connect / interconnect</dt><dd>a single-mode jumper between two parties' panels in the MMR, sold by the operator at ~$100–300 a month / a direct equipment-to-equipment link inside a cage, free.</dd>
+<dt id="dac-aec-aoc">DAC / AEC / AOC</dt><dd>passive copper (~2 m at 800G) / retimed active copper (5–7 m) / active optical cable (to ~100 m); the three ways to leave a NIC.</dd>
+<dt id="dci-400zr-800zr-dwdm">DCI / 400ZR / 800ZR / DWDM</dt><dd>data center interconnect between buildings or sites; coherent pluggable optics reaching 80–120 km from a router port; the multiplexing that puts many wavelengths on one fiber pair.</dd>
+<dt id="division-27-rcdd">Division 27 / RCDD</dt><dd>the construction specification division for communications cabling, and the Registered Communications Distribution Designer whose stamp its design and installation usually require.</dd>
+<dt id="dr4-dr8-fr4-lr4-sr8">DR4 / DR8 / FR4 / LR4 / SR8</dt><dd>optics named by reach and fiber: parallel single-mode to 500 m / duplex single-mode to 2 km / to 10 km / multimode to 100 m. The reference plant is single-mode, so SR8 is not used.</dd>
+<dt id="ebgp-rfc-7938-ecmp">eBGP / RFC 7938 / ECMP</dt><dd>external BGP as the fabric's only routing protocol, a private ASN per rack, Layer 3 to the ToR / equal-cost multipath, spreading flows across every spine link.</dd>
+<dt id="er-mda-hda-eda-tia-942-spaces">ER / MDA / HDA / EDA (TIA-942 spaces)</dt><dd>entrance room / main distribution area / horizontal distribution area / equipment distribution area: carrier hand-off, hall hub, pod closet, the rack itself. IDA and ZDA are optional.</dd>
+<dt id="infiniband-sharp">InfiniBand / SHARP</dt><dd>NVIDIA's lossless, credit-based fabric, and its in-network reduction that sums gradients in the switch, up to 9× less all-reduce traffic; the tenant's option in the reference pod.</dd>
+<dt id="mmr-meet-me-room">MMR (meet-me room)</dt><dd>the carrier-neutral room where carriers and tenants cross-connect; an owner deliverable commissioned before the first circuit.</dd>
+<dt id="oob-out-of-band-network">OOB (out-of-band network)</dt><dd>the management LAN that shares nothing with production: own switches, own power, own uplink; commissioned first.</dd>
+<dt id="os2-om4">OS2 / OM4</dt><dd>single-mode (yellow) and multimode (aqua) fiber grades; OS2 has effectively unlimited data-center reach and is the reference default.</dd>
+<dt id="oversubscription-3-1-1-1">Oversubscription (3:1 / 1:1)</dt><dd>server-facing over spine-facing bandwidth on a leaf; 1:1 is non-blocking and costs 50% more leaves and spines and about twice the optics.</dd>
+<dt id="radix-51-2t">Radix / 51.2T</dt><dd>the number of ports on a switch chip; a 51.2T chip is 64 × 800G and replaces twelve 12.8T switches, which is what keeps a pod at two tiers.</dd>
+<dt id="rail-rail-optimized">Rail (rail-optimized)</dt><dd>the same-index NIC of every GPU server landing on the same leaf, so all-reduce stays one hop; the copper that carries it cannot be longer than a rack is wide.</dd>
+<dt id="rocev2">RoCEv2</dt><dd>RDMA over Converged Ethernet; needs PFC and ECN tuning to stay lossless. The reference pod's proposed back-end.</dd>
+<dt id="scale-up-scale-out">Scale-up / scale-out</dt><dd>NVLink inside the rack (Topic 8) / the fabric between racks and pods (this topic); the boundary is the rack door.</dd>
+<dt id="super-spine">Super-spine</dt><dd>the third Clos tier that joins pods; needed above roughly 1,024 nodes and avoided until then because it adds a full layer of optics.</dd>
+<dt id="tier-1-tier-2-fiber-testing-otdr">Tier 1 / Tier 2 fiber testing (OTDR)</dt><dd>insertion loss and length with a light source / the same plus an OTDR trace; Tier 2 is what AI-pod fiber and the 25-year warranty require.</dd>
+<dt id="tor-eor-mor">ToR / EoR / MoR</dt><dd>a leaf in every rack / one switch at the row end or middle; ToR trades switches for short cables, EoR the reverse.</dd>
+<dt id="transit-peering-ixp">Transit / peering / IXP</dt><dd>paying an upstream for full routes / exchanging traffic directly, usually settlement-free, at an internet exchange point.</dd>
+<dt id="ultra-ethernet-uec-uet">Ultra Ethernet (UEC / UET)</dt><dd>the open, multi-vendor AI Ethernet stack, spec 1.0 released 11 June 2025, with its own transport; the reference pod's NICs are UEC-ready.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 10 — Security, fire, monitoring and efficiency</h2><dl class="gloss">
+<dt id="alarm-rationalisation-isa-18-2">Alarm rationalisation (ISA-18.2)</dt><dd>the discipline of making every alarm actionable with a cause, consequence, response and priority; a flood is more than 10 alarms in 10 minutes at one operator position.</dd>
+<dt id="anti-passback">Anti-passback</dt><dd>an access rule that refuses a credential a second entry until it has recorded a matching exit; defeats badge hand-back.</dd>
+<dt id="asd-vesda-aspirating-smoke-detection">ASD / VESDA (aspirating smoke detection)</dt><dd>a pipe network that samples air continuously and detects smoke at about 100× lower concentration than spot detectors; EN 54-20 Class A is "before visible smoke".</dd>
+<dt id="bacnet-modbus">BACnet / Modbus</dt><dd>the two building-automation protocols; BACnet is what a BMS speaks natively, Modbus is what most power and mechanical gear speaks, and bridging one to the other is routine integration work.</dd>
+<dt id="clean-agent-hfc-227ea-fk-5-1-12">Clean agent (HFC-227ea, FK-5-1-12)</dt><dd>a gaseous fire suppressant that leaves no residue; both named agents are leaving new builds, one under the AIM Act phase-down, the other after 3M's PFAS exit.</dd>
+<dt id="deflagration-venting-explosion-prevention-nfpa-68-69">Deflagration venting / explosion prevention (NFPA 68 / 69)</dt><dd>a panel that relieves a battery-room gas explosion vs a system that stops one forming; NFPA 855 (2026) requires prevention, not venting alone.</dd>
+<dt id="door-fan-room-integrity-test">Door-fan (room-integrity) test</dt><dd>a pressurisation test proving a gas-suppression room holds 85% of design concentration for 10 minutes; a schedule gate the AHJ witnesses.</dd>
+<dt id="eco-mode-ups">Eco-mode (UPS)</dt><dd>a bypass mode giving 98–99% efficiency at the cost of dropping to IEC 62040-3 Class 3 protection; refused by the reference hall.</dd>
+<dt id="eed-article-12-eu-reporting">EED Article 12 (EU reporting)</dt><dd>the Energy Efficiency Directive rule that every EU data center above 500 kW reports PUE, WUE, ERF and REF annually by 15 May; produced voluntarily here for EU tenants and lenders.</dd>
+<dt id="en-50600-2-5-protection-class">EN 50600-2-5 protection class</dt><dd>the European standard's four-layer physical-security model; at least three classes are required.</dd>
+<dt id="fm-global-ds-5-32-5-33">FM Global DS 5-32 / 5-33</dt><dd>the insurer's data sheets for data centers and electrical systems, applied on top of code by an FM-insured owner; their recommendations often become deal terms.</dd>
+<dt id="iec-62443-zones-and-conduits">IEC 62443 (zones and conduits)</dt><dd>the OT cybersecurity standard that segments control systems into zones joined by controlled conduits; NIST SP 800-82 Rev 3 adopts the same model.</dd>
+<dt id="inert-gas-ig-541-ig-55-ig-100">Inert gas (IG-541 / IG-55 / IG-100)</dt><dd>argon, nitrogen and CO₂ blends that hold room oxygen below combustion; clean, PFAS-free and the durable gaseous choice, used here in electrical rooms.</dd>
+<dt id="m-rating-k-rating-astm-f2656">M-rating / K-rating (ASTM F2656)</dt><dd>a vehicle barrier's crash rating, a 15,000 lb truck stopped at 30/40/50 mph (M30/M40/M50), with a P1–P3 penetration suffix; M50/P1 at the reference campus gate.</dd>
+<dt id="mantrap-portal">Mantrap / portal</dt><dd>an interlocked two-door entry that admits one verified person per cycle; about five people a minute by design.</dd>
+<dt id="msi-master-systems-integrator">MSI (master systems integrator)</dt><dd>the contractor that ties BMS, EPMS and DCIM together and maintains the points list.</dd>
+<dt id="off-gas-detection">Off-gas detection</dt><dd>hydrogen, CO and HF sensors that catch a lithium cell venting before it ignites; the battery room's first alarm.</dd>
+<dt id="ot-operational-technology">OT (operational technology)</dt><dd>the control-system estate (BMS, EPMS, SCADA, DCIM) as distinct from corporate IT, with its own security rules and its own network segment on the OOB.</dd>
+<dt id="points-list">Points list</dt><dd>the register of every monitored point with its address, scaling and alarm setpoint; the most fought-over integration document, owned here by the owner's controls lead.</dd>
+<dt id="ppue-partial-pue">pPUE (partial PUE)</dt><dd>PUE for one subsystem or pod, such as a liquid-cooled AI pod at ~1.02–1.1; not comparable across pods.</dd>
+<dt id="pre-action-sprinkler">Pre-action sprinkler</dt><dd>a dry sprinkler system charged only when a detector operates, and in double interlock only when a head also opens; water reaches only the heads that fused.</dd>
+<dt id="pue-category-0-3">PUE category (0–3)</dt><dd>where the IT number is measured: an estimate, UPS output, PDU output or the rack-PDU; most quoted PUEs are Category 1 and never say so.</dd>
+<dt id="scada">SCADA</dt><dd>supervisory control for the industrial side of the plant, here generator paralleling and switchgear, speaking OPC UA, DNP3 and IEC 61850.</dd>
+<dt id="ul-9540a">UL 9540A</dt><dd>the thermal-runaway fire-test method whose data drives battery-room spacing, venting and AHJ and insurer approval.</dd>
+<dt id="water-mist-nfpa-750">Water mist (NFPA 750)</dt><dd>fine-droplet suppression using 70–90% less water than sprinklers; FM-approved for all data center areas including lithium batteries since January 2023.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 8 — AI/HPC, compute and storage</h2><dl class="gloss">
+<dt id="800-vdc">800 VDC</dt><dd>rack power distribution at 800 V DC, arriving with megawatt-class racks in 2027; it moves more than 150% more power through the same copper as 54 V and removes the ~200 kg of busbar a 1 MW rack would otherwise need.</dd>
+<dt id="adiabatic-dry-cooler">Adiabatic dry cooler</dt><dd>a fan-and-coil heat rejecter that runs dry most of the year and sprays water on its air inlet only on hot hours; the reference campus's warm-loop heat sink, fed with reclaimed water on peak days.</dd>
+<dt id="all-reduce">All-reduce</dt><dd>the collective step in which every GPU in a training job exchanges and sums gradients; its alternation with compute is the ~1 Hz power swing the busway sees.</dd>
+<dt id="approach-temperature">Approach temperature</dt><dd>the temperature gap across a heat exchanger, for example between the server loop and the facility loop in a CDU; commercial units achieve about 3–4 °C.</dd>
+<dt id="ashrae-air-classes-a1-a4-h1">ASHRAE air classes (A1–A4, H1)</dt><dd>server-inlet temperature and humidity envelopes; all A classes recommend 18–27 °C and allow up to 32, 35, 40 or 45 °C; H1 is a tighter class for dense air-cooled gear.</dd>
+<dt id="bare-metal">Bare metal</dt><dd>servers run without a hypervisor; the norm for large training because it exposes GPU topology and removes virtualisation overhead.</dd>
+<dt id="blanking-panel">Blanking panel</dt><dd>a plate that fills an empty rack slot so hot exhaust cannot recirculate to the intakes; the cheapest part of containment and the first to be forgotten.</dd>
+<dt id="bulk-synchronous-parallel-bsp">Bulk-synchronous parallel (BSP)</dt><dd>the compute → barrier → checkpoint cycle of a training job; the reason 200 racks behave as one load with no diversity to bank on.</dd>
+<dt id="bypass-recirculation">Bypass / recirculation</dt><dd>the two airflow faults containment kills; cold supply short-circuiting to the return without cooling a server, and hot exhaust re-entering a server intake.</dd>
+<dt id="cfm-per-kw">CFM per kW</dt><dd>the airflow a rack needs per kilowatt; about 157 at an 11 K (20 °F) rise, 125 at 25 °F, 105 at 30 °F, from ΔT = 3.1 × W ÷ CFM.</dd>
+<dt id="checkpoint">Checkpoint</dt><dd>a periodic save of a training job's model and optimizer state (140–420 GB for a 70 B model) so the job can restart after a fault; also the stall visible on the busway while it is written.</dd>
+<dt id="cold-plate">Cold plate</dt><dd>the liquid-cooled metal block clamped to a GPU or CPU; the point where Topic 8's heat becomes Topic 7's problem.</dd>
+<dt id="compute-tray">Compute tray</dt><dd>a slide-in unit of an NVL72 rack holding 4 GPUs and 2 Grace CPUs with cold plates and quick-disconnects; 18 per rack.</dd>
+<dt id="crac-crah">CRAC / CRAH</dt><dd>computer-room air conditioner, with its own compressor, and computer-room air handler, a coil and fan on chilled water; the fan wall is the CRAH grown to the size of a wall.</dd>
+<dt id="cube-law-fan-affinity">Cube law (fan affinity)</dt><dd>fan power scales with the cube of fan speed, so running at 80% speed takes about half the power; why big slow fans win.</dd>
+<dt id="das-san-nas-object-storage">DAS / SAN / NAS / object storage</dt><dd>disks inside the server / block storage over a dedicated network / file storage over IP / a scale-out HTTP object store; four tiers, each a different row in the hall.</dd>
+<dt id="data-gravity">Data gravity</dt><dd>the pull that keeps a tenant in place because moving petabytes is slow and costly.</dd>
+<dt id="dew-point-control">Dew-point control</dt><dd>holding humidity by absolute moisture (about −9 to 15 °C dew point) instead of relative humidity, which means different moisture at each temperature.</dd>
+<dt id="ec-fan">EC fan</dt><dd>electronically commutated fan with a brushless DC motor and built-in speed control; the unit of a fan wall and the reason it can be redundant at the fan.</dd>
+<dt id="economizer-air-side-water-side">Economizer (air-side, water-side)</dt><dd>using outside air, or outside air via a heat exchanger, to cool without running a compressor; available about 40% of the year in Phoenix, none of it at the 45 °C peak.</dd>
+<dt id="eia-310">EIA-310</dt><dd>the 19-inch rack standard; it fixes mounting width, U-height and hole pattern only, never depth or load rating.</dd>
+<dt id="erf-energy-reuse-factor">ERF (energy reuse factor)</dt><dd>the share of a data center's energy exported as reused heat; Germany's EnEfG mandates 10, 15 and 20% for new centers from 2026, 2027 and 2028.</dd>
+<dt id="factory-integration-rack-and-stack">Factory integration / rack-and-stack</dt><dd>a rack shipped fully populated and tested from the vendor / a rack populated server by server on site; AI pods use the first, general zones may still use the second.</dd>
+<dt id="fan-wall">Fan wall</dt><dd>a floor-to-ceiling array of EC fans and chilled-water coils in a gallery beside the hall, about 800 kW per unit, redundant at the fan; the air backbone of the hyperscale hall since 2024.</dd>
+<dt id="fws-facility-water-system">FWS (facility water system)</dt><dd>the owner's water loop between the CDU and the heat rejecters; the reference campus runs it warm, W40, at 36 °C supply and about 46 °C return, so it needs no chiller.</dd>
+<dt id="gpudirect-storage">GPUDirect Storage</dt><dd>a direct path from storage into GPU memory that bypasses the CPU, 40+ GB/s.</dd>
+<dt id="grace-vera">Grace / Vera</dt><dd>NVIDIA's Arm server CPUs paired with GPUs in a superchip; 36 per NVL72 rack.</dd>
+<dt id="hbm-high-bandwidth-memory">HBM (high-bandwidth memory)</dt><dd>stacked memory beside the GPU die (HBM3e, HBM4); the main driver of GPU power.</dd>
+<dt id="hgx-node">HGX node</dt><dd>an 8-GPU server on NVIDIA's HGX baseboard, ~10–14 kW; three fill the reference 40 kW rack.</dd>
+<dt id="in-row-cooling">In-row cooling</dt><dd>a cooling unit placed between racks, close-coupled to the load; suits spot density in 20–60 kW rows.</dd>
+<dt id="kubernetes-slurm">Kubernetes / Slurm</dt><dd>the container orchestrator that runs everything that is not training / the HPC batch scheduler that runs the training cluster on bare metal; Slinky combines them.</dd>
+<dt id="kyber-oberon">Kyber / Oberon</dt><dd>NVIDIA rack architectures; Oberon is the current NVL72 frame, Kyber the 2027 ~600 kW class on 800 VDC.</dd>
+<dt id="low-gwp-refrigerant-a2l-a1">Low-GWP refrigerant (A2L / A1)</dt><dd>refrigerants with low global-warming potential mandated by the AIM Act and F-gas rules; A2L (R-1234ze) is mildly flammable, A1 (R-515B) is not, which changes the code path.</dd>
+<dt id="magnetic-bearing-chiller">Magnetic-bearing chiller</dt><dd>an oil-free centrifugal chiller whose shaft floats on magnetic bearings; excellent at part load and low lift, restarts in about 3 minutes, and runs warm setpoints; the reference plant's chiller type.</dd>
+<dt id="nvl72-rack-scale-system">NVL72 / rack-scale system</dt><dd>a factory-integrated, liquid-cooled rack whose 72 GPUs act as one accelerator over NVLink; the reference pod's rack class.</dd>
+<dt id="nvlink-nvswitch">NVLink / NVSwitch</dt><dd>NVIDIA's in-rack scale-up interconnect, 130 TB/s all-to-all on ~3.2 km of copper, no optics.</dd>
+<dt id="nvme-of-disaggregated-storage">NVMe-oF / disaggregated storage</dt><dd>flash pooled over a fabric and composed on demand (for example VAST DASE); the storage that sits in flash rows beside the pod.</dd>
+<dt id="parallel-file-system">Parallel file system</dt><dd>storage (Lustre, GPFS, WEKA, VAST) that feeds many GPUs at once at GB/s to TB/s.</dd>
+<dt id="pfas">PFAS</dt><dd>per- and polyfluoroalkyl "forever chemicals" in the dielectric fluids that two-phase cooling used; 3M's exit and EPA and EU rules pushed the market back to single-phase water-glycol cold plates.</dd>
+<dt id="pg25">PG25</dt><dd>25% propylene glycol in water, the standard coolant of the server loop; freeze and corrosion protection at a small penalty in heat capacity.</dd>
+<dt id="power-shelf">Power shelf</dt><dd>the rack-level AC-to-DC conversion unit feeding a 48–54 V busbar; ~33 kW each, eight per NVL72; GB300 shelves carry 65 J per GPU of capacitance.</dd>
+<dt id="power-smoothing">Power smoothing</dt><dd>rack capacitors and software floors that cut the grid-facing peak of the ~1 Hz swing by ~30%; smoothing, not ride-through, so no UPS relief.</dd>
+<dt id="quick-disconnect-qd">Quick disconnect (QD)</dt><dd>a blind-mate, drip-free coolant coupling at the rack where the server loop meets the rack manifold; the demarcation between Topic 8's rack and Topic 7's heat.</dd>
+<dt id="quick-disconnect-uqd">Quick-disconnect (UQD)</dt><dd>the dripless coolant coupling on each tray and at the rack manifold; the boundary between Topic 8 and Topic 7, and where the IT vendor's warranty stops.</dd>
+<dt id="stratified-thermal-storage-tank">Stratified thermal storage tank</dt><dd>a tall chilled-water tank holding cold water under warm across a thermocline; sized in minutes to carry the chilled loop from generator start to chiller restart, 10 minutes in the reference.</dd>
+<dt id="tcs-technology-cooling-system">TCS (technology cooling system)</dt><dd>the high-purity server-side loop from the cold plates through the rack manifold to the CDU; about 40 °C out and 48 °C back in the reference pod, ≤ 25 µS/cm and &lt; 50 µm.</dd>
+<dt id="ton-of-refrigeration">Ton of refrigeration</dt><dd>12,000 BTU/h of cooling; 1 kW of IT is 3,412 BTU/h or 0.284 tons, so 10.7 MW is about 3,040 tons.</dd>
+<dt id="w-class-w17-w">W-class (W17–W+)</dt><dd>ASHRAE liquid-cooling classes named by their maximum supply-water temperature; W32 is chiller-free in most climates, W40 and above reject on dry coolers year-round.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 11 — Commissioning, operations and decommissioning</h2><dl class="gloss">
+<dt id="bicsi-009">BICSI 009</dt><dd>the open-consensus data-center operations and maintenance standard (2019, updated 2024), the operational complement to BICSI 002; it requires SOPs, MOPs and EOPs.</dd>
+<dt id="black-building-test-pull-the-plug">Black-building test (pull the plug)</dt><dd>the Level 5 climax: with load banks at design load the utility feed is opened on purpose; pass means the critical bus never dropped, the room stayed in band and every step fired in order.</dd>
+<dt id="certificate-of-destruction">Certificate of destruction</dt><dd>the serialized document an ITAD vendor issues per drive or asset stating how it was sanitized or destroyed; the tenant's proof, only as good as the chain of custody behind it.</dd>
+<dt id="chain-of-custody">Chain of custody</dt><dd>serialized, sealed and witnessed tracking of media from de-install to final disposition; broken the moment a hand-off goes unscanned or a subcontractor goes undisclosed.</dd>
+<dt id="change-advisory-board-cab">Change advisory board (CAB)</dt><dd>the operations body that approves any procedure or change that alters the state of a critical system; every MOP passes it.</dd>
+<dt id="clear-purge-destroy">Clear / Purge / Destroy</dt><dd>NIST's three sanitization levels: software erase; erase resistant to lab recovery, media reusable; physical destruction.</dd>
+<dt id="cryptographic-erase">Cryptographic erase</dt><dd>purging a drive by destroying its encryption key; the reliable method for SSD and NVMe, where overwriting is inadequate.</dd>
+<dt id="defects-liability-period">Defects liability period</dt><dd>the 12 months (typically) after substantial completion in which the contractor fixes defects under warranty and the second half of retainage is held.</dd>
+<dt id="eop-emergency-operating-procedure">EOP (emergency operating procedure)</dt><dd>the drilled, decision-first response to an alarm or fault: safe state first, redundancy restored, fault isolated.</dd>
+<dt id="levels-1-5-commissioning">Levels 1–5 (commissioning)</dt><dd>factory witness, receiving, start-up, functional and integrated systems test; an industry convention layered on ASHRAE Guideline 0 and Standard 202, widening from one component to the whole plant.</dd>
+<dt id="load-bank">Load bank</dt><dd>rented equipment that turns electricity into heat so an empty hall can be tested at design load; resistive, reactive, DC or, for AI pods, ~1 MW liquid-cooled units plumbed into the CDU loop.</dd>
+<dt id="m-o-stamp-of-approval">M&amp;O Stamp of Approval</dt><dd>Uptime's operations assessment, independent of Tier, covering staffing, maintenance and management; two-year validity.</dd>
+<dt id="mop-method-of-procedure">MOP (method of procedure)</dt><dd>a step-by-step script for one action that changes the state of a critical component, with an expected result per step and a rollback; the control on the moment redundancy is deliberately reduced.</dd>
+<dt id="naid-aaa-r2v3-e-stewards">NAID AAA / R2v3 / e-Stewards</dt><dd>ITAD vendor credentials: unannounced audits of destruction and security (i-SIGMA) / recycling, custody and downstream vendor management (SERI) / the same plus strict export bans.</dd>
+<dt id="neta-ats-2025-mts-2023">NETA ATS-2025 / MTS-2023</dt><dd>acceptance-testing and maintenance-testing standards for electrical power equipment; ATS is run before energization by a NETA Accredited Company.</dd>
+<dt id="nfpa-110-chapter-8">NFPA 110 Chapter 8</dt><dd>emergency power testing: weekly inspection, a monthly 30-minute run at 30% load, annual load-bank test, four hours every 36 months; on a hot-metro site the air permit caps the hours.</dd>
+<dt id="nfpa-70b-70e">NFPA 70B / 70E</dt><dd>electrical equipment maintenance (a standard, not a recommended practice, since 2023) / electrical safety in the workplace.</dd>
+<dt id="nist-sp-800-88-rev-2">NIST SP 800-88 Rev. 2</dt><dd>the media-sanitization guideline (26 Sept 2025), which dropped per-media tables in favour of IEEE 2883, separated verification from validation and confirmed one overwrite pass clears an HDD.</dd>
+<dt id="punch-list">Punch list</dt><dd>the priced list of incomplete or defective items outstanding at substantial completion; its value is deducted from the payment.</dd>
+<dt id="remote-hands">Remote hands</dt><dd>on-site technicians who perform physical tasks on tenants' equipment for a fee; a billable line in the operations headcount.</dd>
+<dt id="retainage">Retainage</dt><dd>the 5–10% of each progress payment withheld until completion; commonly half released at substantial completion and half after the defects period.</dd>
+<dt id="service-credit-sla-credit">Service credit (SLA credit)</dt><dd>the tenant's remedy for a breached availability or temperature band, typically 1/30th of the monthly charge per event; paid from the operator's opex.</dd>
+<dt id="sop-standard-operating-procedure">SOP (standard operating procedure)</dt><dd>the framework for routine, repeatable work, rounds, tickets, BMS operation; its goal is consistency.</dd>
+<dt id="substantial-completion-final-completion">Substantial completion / final completion</dt><dd>usable for its purpose, the gate that pays the balance, stops delay damages and starts the warranty / every punch item closed and the last retainage released.</dd>
+<dt id="wet-stacking">Wet stacking</dt><dd>unburnt fuel fouling a diesel generator run too lightly; the reason NFPA 110 demands a monthly run at 30% load or more.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 5 — Power: utility to UPS</h2><dl class="gloss">
+<dt id="ais-gis">AIS / GIS</dt><dd>air-insulated versus gas-insulated switchgear; GIS is compact and sealed, historically filled with SF6.</dd>
+<dt id="arc-resistant-switchgear-ieee-c37-20-7">Arc-resistant switchgear (IEEE C37.20.7)</dt><dd>gear tested to vent an internal arc away from people; Type 2B keeps them safe with the control doors open.</dd>
+<dt id="belly-tank-bulk-tank">Belly tank / bulk tank</dt><dd>the sub-base fuel tank under a genset for immediate supply, and the shared storage that provides the autonomy target.</dd>
+<dt id="bess-battery-energy-storage-system">BESS (battery energy storage system)</dt><dd>batteries beyond UPS ride-through, at the MV bus for peak shaving or grid services, at LV for smoothing AI transients.</dd>
+<dt id="block-power-block">Block (power block)</dt><dd>the unit of design, one 2.5 MW UPS with its ~2.75 MW genset and 2,500 kVA unit substation; halls grow by repeating it.</dd>
+<dt id="demarcation-point">Demarcation point</dt><dd>the ownership boundary between utility and customer, usually the incoming structure or first high-side breaker; revenue metering sits there.</dd>
+<dt id="double-conversion-vfi-line-interactive-vi">Double-conversion (VFI) / line-interactive (VI)</dt><dd>IEC 62040-3 UPS classes; VFI rebuilds the waveform so the load never sees mains, VI passes mains and corrects voltage.</dd>
+<dt id="drups">DRUPS</dt><dd>diesel rotary UPS, a flywheel coupled to a diesel; 13–40 s of inertia bridges to the engine, no battery room.</dd>
+<dt id="dry-type-vs-oil-filled-transformer">Dry-type vs oil-filled transformer</dt><dd>dry-type is the indoor default for unit substations (no flammable liquid); oil-filled is the outdoor default for LPTs and triggers NEC 450 indoors.</dd>
+<dt id="epa-tier-2-tier-4-final">EPA Tier 2 / Tier 4 Final</dt><dd>nonroad engine emission tiers; Tier 2 is allowed for emergency standby only, Tier 4F with SCR and DPF is required once a set runs for demand response or bridging.</dd>
+<dt id="fuel-polishing">Fuel polishing</dt><dd>filtering stored diesel to remove water and microbial growth so it starts an engine years after delivery.</dd>
+<dt id="hvo">HVO</dt><dd>hydrotreated vegetable oil, a drop-in renewable diesel with up to ~90% lower lifecycle CO2.</dd>
+<dt id="impedance-z">Impedance (%Z)</dt><dd>the transformer property that sets fault current (≈ kVA ÷ %Z) and voltage regulation; 5.75% nominal at 2,500 kVA.</dd>
+<dt id="large-power-transformer-lpt">Large power transformer (LPT)</dt><dd>the HV-to-MV substation transformer, 30–100 MVA, oil-filled, outdoors; the 128-week item.</dd>
+<dt id="lfp-nmc-vrla">LFP / NMC / VRLA</dt><dd>lithium iron phosphate, nickel-manganese-cobalt and valve-regulated lead-acid batteries; LFP is the data center lithium default.</dd>
+<dt id="main-tie-main-double-ended">Main-tie-main (double-ended)</dt><dd>two sources and a bus tie, so either side can be maintained with the tie closed and no load dropped; the physical form of concurrent maintainability.</dd>
+<dt id="nfpa-110-type-10">NFPA 110 Type 10</dt><dd>emergency power at the transfer switch within 10 seconds of utility failure; the standby standard for critical facilities.</dd>
+<dt id="paralleling-switchgear">Paralleling switchgear</dt><dd>gear that synchronizes several gensets onto one bus for flexible N+1; long-lead in its own right.</dd>
+<dt id="ride-through">Ride-through</dt><dd>the seconds a UPS carries the load from stored energy while the generators start; ~15 s used of 5 min held.</dd>
+<dt id="selective-coordination">Selective coordination</dt><dd>a protection scheme in which the nearest upstream breaker clears a fault, isolating the smallest zone; proven by a study someone must own.</dd>
+<dt id="sf6-free-switchgear">SF6-free switchgear</dt><dd>MV gear insulated by vacuum plus dry air or a fluoronitrile mix instead of SF6 (GWP ~23,500); the 2026 spec, with a 60 Hz caveat.</dd>
+<dt id="static-bypass">Static bypass</dt><dd>the UPS path that passes mains straight to the load on an internal fault or overload; eco-mode runs on it by choice.</dd>
+<dt id="unit-substation">Unit substation</dt><dd>the packaged MV-to-LV transformer and switchgear (34.5 kV to 480Y/277 V, 2,500 kVA) at the hall wall feeding UPS and mechanical plant.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 4 — Building and physical infrastructure</h2><dl class="gloss">
+<dt id="ac156">AC156</dt><dd>the shake-table test protocol that certifies a rack or piece of equipment survives seismic forces; the rack maker supplies it, the building supplies the anchorage.</dd>
+<dt id="column-grid-bay">Column grid (bay)</dt><dd>the spacing of structural columns, typically 8.4–12 m in data halls; it sets how many rack rows and aisles fit between columns.</dd>
+<dt id="dry-in-weathertight">Dry-in (weathertight)</dt><dd>the milestone when roof and walls keep the weather out; nothing electrical or mechanical inside can start before it.</dd>
+<dt id="dunnage">Dunnage</dt><dd>steel support frames that spread the weight of rooftop equipment such as dry coolers and chillers onto the roof structure.</dd>
+<dt id="freeboard">Freeboard</dt><dd>extra height added above a design flood elevation as a safety margin; the finished floor sits above the 500-year level plus freeboard.</dd>
+<dt id="governing-envelope">Governing envelope</dt><dd>the heaviest and largest piece of equipment the rigging path must ever carry, used to design doors, corridors and slab before the equipment list is final.</dd>
+<dt id="imp-insulated-metal-panel">IMP (insulated metal panel)</dt><dd>factory-made steel-skinned cladding with an insulating core, the usual envelope on a steel-framed data hall.</dd>
+<dt id="k-value-modulus-of-subgrade-reaction">k-value (modulus of subgrade reaction)</dt><dd>the stiffness of the ground under a slab; it governs a slab-on-grade's load capacity more than the soil's bearing strength does.</dd>
+<dt id="knock-out-panel">Knock-out panel</dt><dd>a wall section designed to be removed so heavy gear can be rolled in after the shell is closed; provided where the equipment list is not yet known.</dd>
+<dt id="manifold">Manifold</dt><dd>the pipe header that distributes coolant from a CDU to the racks in a row; hangs lowest in the overhead stack so a leak falls on nothing electrical.</dd>
+<dt id="meet-me-room">Meet-me room</dt><dd>the carrier-neutral space where tenants and network providers interconnect; allocated as floor area here, its contents belong to Topic 9.</dd>
+<dt id="point-load-vs-distributed-load">Point load vs distributed load</dt><dd>weight concentrated on a small area (a rack caster, a CDU foot) against weight spread evenly across a floor (psf); a floor can pass the second and fail the first.</dd>
+<dt id="post-tensioned-floor">Post-tensioned floor</dt><dd>a concrete slab pre-compressed with steel tendons so it can span between columns on upper storeys; the multi-storey substitute for slab-on-grade.</dd>
+<dt id="precast-concrete">Precast concrete</dt><dd>structure and wall panels cast in a factory and shipped to site; cures in about 48 hours in the plant against 28 days cast in place.</dd>
+<dt id="psf-kn-m-kg-m">psf / kN/m² / kg/m²</dt><dd>units of floor loading; 1 kN/m² is about 20.9 psf or 102 kg/m². Data halls specify 250–400 psf where the code minimum is 100.</dd>
+<dt id="raised-access-floor-raf">Raised access floor (RAF)</dt><dd>tiles on pedestals over a plenum used for underfloor air and cable; typically rated 1,200–1,500 kg/m² and not built for a 1,500 kg rack.</dd>
+<dt id="rfs-ready-for-service">RFS (ready for service)</dt><dd>the date a hall is energized, commissioned and handed over; T+42 for reference Hall 1.</dd>
+<dt id="rigging-path">Rigging path</dt><dd>the route heavy equipment travels from truck to pad; it must carry the heaviest load that ever moves along it, so it often governs the slab more than the racks do.</dd>
+<dt id="risk-category-ibc-asce-7-and-ip">Risk Category (IBC/ASCE 7) and Ip</dt><dd>the occupancy class that sets design forces; data centers are usually Category IV, which gives the component importance factor Ip = 1.5 and about 50% higher anchorage forces.</dd>
+<dt id="sdc-seismic-design-category">SDC (Seismic Design Category)</dt><dd>the A–F class combining a site's shaking (SDS) with its Risk Category; engineered anchorage is required from C upward.</dd>
+<dt id="shell-and-core">Shell and core</dt><dd>the structure, envelope and base building, the box before MEP fit-out; 10–15% of a data center's construction cost.</dd>
+<dt id="slab-on-grade">Slab-on-grade</dt><dd>a concrete floor poured directly on prepared ground; 12–18 in thick in a data hall against 4–6 in in an office.</dd>
+<dt id="spmt-self-propelled-modular-transporter">SPMT (self-propelled modular transporter)</dt><dd>a multi-axle powered platform used to move the heaviest loads, such as a 100–200 t transformer, from road to pad.</dd>
+<dt id="tilt-up">Tilt-up</dt><dd>concrete wall panels cast flat on the slab and craned upright; the fastest cheap shell for a big single-storey box on a flat site.</dd>
+<dt id="truck-court">Truck court</dt><dd>the paved manoeuvring area in front of the dock doors; 120 ft or more deep so trailers and cranes can work.</dd>
+</dl></section>
   
 </main>
 <footer>Generated from the course markdown on 2026-09-25. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a></footer>
