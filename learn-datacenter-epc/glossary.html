@@ -326,6 +326,32 @@
 <dt id="tilt-up">Tilt-up</dt><dd>concrete wall panels cast flat on the slab and craned upright; the fastest cheap shell for a big single-storey box on a flat site.</dd>
 <dt id="truck-court">Truck court</dt><dd>the paved manoeuvring area in front of the dock doors; 120 ft or more deep so trailers and cranes can work.</dd>
 </dl></section>
+<section class="gloss-group"><h2>Topic 7 — Cooling and thermal management</h2><dl class="gloss">
+<dt id="adiabatic-dry-cooler">Adiabatic dry cooler</dt><dd>a fan-and-coil heat rejecter that runs dry most of the year and sprays water on its air inlet only on hot hours; the reference campus's warm-loop heat sink, fed with reclaimed water on peak days.</dd>
+<dt id="approach-temperature">Approach temperature</dt><dd>the temperature gap across a heat exchanger, for example between the server loop and the facility loop in a CDU; commercial units achieve about 3–4 °C.</dd>
+<dt id="ashrae-air-classes-a1-a4-h1">ASHRAE air classes (A1–A4, H1)</dt><dd>server-inlet temperature and humidity envelopes; all A classes recommend 18–27 °C and allow up to 32, 35, 40 or 45 °C; H1 is a tighter class for dense air-cooled gear.</dd>
+<dt id="blanking-panel">Blanking panel</dt><dd>a plate that fills an empty rack slot so hot exhaust cannot recirculate to the intakes; the cheapest part of containment and the first to be forgotten.</dd>
+<dt id="bypass-recirculation">Bypass / recirculation</dt><dd>the two airflow faults containment kills; cold supply short-circuiting to the return without cooling a server, and hot exhaust re-entering a server intake.</dd>
+<dt id="cfm-per-kw">CFM per kW</dt><dd>the airflow a rack needs per kilowatt; about 157 at an 11 K (20 °F) rise, 125 at 25 °F, 105 at 30 °F, from ΔT = 3.1 × W ÷ CFM.</dd>
+<dt id="crac-crah">CRAC / CRAH</dt><dd>computer-room air conditioner, with its own compressor, and computer-room air handler, a coil and fan on chilled water; the fan wall is the CRAH grown to the size of a wall.</dd>
+<dt id="cube-law-fan-affinity">Cube law (fan affinity)</dt><dd>fan power scales with the cube of fan speed, so running at 80% speed takes about half the power; why big slow fans win.</dd>
+<dt id="dew-point-control">Dew-point control</dt><dd>holding humidity by absolute moisture (about −9 to 15 °C dew point) instead of relative humidity, which means different moisture at each temperature.</dd>
+<dt id="ec-fan">EC fan</dt><dd>electronically commutated fan with a brushless DC motor and built-in speed control; the unit of a fan wall and the reason it can be redundant at the fan.</dd>
+<dt id="economizer-air-side-water-side">Economizer (air-side, water-side)</dt><dd>using outside air, or outside air via a heat exchanger, to cool without running a compressor; available about 40% of the year in Phoenix, none of it at the 45 °C peak.</dd>
+<dt id="erf-energy-reuse-factor">ERF (energy reuse factor)</dt><dd>the share of a data center's energy exported as reused heat; Germany's EnEfG mandates 10, 15 and 20% for new centers from 2026, 2027 and 2028.</dd>
+<dt id="fan-wall">Fan wall</dt><dd>a floor-to-ceiling array of EC fans and chilled-water coils in a gallery beside the hall, about 800 kW per unit, redundant at the fan; the air backbone of the hyperscale hall since 2024.</dd>
+<dt id="fws-facility-water-system">FWS (facility water system)</dt><dd>the owner's water loop between the CDU and the heat rejecters; the reference campus runs it warm, W40, at 36 °C supply and about 46 °C return, so it needs no chiller.</dd>
+<dt id="in-row-cooling">In-row cooling</dt><dd>a cooling unit placed between racks, close-coupled to the load; suits spot density in 20–60 kW rows.</dd>
+<dt id="low-gwp-refrigerant-a2l-a1">Low-GWP refrigerant (A2L / A1)</dt><dd>refrigerants with low global-warming potential mandated by the AIM Act and F-gas rules; A2L (R-1234ze) is mildly flammable, A1 (R-515B) is not, which changes the code path.</dd>
+<dt id="magnetic-bearing-chiller">Magnetic-bearing chiller</dt><dd>an oil-free centrifugal chiller whose shaft floats on magnetic bearings; excellent at part load and low lift, restarts in about 3 minutes, and runs warm setpoints; the reference plant's chiller type.</dd>
+<dt id="pfas">PFAS</dt><dd>per- and polyfluoroalkyl "forever chemicals" in the dielectric fluids that two-phase cooling used; 3M's exit and EPA and EU rules pushed the market back to single-phase water-glycol cold plates.</dd>
+<dt id="pg25">PG25</dt><dd>25% propylene glycol in water, the standard coolant of the server loop; freeze and corrosion protection at a small penalty in heat capacity.</dd>
+<dt id="quick-disconnect-qd">Quick disconnect (QD)</dt><dd>a blind-mate, drip-free coolant coupling at the rack where the server loop meets the rack manifold; the demarcation between Topic 8's rack and Topic 7's heat.</dd>
+<dt id="stratified-thermal-storage-tank">Stratified thermal storage tank</dt><dd>a tall chilled-water tank holding cold water under warm across a thermocline; sized in minutes to carry the chilled loop from generator start to chiller restart, 10 minutes in the reference.</dd>
+<dt id="tcs-technology-cooling-system">TCS (technology cooling system)</dt><dd>the high-purity server-side loop from the cold plates through the rack manifold to the CDU; about 40 °C out and 48 °C back in the reference pod, ≤ 25 µS/cm and &lt; 50 µm.</dd>
+<dt id="ton-of-refrigeration">Ton of refrigeration</dt><dd>12,000 BTU/h of cooling; 1 kW of IT is 3,412 BTU/h or 0.284 tons, so 10.7 MW is about 3,040 tons.</dd>
+<dt id="w-class-w17-w">W-class (W17–W+)</dt><dd>ASHRAE liquid-cooling classes named by their maximum supply-water temperature; W32 is chiller-free in most climates, W40 and above reject on dry coolers year-round.</dd>
+</dl></section>
   
 </main>
 <footer>Generated from the course markdown on 2026-09-25. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a></footer>
