@@ -143,6 +143,137 @@
 <dt id="system-impact-study-sis-facilities-study">System impact study (SIS) / facilities study</dt><dd>the utility's model of a new load's effect on the grid and the upgrades it triggers / the engineered and priced design of the substation, tie and metering.</dd>
 <dt id="wue-water-usage-effectiveness">WUE (water usage effectiveness)</dt><dd>litres of water per kWh of IT energy; ~1.8 industry average, 0.15 at best, ≤ 0.2 the reference campus target.</dd>
 </dl></section>
+<section class="gloss-group"><h2>Topic 4 — Building and physical infrastructure</h2><dl class="gloss">
+<dt id="ac156">AC156</dt><dd>the shake-table test protocol that certifies a rack or piece of equipment survives seismic forces; the rack maker supplies it, the building supplies the anchorage.</dd>
+<dt id="column-grid-bay">Column grid (bay)</dt><dd>the spacing of structural columns, typically 8.4–12 m in data halls; it sets how many rack rows and aisles fit between columns.</dd>
+<dt id="dry-in-weathertight">Dry-in (weathertight)</dt><dd>the milestone when roof and walls keep the weather out; nothing electrical or mechanical inside can start before it.</dd>
+<dt id="dunnage">Dunnage</dt><dd>steel support frames that spread the weight of rooftop equipment such as dry coolers and chillers onto the roof structure.</dd>
+<dt id="freeboard">Freeboard</dt><dd>extra height added above a design flood elevation as a safety margin; the finished floor sits above the 500-year level plus freeboard.</dd>
+<dt id="governing-envelope">Governing envelope</dt><dd>the heaviest and largest piece of equipment the rigging path must ever carry, used to design doors, corridors and slab before the equipment list is final.</dd>
+<dt id="imp-insulated-metal-panel">IMP (insulated metal panel)</dt><dd>factory-made steel-skinned cladding with an insulating core, the usual envelope on a steel-framed data hall.</dd>
+<dt id="k-value-modulus-of-subgrade-reaction">k-value (modulus of subgrade reaction)</dt><dd>the stiffness of the ground under a slab; it governs a slab-on-grade's load capacity more than the soil's bearing strength does.</dd>
+<dt id="knock-out-panel">Knock-out panel</dt><dd>a wall section designed to be removed so heavy gear can be rolled in after the shell is closed; provided where the equipment list is not yet known.</dd>
+<dt id="manifold">Manifold</dt><dd>the pipe header that distributes coolant from a CDU to the racks in a row; hangs lowest in the overhead stack so a leak falls on nothing electrical.</dd>
+<dt id="meet-me-room">Meet-me room</dt><dd>the carrier-neutral space where tenants and network providers interconnect; allocated as floor area here, its contents belong to Topic 9.</dd>
+<dt id="point-load-vs-distributed-load">Point load vs distributed load</dt><dd>weight concentrated on a small area (a rack caster, a CDU foot) against weight spread evenly across a floor (psf); a floor can pass the second and fail the first.</dd>
+<dt id="post-tensioned-floor">Post-tensioned floor</dt><dd>a concrete slab pre-compressed with steel tendons so it can span between columns on upper storeys; the multi-storey substitute for slab-on-grade.</dd>
+<dt id="precast-concrete">Precast concrete</dt><dd>structure and wall panels cast in a factory and shipped to site; cures in about 48 hours in the plant against 28 days cast in place.</dd>
+<dt id="psf-kn-m-kg-m">psf / kN/m² / kg/m²</dt><dd>units of floor loading; 1 kN/m² is about 20.9 psf or 102 kg/m². Data halls specify 250–400 psf where the code minimum is 100.</dd>
+<dt id="raised-access-floor-raf">Raised access floor (RAF)</dt><dd>tiles on pedestals over a plenum used for underfloor air and cable; typically rated 1,200–1,500 kg/m² and not built for a 1,500 kg rack.</dd>
+<dt id="rfs-ready-for-service">RFS (ready for service)</dt><dd>the date a hall is energized, commissioned and handed over; T+42 for reference Hall 1.</dd>
+<dt id="rigging-path">Rigging path</dt><dd>the route heavy equipment travels from truck to pad; it must carry the heaviest load that ever moves along it, so it often governs the slab more than the racks do.</dd>
+<dt id="risk-category-ibc-asce-7-and-ip">Risk Category (IBC/ASCE 7) and Ip</dt><dd>the occupancy class that sets design forces; data centers are usually Category IV, which gives the component importance factor Ip = 1.5 and about 50% higher anchorage forces.</dd>
+<dt id="sdc-seismic-design-category">SDC (Seismic Design Category)</dt><dd>the A–F class combining a site's shaking (SDS) with its Risk Category; engineered anchorage is required from C upward.</dd>
+<dt id="shell-and-core">Shell and core</dt><dd>the structure, envelope and base building, the box before MEP fit-out; 10–15% of a data center's construction cost.</dd>
+<dt id="slab-on-grade">Slab-on-grade</dt><dd>a concrete floor poured directly on prepared ground; 12–18 in thick in a data hall against 4–6 in in an office.</dd>
+<dt id="spmt-self-propelled-modular-transporter">SPMT (self-propelled modular transporter)</dt><dd>a multi-axle powered platform used to move the heaviest loads, such as a 100–200 t transformer, from road to pad.</dd>
+<dt id="tilt-up">Tilt-up</dt><dd>concrete wall panels cast flat on the slab and craned upright; the fastest cheap shell for a big single-storey box on a flat site.</dd>
+<dt id="truck-court">Truck court</dt><dd>the paved manoeuvring area in front of the dock doors; 120 ft or more deep so trailers and cranes can work.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 5 — Power: utility to UPS</h2><dl class="gloss">
+<dt id="ais-gis">AIS / GIS</dt><dd>air-insulated versus gas-insulated switchgear; GIS is compact and sealed, historically filled with SF6.</dd>
+<dt id="arc-resistant-switchgear-ieee-c37-20-7">Arc-resistant switchgear (IEEE C37.20.7)</dt><dd>gear tested to vent an internal arc away from people; Type 2B keeps them safe with the control doors open.</dd>
+<dt id="belly-tank-bulk-tank">Belly tank / bulk tank</dt><dd>the sub-base fuel tank under a genset for immediate supply, and the shared storage that provides the autonomy target.</dd>
+<dt id="bess-battery-energy-storage-system">BESS (battery energy storage system)</dt><dd>batteries beyond UPS ride-through, at the MV bus for peak shaving or grid services, at LV for smoothing AI transients.</dd>
+<dt id="block-power-block">Block (power block)</dt><dd>the unit of design, one 2.5 MW UPS with its ~2.75 MW genset and 2,500 kVA unit substation; halls grow by repeating it.</dd>
+<dt id="demarcation-point">Demarcation point</dt><dd>the ownership boundary between utility and customer, usually the incoming structure or first high-side breaker; revenue metering sits there.</dd>
+<dt id="double-conversion-vfi-line-interactive-vi">Double-conversion (VFI) / line-interactive (VI)</dt><dd>IEC 62040-3 UPS classes; VFI rebuilds the waveform so the load never sees mains, VI passes mains and corrects voltage.</dd>
+<dt id="drups">DRUPS</dt><dd>diesel rotary UPS, a flywheel coupled to a diesel; 13–40 s of inertia bridges to the engine, no battery room.</dd>
+<dt id="dry-type-vs-oil-filled-transformer">Dry-type vs oil-filled transformer</dt><dd>dry-type is the indoor default for unit substations (no flammable liquid); oil-filled is the outdoor default for LPTs and triggers NEC 450 indoors.</dd>
+<dt id="epa-tier-2-tier-4-final">EPA Tier 2 / Tier 4 Final</dt><dd>nonroad engine emission tiers; Tier 2 is allowed for emergency standby only, Tier 4F with SCR and DPF is required once a set runs for demand response or bridging.</dd>
+<dt id="fuel-polishing">Fuel polishing</dt><dd>filtering stored diesel to remove water and microbial growth so it starts an engine years after delivery.</dd>
+<dt id="hvo">HVO</dt><dd>hydrotreated vegetable oil, a drop-in renewable diesel with up to ~90% lower lifecycle CO2.</dd>
+<dt id="impedance-z">Impedance (%Z)</dt><dd>the transformer property that sets fault current (≈ kVA ÷ %Z) and voltage regulation; 5.75% nominal at 2,500 kVA.</dd>
+<dt id="large-power-transformer-lpt">Large power transformer (LPT)</dt><dd>the HV-to-MV substation transformer, 30–100 MVA, oil-filled, outdoors; the 128-week item.</dd>
+<dt id="lfp-nmc-vrla">LFP / NMC / VRLA</dt><dd>lithium iron phosphate, nickel-manganese-cobalt and valve-regulated lead-acid batteries; LFP is the data center lithium default.</dd>
+<dt id="main-tie-main-double-ended">Main-tie-main (double-ended)</dt><dd>two sources and a bus tie, so either side can be maintained with the tie closed and no load dropped; the physical form of concurrent maintainability.</dd>
+<dt id="nfpa-110-type-10">NFPA 110 Type 10</dt><dd>emergency power at the transfer switch within 10 seconds of utility failure; the standby standard for critical facilities.</dd>
+<dt id="paralleling-switchgear">Paralleling switchgear</dt><dd>gear that synchronizes several gensets onto one bus for flexible N+1; long-lead in its own right.</dd>
+<dt id="ride-through">Ride-through</dt><dd>the seconds a UPS carries the load from stored energy while the generators start; ~15 s used of 5 min held.</dd>
+<dt id="selective-coordination">Selective coordination</dt><dd>a protection scheme in which the nearest upstream breaker clears a fault, isolating the smallest zone; proven by a study someone must own.</dd>
+<dt id="sf6-free-switchgear">SF6-free switchgear</dt><dd>MV gear insulated by vacuum plus dry air or a fluoronitrile mix instead of SF6 (GWP ~23,500); the 2026 spec, with a 60 Hz caveat.</dd>
+<dt id="static-bypass">Static bypass</dt><dd>the UPS path that passes mains straight to the load on an internal fault or overload; eco-mode runs on it by choice.</dd>
+<dt id="unit-substation">Unit substation</dt><dd>the packaged MV-to-LV transformer and switchgear (34.5 kV to 480Y/277 V, 2,500 kVA) at the hall wall feeding UPS and mechanical plant.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 6 — Power: distribution and redundancy</h2><dl class="gloss">
+<dt id="3m2-4m3-distributed-redundant">3M2 / 4M3 (distributed redundant)</dt><dd>three (or four) independent UPS systems that share the load so any one can be lost; each runs at ≤ 67% (≤ 75%) and every rack row takes A and B from two different systems. The reference hall's Tier III model: six 2.5 MW blocks for 10 MW usable.</dd>
+<dt id="415-240-v-distribution">415/240 V distribution</dt><dd>three-phase 415 V line-to-line, 240 V line-to-neutral to the rack, so the server takes 240 V with no PDU isolation transformer; a 60 A circuit carries ~34.5 kW against 17.3 kW at 208 V. Raises available fault current.</dd>
+<dt id="a-b-feed-dual-corded-single-corded">A/B feed / dual-corded / single-corded</dt><dd>two independent power paths to a rack; dual-corded gear has a PSU on each and needs no switch, each side loaded ≤ 50%; single-corded gear needs a rack ATS or STS to see both.</dd>
+<dt id="arc-flash-boundary-incident-energy">Arc-flash boundary / incident energy</dt><dd>the distance at which an arc would deliver 1.2 cal/cm² to skin; PPE categories map to incident energy and no energised work is permitted above 40 cal/cm² (NFPA 70E).</dd>
+<dt id="ats-automatic-transfer-switch">ATS (automatic transfer switch)</dt><dd>an electromechanical switch that moves a load between two sources; slower and simpler than an STS, common at the rack for a single-corded appliance.</dd>
+<dt id="autotransformer">Autotransformer</dt><dd>a single-winding transformer that shifts voltage a small step (480 → 415 V) without creating a separately derived system; about 90% smaller than a 208 V isolation transformer.</dd>
+<dt id="availability-a-mtbf-mtbf-mttr">Availability (A = MTBF / (MTBF + MTTR))</dt><dd>the fraction of time a repairable element works; parallel paths multiply their unavailabilities. Industry "nines" are legacy arithmetic, not Uptime certification, which dropped them in 2009.</dd>
+<dt id="block-redundant-catcher-reserve-bus">Block redundant (catcher / reserve bus)</dt><dd>N active UPS blocks plus one unloaded reserve that a failed block's load reaches through an STS; ~80% usable, but a large STS sits in every path.</dd>
+<dt id="busway-busbar-trunking">Busway (busbar trunking)</dt><dd>prefabricated overhead conductor track (40–1,250 A) into which tap-off boxes twist-lock while live; the row distribution layer for Zones 2–4 and 94% of the reference hall's megawatts.</dd>
+<dt id="cbn-srg-common-bonding-network-signal-reference-grid">CBN / SRG (common bonding network / signal reference grid)</dt><dd>the equipotential grounding structure of a data hall; a copper grid on 0.6–3 m centres, ≥ #6 AWG, per IEEE 1100 and TIA-942, with every cabinet bonded to it directly.</dd>
+<dt id="chapter-3-wiring-nec">Chapter 3 wiring (NEC)</dt><dd>the ordinary wiring methods of the National Electrical Code; building an IT room to them instead of Article 645 removes the EPO requirement along with 645's wiring relaxations.</dd>
+<dt id="fault-current-available-aic-sccr">Fault current (available) / AIC / SCCR</dt><dd>the current a short circuit can draw at a point in the system; every breaker (interrupting capacity, AIC) and assembly (short-circuit current rating, SCCR) must exceed it. ~17.6 kA with a PDU isolation transformer, ~56 kA without.</dd>
+<dt id="isolation-transformer-separately-derived-system">Isolation transformer / separately derived system</dt><dd>a PDU transformer that changes voltage and creates a new neutral and ground reference; the 480 → 208/120 V legacy that 415/240 V distribution removes, along with its impedance.</dd>
+<dt id="k-rated-transformer-k-13-k-20">K-rated transformer (K-13, K-20)</dt><dd>a transformer built to tolerate the extra heating of harmonic currents; K-13 suits modern mixed loads, K-20 is checked where thousands of identical GPU supplies switch in step.</dd>
+<dt id="mt-diablo-400-v-dc-sidecar">Mt Diablo / ±400 V DC sidecar</dt><dd>the OCP specification (Microsoft, Meta, Google) for a separate power rack that feeds adjacent compute racks at ±400 V DC, 800 V rail to rail; racks from 100 kW to 1 MW; hardware 2026–27. The reference hall reserves bays for it.</dd>
+<dt id="mtbf-mttr">MTBF / MTTR</dt><dd>mean time between failures / mean time to repair. Pair MTBF ≈ MTBF² / (2 × MTTR), so repair speed is worth as much as a third path.</dd>
+<dt id="nfpa-70e-energised-electrical-work-permit">NFPA 70E / energised electrical work permit</dt><dd>the US electrical safety standard for working on live gear; data centers work energised, so the permit and arc-flash labels are routine rather than exceptional.</dd>
+<dt id="pdu-floor-power-distribution-unit">PDU (floor power distribution unit)</dt><dd>a floor-standing cabinet, 300–1,000 kVA, with an input breaker, an optional transformer and branch panels; the first box after the UPS output bus. ~20 in the reference hall's Phase 1.</dd>
+<dt id="pfc-active-power-factor-correction">PFC (active power factor correction)</dt><dd>the front end of a modern server power supply that draws near-sinusoidal current at under 5% THD; why harmonics stopped being a data center problem.</dd>
+<dt id="rack-pdu-rpdu">Rack PDU (rPDU)</dt><dd>the 0U vertical outlet strip in a rack, typically 30–60 A at 415/240 V, that turns one branch circuit into server receptacles; per-outlet metering on it proves the A/B mapping.</dd>
+<dt id="rpp-remote-power-panel">RPP (remote power panel)</dt><dd>a breaker panel on the floor near the racks, fed by cable home-runs from the PDU; cheaper than busway on day one and the reference hall's choice for Zone 1's stable 8 kW racks.</dd>
+<dt id="sts-static-transfer-switch">STS (static transfer switch)</dt><dd>a thyristor switch that moves a load between two sources in ~4 ms; used at the rack for single-corded gear, avoided as a large central unit because it makes one failure into a row outage.</dd>
+<dt id="tap-off-box-whip">Tap-off box / whip</dt><dd>the twist-lock unit that draws a branch circuit off live busway, and the flexible cable drop from it (or from an RPP breaker) to the rack; ~$350 and owner-installed on busway.</dd>
+<dt id="tia-607-c-bonding-hierarchy">TIA-607-C bonding hierarchy</dt><dd>the standard's primary and secondary bonding busbars and rack bonding busbars, 1/0 AWG to the busbar and ≥ 6 AWG to each cabinet, never bonded in series.</dd>
+<dt id="tn-s">TN-S</dt><dd>an earthing arrangement with separate neutral and protective earth conductors throughout; the preferred scheme for IT loads.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 7 — Cooling and thermal management</h2><dl class="gloss">
+<dt id="adiabatic-dry-cooler">Adiabatic dry cooler</dt><dd>a fan-and-coil heat rejecter that runs dry most of the year and sprays water on its air inlet only on hot hours; the reference campus's warm-loop heat sink, fed with reclaimed water on peak days.</dd>
+<dt id="approach-temperature">Approach temperature</dt><dd>the temperature gap across a heat exchanger, for example between the server loop and the facility loop in a CDU; commercial units achieve about 3–4 °C.</dd>
+<dt id="ashrae-air-classes-a1-a4-h1">ASHRAE air classes (A1–A4, H1)</dt><dd>server-inlet temperature and humidity envelopes; all A classes recommend 18–27 °C and allow up to 32, 35, 40 or 45 °C; H1 is a tighter class for dense air-cooled gear.</dd>
+<dt id="blanking-panel">Blanking panel</dt><dd>a plate that fills an empty rack slot so hot exhaust cannot recirculate to the intakes; the cheapest part of containment and the first to be forgotten.</dd>
+<dt id="bypass-recirculation">Bypass / recirculation</dt><dd>the two airflow faults containment kills; cold supply short-circuiting to the return without cooling a server, and hot exhaust re-entering a server intake.</dd>
+<dt id="cfm-per-kw">CFM per kW</dt><dd>the airflow a rack needs per kilowatt; about 157 at an 11 K (20 °F) rise, 125 at 25 °F, 105 at 30 °F, from ΔT = 3.1 × W ÷ CFM.</dd>
+<dt id="crac-crah">CRAC / CRAH</dt><dd>computer-room air conditioner, with its own compressor, and computer-room air handler, a coil and fan on chilled water; the fan wall is the CRAH grown to the size of a wall.</dd>
+<dt id="cube-law-fan-affinity">Cube law (fan affinity)</dt><dd>fan power scales with the cube of fan speed, so running at 80% speed takes about half the power; why big slow fans win.</dd>
+<dt id="dew-point-control">Dew-point control</dt><dd>holding humidity by absolute moisture (about −9 to 15 °C dew point) instead of relative humidity, which means different moisture at each temperature.</dd>
+<dt id="ec-fan">EC fan</dt><dd>electronically commutated fan with a brushless DC motor and built-in speed control; the unit of a fan wall and the reason it can be redundant at the fan.</dd>
+<dt id="economizer-air-side-water-side">Economizer (air-side, water-side)</dt><dd>using outside air, or outside air via a heat exchanger, to cool without running a compressor; available about 40% of the year in Phoenix, none of it at the 45 °C peak.</dd>
+<dt id="erf-energy-reuse-factor">ERF (energy reuse factor)</dt><dd>the share of a data center's energy exported as reused heat; Germany's EnEfG mandates 10, 15 and 20% for new centers from 2026, 2027 and 2028.</dd>
+<dt id="fan-wall">Fan wall</dt><dd>a floor-to-ceiling array of EC fans and chilled-water coils in a gallery beside the hall, about 800 kW per unit, redundant at the fan; the air backbone of the hyperscale hall since 2024.</dd>
+<dt id="fws-facility-water-system">FWS (facility water system)</dt><dd>the owner's water loop between the CDU and the heat rejecters; the reference campus runs it warm, W40, at 36 °C supply and about 46 °C return, so it needs no chiller.</dd>
+<dt id="in-row-cooling">In-row cooling</dt><dd>a cooling unit placed between racks, close-coupled to the load; suits spot density in 20–60 kW rows.</dd>
+<dt id="low-gwp-refrigerant-a2l-a1">Low-GWP refrigerant (A2L / A1)</dt><dd>refrigerants with low global-warming potential mandated by the AIM Act and F-gas rules; A2L (R-1234ze) is mildly flammable, A1 (R-515B) is not, which changes the code path.</dd>
+<dt id="magnetic-bearing-chiller">Magnetic-bearing chiller</dt><dd>an oil-free centrifugal chiller whose shaft floats on magnetic bearings; excellent at part load and low lift, restarts in about 3 minutes, and runs warm setpoints; the reference plant's chiller type.</dd>
+<dt id="pfas">PFAS</dt><dd>per- and polyfluoroalkyl "forever chemicals" in the dielectric fluids that two-phase cooling used; 3M's exit and EPA and EU rules pushed the market back to single-phase water-glycol cold plates.</dd>
+<dt id="pg25">PG25</dt><dd>25% propylene glycol in water, the standard coolant of the server loop; freeze and corrosion protection at a small penalty in heat capacity.</dd>
+<dt id="quick-disconnect-qd">Quick disconnect (QD)</dt><dd>a blind-mate, drip-free coolant coupling at the rack where the server loop meets the rack manifold; the demarcation between Topic 8's rack and Topic 7's heat.</dd>
+<dt id="stratified-thermal-storage-tank">Stratified thermal storage tank</dt><dd>a tall chilled-water tank holding cold water under warm across a thermocline; sized in minutes to carry the chilled loop from generator start to chiller restart, 10 minutes in the reference.</dd>
+<dt id="tcs-technology-cooling-system">TCS (technology cooling system)</dt><dd>the high-purity server-side loop from the cold plates through the rack manifold to the CDU; about 40 °C out and 48 °C back in the reference pod, ≤ 25 µS/cm and &lt; 50 µm.</dd>
+<dt id="ton-of-refrigeration">Ton of refrigeration</dt><dd>12,000 BTU/h of cooling; 1 kW of IT is 3,412 BTU/h or 0.284 tons, so 10.7 MW is about 3,040 tons.</dd>
+<dt id="w-class-w17-w">W-class (W17–W+)</dt><dd>ASHRAE liquid-cooling classes named by their maximum supply-water temperature; W32 is chiller-free in most climates, W40 and above reject on dry coolers year-round.</dd>
+</dl></section>
+<section class="gloss-group"><h2>Topic 8 — AI/HPC, compute and storage</h2><dl class="gloss">
+<dt id="800-vdc">800 VDC</dt><dd>rack power distribution at 800 V DC, arriving with megawatt-class racks in 2027; it moves more than 150% more power through the same copper as 54 V and removes the ~200 kg of busbar a 1 MW rack would otherwise need.</dd>
+<dt id="all-reduce">All-reduce</dt><dd>the collective step in which every GPU in a training job exchanges and sums gradients; its alternation with compute is the ~1 Hz power swing the busway sees.</dd>
+<dt id="bare-metal">Bare metal</dt><dd>servers run without a hypervisor; the norm for large training because it exposes GPU topology and removes virtualisation overhead.</dd>
+<dt id="bulk-synchronous-parallel-bsp">Bulk-synchronous parallel (BSP)</dt><dd>the compute → barrier → checkpoint cycle of a training job; the reason 200 racks behave as one load with no diversity to bank on.</dd>
+<dt id="checkpoint">Checkpoint</dt><dd>a periodic save of a training job's model and optimizer state (140–420 GB for a 70 B model) so the job can restart after a fault; also the stall visible on the busway while it is written.</dd>
+<dt id="cold-plate">Cold plate</dt><dd>the liquid-cooled metal block clamped to a GPU or CPU; the point where Topic 8's heat becomes Topic 7's problem.</dd>
+<dt id="compute-tray">Compute tray</dt><dd>a slide-in unit of an NVL72 rack holding 4 GPUs and 2 Grace CPUs with cold plates and quick-disconnects; 18 per rack.</dd>
+<dt id="das-san-nas-object-storage">DAS / SAN / NAS / object storage</dt><dd>disks inside the server / block storage over a dedicated network / file storage over IP / a scale-out HTTP object store; four tiers, each a different row in the hall.</dd>
+<dt id="data-gravity">Data gravity</dt><dd>the pull that keeps a tenant in place because moving petabytes is slow and costly.</dd>
+<dt id="eia-310">EIA-310</dt><dd>the 19-inch rack standard; it fixes mounting width, U-height and hole pattern only, never depth or load rating.</dd>
+<dt id="factory-integration-rack-and-stack">Factory integration / rack-and-stack</dt><dd>a rack shipped fully populated and tested from the vendor / a rack populated server by server on site; AI pods use the first, general zones may still use the second.</dd>
+<dt id="gpudirect-storage">GPUDirect Storage</dt><dd>a direct path from storage into GPU memory that bypasses the CPU, 40+ GB/s.</dd>
+<dt id="grace-vera">Grace / Vera</dt><dd>NVIDIA's Arm server CPUs paired with GPUs in a superchip; 36 per NVL72 rack.</dd>
+<dt id="hbm-high-bandwidth-memory">HBM (high-bandwidth memory)</dt><dd>stacked memory beside the GPU die (HBM3e, HBM4); the main driver of GPU power.</dd>
+<dt id="hgx-node">HGX node</dt><dd>an 8-GPU server on NVIDIA's HGX baseboard, ~10–14 kW; three fill the reference 40 kW rack.</dd>
+<dt id="kubernetes-slurm">Kubernetes / Slurm</dt><dd>the container orchestrator that runs everything that is not training / the HPC batch scheduler that runs the training cluster on bare metal; Slinky combines them.</dd>
+<dt id="kyber-oberon">Kyber / Oberon</dt><dd>NVIDIA rack architectures; Oberon is the current NVL72 frame, Kyber the 2027 ~600 kW class on 800 VDC.</dd>
+<dt id="nvl72-rack-scale-system">NVL72 / rack-scale system</dt><dd>a factory-integrated, liquid-cooled rack whose 72 GPUs act as one accelerator over NVLink; the reference pod's rack class.</dd>
+<dt id="nvlink-nvswitch">NVLink / NVSwitch</dt><dd>NVIDIA's in-rack scale-up interconnect, 130 TB/s all-to-all on ~3.2 km of copper, no optics.</dd>
+<dt id="nvme-of-disaggregated-storage">NVMe-oF / disaggregated storage</dt><dd>flash pooled over a fabric and composed on demand (for example VAST DASE); the storage that sits in flash rows beside the pod.</dd>
+<dt id="parallel-file-system">Parallel file system</dt><dd>storage (Lustre, GPFS, WEKA, VAST) that feeds many GPUs at once at GB/s to TB/s.</dd>
+<dt id="power-shelf">Power shelf</dt><dd>the rack-level AC-to-DC conversion unit feeding a 48–54 V busbar; ~33 kW each, eight per NVL72; GB300 shelves carry 65 J per GPU of capacitance.</dd>
+<dt id="power-smoothing">Power smoothing</dt><dd>rack capacitors and software floors that cut the grid-facing peak of the ~1 Hz swing by ~30%; smoothing, not ride-through, so no UPS relief.</dd>
+<dt id="quick-disconnect-uqd">Quick-disconnect (UQD)</dt><dd>the dripless coolant coupling on each tray and at the rack manifold; the boundary between Topic 8 and Topic 7, and where the IT vendor's warranty stops.</dd>
+</dl></section>
 <section class="gloss-group"><h2>Topic 9 — Network and structured cabling</h2><dl class="gloss">
 <dt id="base-8-trunk-mpo-vsff">Base-8 trunk / MPO / VSFF</dt><dd>a pre-terminated fiber cable in multiples of eight fibers, matching 8-fiber parallel optics such as DR4; MPO-12/16 are the multi-fiber push-on connectors it ends in; VSFF (SN, MMC, CS) are the very-small-form-factor successors at about three times the density.</dd>
 <dt id="bmc-ipmi-redfish">BMC / IPMI / Redfish</dt><dd>the baseboard management controller inside every server and switch, and the two interfaces used to reach it over the OOB.</dd>
@@ -197,56 +328,6 @@
 <dt id="ul-9540a">UL 9540A</dt><dd>the thermal-runaway fire-test method whose data drives battery-room spacing, venting and AHJ and insurer approval.</dd>
 <dt id="water-mist-nfpa-750">Water mist (NFPA 750)</dt><dd>fine-droplet suppression using 70–90% less water than sprinklers; FM-approved for all data center areas including lithium batteries since January 2023.</dd>
 </dl></section>
-<section class="gloss-group"><h2>Topic 8 — AI/HPC, compute and storage</h2><dl class="gloss">
-<dt id="800-vdc">800 VDC</dt><dd>rack power distribution at 800 V DC, arriving with megawatt-class racks in 2027; it moves more than 150% more power through the same copper as 54 V and removes the ~200 kg of busbar a 1 MW rack would otherwise need.</dd>
-<dt id="adiabatic-dry-cooler">Adiabatic dry cooler</dt><dd>a fan-and-coil heat rejecter that runs dry most of the year and sprays water on its air inlet only on hot hours; the reference campus's warm-loop heat sink, fed with reclaimed water on peak days.</dd>
-<dt id="all-reduce">All-reduce</dt><dd>the collective step in which every GPU in a training job exchanges and sums gradients; its alternation with compute is the ~1 Hz power swing the busway sees.</dd>
-<dt id="approach-temperature">Approach temperature</dt><dd>the temperature gap across a heat exchanger, for example between the server loop and the facility loop in a CDU; commercial units achieve about 3–4 °C.</dd>
-<dt id="ashrae-air-classes-a1-a4-h1">ASHRAE air classes (A1–A4, H1)</dt><dd>server-inlet temperature and humidity envelopes; all A classes recommend 18–27 °C and allow up to 32, 35, 40 or 45 °C; H1 is a tighter class for dense air-cooled gear.</dd>
-<dt id="bare-metal">Bare metal</dt><dd>servers run without a hypervisor; the norm for large training because it exposes GPU topology and removes virtualisation overhead.</dd>
-<dt id="blanking-panel">Blanking panel</dt><dd>a plate that fills an empty rack slot so hot exhaust cannot recirculate to the intakes; the cheapest part of containment and the first to be forgotten.</dd>
-<dt id="bulk-synchronous-parallel-bsp">Bulk-synchronous parallel (BSP)</dt><dd>the compute → barrier → checkpoint cycle of a training job; the reason 200 racks behave as one load with no diversity to bank on.</dd>
-<dt id="bypass-recirculation">Bypass / recirculation</dt><dd>the two airflow faults containment kills; cold supply short-circuiting to the return without cooling a server, and hot exhaust re-entering a server intake.</dd>
-<dt id="cfm-per-kw">CFM per kW</dt><dd>the airflow a rack needs per kilowatt; about 157 at an 11 K (20 °F) rise, 125 at 25 °F, 105 at 30 °F, from ΔT = 3.1 × W ÷ CFM.</dd>
-<dt id="checkpoint">Checkpoint</dt><dd>a periodic save of a training job's model and optimizer state (140–420 GB for a 70 B model) so the job can restart after a fault; also the stall visible on the busway while it is written.</dd>
-<dt id="cold-plate">Cold plate</dt><dd>the liquid-cooled metal block clamped to a GPU or CPU; the point where Topic 8's heat becomes Topic 7's problem.</dd>
-<dt id="compute-tray">Compute tray</dt><dd>a slide-in unit of an NVL72 rack holding 4 GPUs and 2 Grace CPUs with cold plates and quick-disconnects; 18 per rack.</dd>
-<dt id="crac-crah">CRAC / CRAH</dt><dd>computer-room air conditioner, with its own compressor, and computer-room air handler, a coil and fan on chilled water; the fan wall is the CRAH grown to the size of a wall.</dd>
-<dt id="cube-law-fan-affinity">Cube law (fan affinity)</dt><dd>fan power scales with the cube of fan speed, so running at 80% speed takes about half the power; why big slow fans win.</dd>
-<dt id="das-san-nas-object-storage">DAS / SAN / NAS / object storage</dt><dd>disks inside the server / block storage over a dedicated network / file storage over IP / a scale-out HTTP object store; four tiers, each a different row in the hall.</dd>
-<dt id="data-gravity">Data gravity</dt><dd>the pull that keeps a tenant in place because moving petabytes is slow and costly.</dd>
-<dt id="dew-point-control">Dew-point control</dt><dd>holding humidity by absolute moisture (about −9 to 15 °C dew point) instead of relative humidity, which means different moisture at each temperature.</dd>
-<dt id="ec-fan">EC fan</dt><dd>electronically commutated fan with a brushless DC motor and built-in speed control; the unit of a fan wall and the reason it can be redundant at the fan.</dd>
-<dt id="economizer-air-side-water-side">Economizer (air-side, water-side)</dt><dd>using outside air, or outside air via a heat exchanger, to cool without running a compressor; available about 40% of the year in Phoenix, none of it at the 45 °C peak.</dd>
-<dt id="eia-310">EIA-310</dt><dd>the 19-inch rack standard; it fixes mounting width, U-height and hole pattern only, never depth or load rating.</dd>
-<dt id="erf-energy-reuse-factor">ERF (energy reuse factor)</dt><dd>the share of a data center's energy exported as reused heat; Germany's EnEfG mandates 10, 15 and 20% for new centers from 2026, 2027 and 2028.</dd>
-<dt id="factory-integration-rack-and-stack">Factory integration / rack-and-stack</dt><dd>a rack shipped fully populated and tested from the vendor / a rack populated server by server on site; AI pods use the first, general zones may still use the second.</dd>
-<dt id="fan-wall">Fan wall</dt><dd>a floor-to-ceiling array of EC fans and chilled-water coils in a gallery beside the hall, about 800 kW per unit, redundant at the fan; the air backbone of the hyperscale hall since 2024.</dd>
-<dt id="fws-facility-water-system">FWS (facility water system)</dt><dd>the owner's water loop between the CDU and the heat rejecters; the reference campus runs it warm, W40, at 36 °C supply and about 46 °C return, so it needs no chiller.</dd>
-<dt id="gpudirect-storage">GPUDirect Storage</dt><dd>a direct path from storage into GPU memory that bypasses the CPU, 40+ GB/s.</dd>
-<dt id="grace-vera">Grace / Vera</dt><dd>NVIDIA's Arm server CPUs paired with GPUs in a superchip; 36 per NVL72 rack.</dd>
-<dt id="hbm-high-bandwidth-memory">HBM (high-bandwidth memory)</dt><dd>stacked memory beside the GPU die (HBM3e, HBM4); the main driver of GPU power.</dd>
-<dt id="hgx-node">HGX node</dt><dd>an 8-GPU server on NVIDIA's HGX baseboard, ~10–14 kW; three fill the reference 40 kW rack.</dd>
-<dt id="in-row-cooling">In-row cooling</dt><dd>a cooling unit placed between racks, close-coupled to the load; suits spot density in 20–60 kW rows.</dd>
-<dt id="kubernetes-slurm">Kubernetes / Slurm</dt><dd>the container orchestrator that runs everything that is not training / the HPC batch scheduler that runs the training cluster on bare metal; Slinky combines them.</dd>
-<dt id="kyber-oberon">Kyber / Oberon</dt><dd>NVIDIA rack architectures; Oberon is the current NVL72 frame, Kyber the 2027 ~600 kW class on 800 VDC.</dd>
-<dt id="low-gwp-refrigerant-a2l-a1">Low-GWP refrigerant (A2L / A1)</dt><dd>refrigerants with low global-warming potential mandated by the AIM Act and F-gas rules; A2L (R-1234ze) is mildly flammable, A1 (R-515B) is not, which changes the code path.</dd>
-<dt id="magnetic-bearing-chiller">Magnetic-bearing chiller</dt><dd>an oil-free centrifugal chiller whose shaft floats on magnetic bearings; excellent at part load and low lift, restarts in about 3 minutes, and runs warm setpoints; the reference plant's chiller type.</dd>
-<dt id="nvl72-rack-scale-system">NVL72 / rack-scale system</dt><dd>a factory-integrated, liquid-cooled rack whose 72 GPUs act as one accelerator over NVLink; the reference pod's rack class.</dd>
-<dt id="nvlink-nvswitch">NVLink / NVSwitch</dt><dd>NVIDIA's in-rack scale-up interconnect, 130 TB/s all-to-all on ~3.2 km of copper, no optics.</dd>
-<dt id="nvme-of-disaggregated-storage">NVMe-oF / disaggregated storage</dt><dd>flash pooled over a fabric and composed on demand (for example VAST DASE); the storage that sits in flash rows beside the pod.</dd>
-<dt id="parallel-file-system">Parallel file system</dt><dd>storage (Lustre, GPFS, WEKA, VAST) that feeds many GPUs at once at GB/s to TB/s.</dd>
-<dt id="pfas">PFAS</dt><dd>per- and polyfluoroalkyl "forever chemicals" in the dielectric fluids that two-phase cooling used; 3M's exit and EPA and EU rules pushed the market back to single-phase water-glycol cold plates.</dd>
-<dt id="pg25">PG25</dt><dd>25% propylene glycol in water, the standard coolant of the server loop; freeze and corrosion protection at a small penalty in heat capacity.</dd>
-<dt id="power-shelf">Power shelf</dt><dd>the rack-level AC-to-DC conversion unit feeding a 48–54 V busbar; ~33 kW each, eight per NVL72; GB300 shelves carry 65 J per GPU of capacitance.</dd>
-<dt id="power-smoothing">Power smoothing</dt><dd>rack capacitors and software floors that cut the grid-facing peak of the ~1 Hz swing by ~30%; smoothing, not ride-through, so no UPS relief.</dd>
-<dt id="quick-disconnect-qd">Quick disconnect (QD)</dt><dd>a blind-mate, drip-free coolant coupling at the rack where the server loop meets the rack manifold; the demarcation between Topic 8's rack and Topic 7's heat.</dd>
-<dt id="quick-disconnect-uqd">Quick-disconnect (UQD)</dt><dd>the dripless coolant coupling on each tray and at the rack manifold; the boundary between Topic 8 and Topic 7, and where the IT vendor's warranty stops.</dd>
-<dt id="stratified-thermal-storage-tank">Stratified thermal storage tank</dt><dd>a tall chilled-water tank holding cold water under warm across a thermocline; sized in minutes to carry the chilled loop from generator start to chiller restart, 10 minutes in the reference.</dd>
-<dt id="tcs-technology-cooling-system">TCS (technology cooling system)</dt><dd>the high-purity server-side loop from the cold plates through the rack manifold to the CDU; about 40 °C out and 48 °C back in the reference pod, ≤ 25 µS/cm and &lt; 50 µm.</dd>
-<dt id="ton-of-refrigeration">Ton of refrigeration</dt><dd>12,000 BTU/h of cooling; 1 kW of IT is 3,412 BTU/h or 0.284 tons, so 10.7 MW is about 3,040 tons.</dd>
-<dt id="w-class-w17-w">W-class (W17–W+)</dt><dd>ASHRAE liquid-cooling classes named by their maximum supply-water temperature; W32 is chiller-free in most climates, W40 and above reject on dry coolers year-round.</dd>
-</dl></section>
 <section class="gloss-group"><h2>Topic 11 — Commissioning, operations and decommissioning</h2><dl class="gloss">
 <dt id="bicsi-009">BICSI 009</dt><dd>the open-consensus data-center operations and maintenance standard (2019, updated 2024), the operational complement to BICSI 002; it requires SOPs, MOPs and EOPs.</dd>
 <dt id="black-building-test-pull-the-plug">Black-building test (pull the plug)</dt><dd>the Level 5 climax: with load banks at design load the utility feed is opened on purpose; pass means the critical bus never dropped, the room stayed in band and every step fired in order.</dd>
@@ -273,84 +354,6 @@
 <dt id="sop-standard-operating-procedure">SOP (standard operating procedure)</dt><dd>the framework for routine, repeatable work, rounds, tickets, BMS operation; its goal is consistency.</dd>
 <dt id="substantial-completion-final-completion">Substantial completion / final completion</dt><dd>usable for its purpose, the gate that pays the balance, stops delay damages and starts the warranty / every punch item closed and the last retainage released.</dd>
 <dt id="wet-stacking">Wet stacking</dt><dd>unburnt fuel fouling a diesel generator run too lightly; the reason NFPA 110 demands a monthly run at 30% load or more.</dd>
-</dl></section>
-<section class="gloss-group"><h2>Topic 5 — Power: utility to UPS</h2><dl class="gloss">
-<dt id="ais-gis">AIS / GIS</dt><dd>air-insulated versus gas-insulated switchgear; GIS is compact and sealed, historically filled with SF6.</dd>
-<dt id="arc-resistant-switchgear-ieee-c37-20-7">Arc-resistant switchgear (IEEE C37.20.7)</dt><dd>gear tested to vent an internal arc away from people; Type 2B keeps them safe with the control doors open.</dd>
-<dt id="belly-tank-bulk-tank">Belly tank / bulk tank</dt><dd>the sub-base fuel tank under a genset for immediate supply, and the shared storage that provides the autonomy target.</dd>
-<dt id="bess-battery-energy-storage-system">BESS (battery energy storage system)</dt><dd>batteries beyond UPS ride-through, at the MV bus for peak shaving or grid services, at LV for smoothing AI transients.</dd>
-<dt id="block-power-block">Block (power block)</dt><dd>the unit of design, one 2.5 MW UPS with its ~2.75 MW genset and 2,500 kVA unit substation; halls grow by repeating it.</dd>
-<dt id="demarcation-point">Demarcation point</dt><dd>the ownership boundary between utility and customer, usually the incoming structure or first high-side breaker; revenue metering sits there.</dd>
-<dt id="double-conversion-vfi-line-interactive-vi">Double-conversion (VFI) / line-interactive (VI)</dt><dd>IEC 62040-3 UPS classes; VFI rebuilds the waveform so the load never sees mains, VI passes mains and corrects voltage.</dd>
-<dt id="drups">DRUPS</dt><dd>diesel rotary UPS, a flywheel coupled to a diesel; 13–40 s of inertia bridges to the engine, no battery room.</dd>
-<dt id="dry-type-vs-oil-filled-transformer">Dry-type vs oil-filled transformer</dt><dd>dry-type is the indoor default for unit substations (no flammable liquid); oil-filled is the outdoor default for LPTs and triggers NEC 450 indoors.</dd>
-<dt id="epa-tier-2-tier-4-final">EPA Tier 2 / Tier 4 Final</dt><dd>nonroad engine emission tiers; Tier 2 is allowed for emergency standby only, Tier 4F with SCR and DPF is required once a set runs for demand response or bridging.</dd>
-<dt id="fuel-polishing">Fuel polishing</dt><dd>filtering stored diesel to remove water and microbial growth so it starts an engine years after delivery.</dd>
-<dt id="hvo">HVO</dt><dd>hydrotreated vegetable oil, a drop-in renewable diesel with up to ~90% lower lifecycle CO2.</dd>
-<dt id="impedance-z">Impedance (%Z)</dt><dd>the transformer property that sets fault current (≈ kVA ÷ %Z) and voltage regulation; 5.75% nominal at 2,500 kVA.</dd>
-<dt id="large-power-transformer-lpt">Large power transformer (LPT)</dt><dd>the HV-to-MV substation transformer, 30–100 MVA, oil-filled, outdoors; the 128-week item.</dd>
-<dt id="lfp-nmc-vrla">LFP / NMC / VRLA</dt><dd>lithium iron phosphate, nickel-manganese-cobalt and valve-regulated lead-acid batteries; LFP is the data center lithium default.</dd>
-<dt id="main-tie-main-double-ended">Main-tie-main (double-ended)</dt><dd>two sources and a bus tie, so either side can be maintained with the tie closed and no load dropped; the physical form of concurrent maintainability.</dd>
-<dt id="nfpa-110-type-10">NFPA 110 Type 10</dt><dd>emergency power at the transfer switch within 10 seconds of utility failure; the standby standard for critical facilities.</dd>
-<dt id="paralleling-switchgear">Paralleling switchgear</dt><dd>gear that synchronizes several gensets onto one bus for flexible N+1; long-lead in its own right.</dd>
-<dt id="ride-through">Ride-through</dt><dd>the seconds a UPS carries the load from stored energy while the generators start; ~15 s used of 5 min held.</dd>
-<dt id="selective-coordination">Selective coordination</dt><dd>a protection scheme in which the nearest upstream breaker clears a fault, isolating the smallest zone; proven by a study someone must own.</dd>
-<dt id="sf6-free-switchgear">SF6-free switchgear</dt><dd>MV gear insulated by vacuum plus dry air or a fluoronitrile mix instead of SF6 (GWP ~23,500); the 2026 spec, with a 60 Hz caveat.</dd>
-<dt id="static-bypass">Static bypass</dt><dd>the UPS path that passes mains straight to the load on an internal fault or overload; eco-mode runs on it by choice.</dd>
-<dt id="unit-substation">Unit substation</dt><dd>the packaged MV-to-LV transformer and switchgear (34.5 kV to 480Y/277 V, 2,500 kVA) at the hall wall feeding UPS and mechanical plant.</dd>
-</dl></section>
-<section class="gloss-group"><h2>Topic 4 — Building and physical infrastructure</h2><dl class="gloss">
-<dt id="ac156">AC156</dt><dd>the shake-table test protocol that certifies a rack or piece of equipment survives seismic forces; the rack maker supplies it, the building supplies the anchorage.</dd>
-<dt id="column-grid-bay">Column grid (bay)</dt><dd>the spacing of structural columns, typically 8.4–12 m in data halls; it sets how many rack rows and aisles fit between columns.</dd>
-<dt id="dry-in-weathertight">Dry-in (weathertight)</dt><dd>the milestone when roof and walls keep the weather out; nothing electrical or mechanical inside can start before it.</dd>
-<dt id="dunnage">Dunnage</dt><dd>steel support frames that spread the weight of rooftop equipment such as dry coolers and chillers onto the roof structure.</dd>
-<dt id="freeboard">Freeboard</dt><dd>extra height added above a design flood elevation as a safety margin; the finished floor sits above the 500-year level plus freeboard.</dd>
-<dt id="governing-envelope">Governing envelope</dt><dd>the heaviest and largest piece of equipment the rigging path must ever carry, used to design doors, corridors and slab before the equipment list is final.</dd>
-<dt id="imp-insulated-metal-panel">IMP (insulated metal panel)</dt><dd>factory-made steel-skinned cladding with an insulating core, the usual envelope on a steel-framed data hall.</dd>
-<dt id="k-value-modulus-of-subgrade-reaction">k-value (modulus of subgrade reaction)</dt><dd>the stiffness of the ground under a slab; it governs a slab-on-grade's load capacity more than the soil's bearing strength does.</dd>
-<dt id="knock-out-panel">Knock-out panel</dt><dd>a wall section designed to be removed so heavy gear can be rolled in after the shell is closed; provided where the equipment list is not yet known.</dd>
-<dt id="manifold">Manifold</dt><dd>the pipe header that distributes coolant from a CDU to the racks in a row; hangs lowest in the overhead stack so a leak falls on nothing electrical.</dd>
-<dt id="meet-me-room">Meet-me room</dt><dd>the carrier-neutral space where tenants and network providers interconnect; allocated as floor area here, its contents belong to Topic 9.</dd>
-<dt id="point-load-vs-distributed-load">Point load vs distributed load</dt><dd>weight concentrated on a small area (a rack caster, a CDU foot) against weight spread evenly across a floor (psf); a floor can pass the second and fail the first.</dd>
-<dt id="post-tensioned-floor">Post-tensioned floor</dt><dd>a concrete slab pre-compressed with steel tendons so it can span between columns on upper storeys; the multi-storey substitute for slab-on-grade.</dd>
-<dt id="precast-concrete">Precast concrete</dt><dd>structure and wall panels cast in a factory and shipped to site; cures in about 48 hours in the plant against 28 days cast in place.</dd>
-<dt id="psf-kn-m-kg-m">psf / kN/m² / kg/m²</dt><dd>units of floor loading; 1 kN/m² is about 20.9 psf or 102 kg/m². Data halls specify 250–400 psf where the code minimum is 100.</dd>
-<dt id="raised-access-floor-raf">Raised access floor (RAF)</dt><dd>tiles on pedestals over a plenum used for underfloor air and cable; typically rated 1,200–1,500 kg/m² and not built for a 1,500 kg rack.</dd>
-<dt id="rfs-ready-for-service">RFS (ready for service)</dt><dd>the date a hall is energized, commissioned and handed over; T+42 for reference Hall 1.</dd>
-<dt id="rigging-path">Rigging path</dt><dd>the route heavy equipment travels from truck to pad; it must carry the heaviest load that ever moves along it, so it often governs the slab more than the racks do.</dd>
-<dt id="risk-category-ibc-asce-7-and-ip">Risk Category (IBC/ASCE 7) and Ip</dt><dd>the occupancy class that sets design forces; data centers are usually Category IV, which gives the component importance factor Ip = 1.5 and about 50% higher anchorage forces.</dd>
-<dt id="sdc-seismic-design-category">SDC (Seismic Design Category)</dt><dd>the A–F class combining a site's shaking (SDS) with its Risk Category; engineered anchorage is required from C upward.</dd>
-<dt id="shell-and-core">Shell and core</dt><dd>the structure, envelope and base building, the box before MEP fit-out; 10–15% of a data center's construction cost.</dd>
-<dt id="slab-on-grade">Slab-on-grade</dt><dd>a concrete floor poured directly on prepared ground; 12–18 in thick in a data hall against 4–6 in in an office.</dd>
-<dt id="spmt-self-propelled-modular-transporter">SPMT (self-propelled modular transporter)</dt><dd>a multi-axle powered platform used to move the heaviest loads, such as a 100–200 t transformer, from road to pad.</dd>
-<dt id="tilt-up">Tilt-up</dt><dd>concrete wall panels cast flat on the slab and craned upright; the fastest cheap shell for a big single-storey box on a flat site.</dd>
-<dt id="truck-court">Truck court</dt><dd>the paved manoeuvring area in front of the dock doors; 120 ft or more deep so trailers and cranes can work.</dd>
-</dl></section>
-<section class="gloss-group"><h2>Topic 7 — Cooling and thermal management</h2><dl class="gloss">
-<dt id="adiabatic-dry-cooler">Adiabatic dry cooler</dt><dd>a fan-and-coil heat rejecter that runs dry most of the year and sprays water on its air inlet only on hot hours; the reference campus's warm-loop heat sink, fed with reclaimed water on peak days.</dd>
-<dt id="approach-temperature">Approach temperature</dt><dd>the temperature gap across a heat exchanger, for example between the server loop and the facility loop in a CDU; commercial units achieve about 3–4 °C.</dd>
-<dt id="ashrae-air-classes-a1-a4-h1">ASHRAE air classes (A1–A4, H1)</dt><dd>server-inlet temperature and humidity envelopes; all A classes recommend 18–27 °C and allow up to 32, 35, 40 or 45 °C; H1 is a tighter class for dense air-cooled gear.</dd>
-<dt id="blanking-panel">Blanking panel</dt><dd>a plate that fills an empty rack slot so hot exhaust cannot recirculate to the intakes; the cheapest part of containment and the first to be forgotten.</dd>
-<dt id="bypass-recirculation">Bypass / recirculation</dt><dd>the two airflow faults containment kills; cold supply short-circuiting to the return without cooling a server, and hot exhaust re-entering a server intake.</dd>
-<dt id="cfm-per-kw">CFM per kW</dt><dd>the airflow a rack needs per kilowatt; about 157 at an 11 K (20 °F) rise, 125 at 25 °F, 105 at 30 °F, from ΔT = 3.1 × W ÷ CFM.</dd>
-<dt id="crac-crah">CRAC / CRAH</dt><dd>computer-room air conditioner, with its own compressor, and computer-room air handler, a coil and fan on chilled water; the fan wall is the CRAH grown to the size of a wall.</dd>
-<dt id="cube-law-fan-affinity">Cube law (fan affinity)</dt><dd>fan power scales with the cube of fan speed, so running at 80% speed takes about half the power; why big slow fans win.</dd>
-<dt id="dew-point-control">Dew-point control</dt><dd>holding humidity by absolute moisture (about −9 to 15 °C dew point) instead of relative humidity, which means different moisture at each temperature.</dd>
-<dt id="ec-fan">EC fan</dt><dd>electronically commutated fan with a brushless DC motor and built-in speed control; the unit of a fan wall and the reason it can be redundant at the fan.</dd>
-<dt id="economizer-air-side-water-side">Economizer (air-side, water-side)</dt><dd>using outside air, or outside air via a heat exchanger, to cool without running a compressor; available about 40% of the year in Phoenix, none of it at the 45 °C peak.</dd>
-<dt id="erf-energy-reuse-factor">ERF (energy reuse factor)</dt><dd>the share of a data center's energy exported as reused heat; Germany's EnEfG mandates 10, 15 and 20% for new centers from 2026, 2027 and 2028.</dd>
-<dt id="fan-wall">Fan wall</dt><dd>a floor-to-ceiling array of EC fans and chilled-water coils in a gallery beside the hall, about 800 kW per unit, redundant at the fan; the air backbone of the hyperscale hall since 2024.</dd>
-<dt id="fws-facility-water-system">FWS (facility water system)</dt><dd>the owner's water loop between the CDU and the heat rejecters; the reference campus runs it warm, W40, at 36 °C supply and about 46 °C return, so it needs no chiller.</dd>
-<dt id="in-row-cooling">In-row cooling</dt><dd>a cooling unit placed between racks, close-coupled to the load; suits spot density in 20–60 kW rows.</dd>
-<dt id="low-gwp-refrigerant-a2l-a1">Low-GWP refrigerant (A2L / A1)</dt><dd>refrigerants with low global-warming potential mandated by the AIM Act and F-gas rules; A2L (R-1234ze) is mildly flammable, A1 (R-515B) is not, which changes the code path.</dd>
-<dt id="magnetic-bearing-chiller">Magnetic-bearing chiller</dt><dd>an oil-free centrifugal chiller whose shaft floats on magnetic bearings; excellent at part load and low lift, restarts in about 3 minutes, and runs warm setpoints; the reference plant's chiller type.</dd>
-<dt id="pfas">PFAS</dt><dd>per- and polyfluoroalkyl "forever chemicals" in the dielectric fluids that two-phase cooling used; 3M's exit and EPA and EU rules pushed the market back to single-phase water-glycol cold plates.</dd>
-<dt id="pg25">PG25</dt><dd>25% propylene glycol in water, the standard coolant of the server loop; freeze and corrosion protection at a small penalty in heat capacity.</dd>
-<dt id="quick-disconnect-qd">Quick disconnect (QD)</dt><dd>a blind-mate, drip-free coolant coupling at the rack where the server loop meets the rack manifold; the demarcation between Topic 8's rack and Topic 7's heat.</dd>
-<dt id="stratified-thermal-storage-tank">Stratified thermal storage tank</dt><dd>a tall chilled-water tank holding cold water under warm across a thermocline; sized in minutes to carry the chilled loop from generator start to chiller restart, 10 minutes in the reference.</dd>
-<dt id="tcs-technology-cooling-system">TCS (technology cooling system)</dt><dd>the high-purity server-side loop from the cold plates through the rack manifold to the CDU; about 40 °C out and 48 °C back in the reference pod, ≤ 25 µS/cm and &lt; 50 µm.</dd>
-<dt id="ton-of-refrigeration">Ton of refrigeration</dt><dd>12,000 BTU/h of cooling; 1 kW of IT is 3,412 BTU/h or 0.284 tons, so 10.7 MW is about 3,040 tons.</dd>
-<dt id="w-class-w17-w">W-class (W17–W+)</dt><dd>ASHRAE liquid-cooling classes named by their maximum supply-water temperature; W32 is chiller-free in most climates, W40 and above reject on dry coolers year-round.</dd>
 </dl></section>
   
 </main>
