@@ -73,6 +73,82 @@
   });
 
 
+  /* ---- figure lightbox: tap a raster figure to see it at readable size ----
+     Illustration labels are about 6px tall at phone width. One overlay per
+     page, built on first use. Fit by default; tapping the image toggles 2x
+     around the tap point; the view scrolls and the browser pinch-zooms.
+     Close: button, Escape, or a tap on the backdrop; focus returns. */
+  var figImgs = document.querySelectorAll('figure.fig img');
+  if (figImgs.length) {
+    var lb = null, lbImg, lbCap, lbClose, lbView, opener = null, scrollY0 = 0, lastTap = 0;
+    var toggleZoom = function (ev) {
+      var now = Date.now(); if (now - lastTap < 300) return; lastTap = now; /* a double tap is one toggle */
+      var zoomed = !lb.classList.contains('zoomed');
+      if (zoomed) {
+        var r = lbImg.getBoundingClientRect();
+        var fx = ev ? (ev.clientX - r.left) / r.width : 0.5, fy = ev ? (ev.clientY - r.top) / r.height : 0.5;
+        lbImg.style.width = (r.width * 2) + 'px';
+        lb.classList.add('zoomed');
+        lbView.scrollLeft = fx * lbImg.clientWidth - lbView.clientWidth / 2;
+        lbView.scrollTop = fy * lbImg.clientHeight - lbView.clientHeight / 2;
+      } else { lb.classList.remove('zoomed'); lbImg.style.width = ''; }
+      lbImg.setAttribute('aria-pressed', zoomed ? 'true' : 'false');
+    };
+    var close = function () {
+      if (!lb || lb.hidden) return;
+      lb.classList.remove('open'); lb.hidden = true;
+      document.documentElement.classList.remove('lb-lock'); document.body.classList.remove('lb-lock');
+      document.body.style.top = ''; window.scrollTo(0, scrollY0);
+      if (opener) opener.focus({ preventScroll: true });
+    };
+    var build = function () {
+      lb = document.createElement('div');
+      lb.className = 'lightbox'; lb.hidden = true;
+      lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Enlarged figure');
+      lb.innerHTML = '<div class="lb-bar"><button type="button" class="lb-close" aria-label="Close">×</button></div>' +
+        '<div class="lb-view"><img alt="" tabindex="0" role="button" aria-label="Toggle zoom" aria-pressed="false"></div>' +
+        '<p class="lb-cap"></p>';
+      document.body.appendChild(lb);
+      lbImg = lb.querySelector('img'); lbCap = lb.querySelector('.lb-cap');
+      lbClose = lb.querySelector('.lb-close'); lbView = lb.querySelector('.lb-view');
+      lbClose.addEventListener('click', close);
+      lb.addEventListener('click', function (ev) { if (ev.target === lbView || ev.target === lbCap) close(); });
+      lbImg.addEventListener('click', toggleZoom);
+      lbImg.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleZoom(null); }
+      });
+      lb.addEventListener('keydown', function (ev) { /* two tab stops: close, image */
+        if (ev.key !== 'Tab') return;
+        if (ev.shiftKey && document.activeElement === lbClose) { ev.preventDefault(); lbImg.focus(); }
+        else if (!ev.shiftKey && document.activeElement === lbImg) { ev.preventDefault(); lbClose.focus(); }
+      });
+      document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && !lb.hidden) close(); });
+    };
+    var open = function (img) {
+      if (!lb) build();
+      opener = img;
+      lbImg.src = img.currentSrc || img.src; lbImg.alt = img.alt || '';
+      var cap = img.closest('figure').querySelector('figcaption');
+      lbCap.textContent = cap ? cap.textContent : '';
+      lb.classList.remove('zoomed'); lbImg.style.width = ''; lbImg.setAttribute('aria-pressed', 'false');
+      scrollY0 = window.scrollY;
+      document.body.style.top = -scrollY0 + 'px';
+      document.documentElement.classList.add('lb-lock'); document.body.classList.add('lb-lock');
+      lb.hidden = false;
+      requestAnimationFrame(function () { lb.classList.add('open'); });
+      lbClose.focus();
+    };
+    figImgs.forEach(function (img) {
+      img.setAttribute('tabindex', '0'); img.setAttribute('role', 'button'); img.setAttribute('aria-label', 'Enlarge figure');
+      img.addEventListener('click', function () { open(img); });
+      img.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(img); }
+      });
+      var hint = document.createElement('span'); hint.className = 'fig-hint aside'; hint.textContent = 'Tap to enlarge';
+      img.closest('figure').appendChild(hint);
+    });
+  }
+
   /* ============ landing page: the density explorer ============
      One decision, rack density, flows down a bus and re-sizes everything.
      All numbers are rules of thumb an engineer would recognise, stated as

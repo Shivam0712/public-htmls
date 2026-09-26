@@ -451,3 +451,34 @@ details.more[open]{border-left-color:var(--copper)}
 details.more .more-body{padding-top:.4rem}
 details.more .more-body>:last-child{margin-bottom:.3rem}
 .tools{margin:-.4rem 0 1.2rem}
+
+/* ============ figure lightbox ============
+   Tap a raster figure to see it at readable size: illustration labels are
+   about 6px tall at phone width. One overlay per page, built by site.js on
+   first use. Fit by default; a tap on the image toggles 2x; the view scrolls
+   and leaves pinch-zoom to the browser. Paper tokens, no shadow. */
+figure.fig img[role=button]{cursor:zoom-in}
+.fig-hint{display:none;margin:.3rem 0 0;font-size:.82rem}
+@media (hover:none){.fig-hint{display:block}}
+.lightbox{position:fixed;inset:0;z-index:20;background:var(--paper);color:var(--ink);
+  display:flex;flex-direction:column;opacity:0;transition:opacity .15s ease-out}
+.lightbox[hidden]{display:none}
+.lightbox.open{opacity:1}
+.lb-bar{flex:0 0 auto;display:flex;justify-content:flex-end;
+  padding:calc(.4rem + env(safe-area-inset-top)) .6rem .4rem}
+.lb-close{width:44px;height:44px;padding:0;border:1px solid var(--ink);border-radius:3px;
+  background:var(--paper);color:var(--ink);font:400 1.6rem/1 var(--sans);cursor:pointer;
+  display:grid;place-items:center}
+.lb-close:hover{background:var(--ink);color:var(--paper)}
+.lb-view{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;touch-action:pan-x pan-y pinch-zoom;
+  display:grid;grid-template-rows:minmax(0,1fr);place-items:center;padding:0 .6rem;cursor:zoom-out}
+.lb-view img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;cursor:zoom-in}
+.lightbox.zoomed .lb-view{display:block;padding:0}
+.lightbox.zoomed .lb-view img{max-width:none;max-height:none;cursor:zoom-out}
+.lb-cap{flex:0 0 auto;margin:0;padding:.6rem 1.25rem calc(.8rem + env(safe-area-inset-bottom));
+  font-size:.88rem;line-height:1.4;color:var(--steel);border-top:1px solid var(--rule);
+  max-height:28vh;overflow:auto}
+html.lb-lock,body.lb-lock{overflow:hidden}
+body.lb-lock{position:fixed;left:0;right:0}
+@media (prefers-reduced-motion:reduce){.lightbox{transition:none}}
