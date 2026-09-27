@@ -318,8 +318,10 @@
 <dt id="cbn-srg-common-bonding-network-signal-reference-grid">CBN / SRG (common bonding network / signal reference grid)</dt><dd>the equipotential grounding structure of a data hall; a copper grid on 0.6–3 m centres, ≥ #6 AWG, per IEEE 1100 and TIA-942, with every cabinet bonded to it directly.</dd>
 <dt id="chapter-3-wiring-nec">Chapter 3 wiring (NEC)</dt><dd>the ordinary wiring methods of the National Electrical Code; building an IT room to them instead of Article 645 removes the EPO requirement along with 645's wiring relaxations.</dd>
 <dt id="circuit-breaker">Circuit breaker</dt><dd>A protective switch that opens a circuit when a qualifying overload or fault occurs.</dd>
+<dt id="continuous-load-planning-allowance">Continuous-load planning allowance</dt><dd>A stated fraction of a circuit rating used for sizing sustained demand; the chapter's 80% example is not universal.</dd>
 <dt id="direct-current-dc">Direct current (DC)</dt><dd>Electricity delivered with a steady polarity between its conductors.</dd>
 <dt id="fault-current-available-aic-sccr">Fault current (available) / AIC / SCCR</dt><dd>the current a short circuit can draw at a point in the system; every breaker (interrupting capacity, AIC) and assembly (short-circuit current rating, SCCR) must exceed it. ~17.6 kA with a PDU isolation transformer, ~56 kA without.</dd>
+<dt id="fault-current-study">Fault-current study</dt><dd>An engineering calculation of possible short- circuit currents and the ratings needed to interrupt them.</dd>
 <dt id="isolation-transformer-separately-derived-system">Isolation transformer / separately derived system</dt><dd>a PDU transformer that changes voltage and creates a new neutral and ground reference; the 480 → 208/120 V legacy that 415/240 V distribution removes, along with its impedance.</dd>
 <dt id="k-rated-transformer-k-13-k-20">K-rated transformer (K-13, K-20)</dt><dd>a transformer built to tolerate the extra heating of harmonic currents; K-13 suits modern mixed loads, K-20 is checked where thousands of identical GPU supplies switch in step.</dd>
 <dt id="kiloampere-ka">Kiloampere (kA)</dt><dd>One thousand amperes, often used to describe available short-circuit current.</dd>
@@ -335,10 +337,14 @@
 <dt id="owner-tenant-demarcation">Owner-tenant demarcation</dt><dd>The contractually specified point where responsibility for equipment or connections changes hands.</dd>
 <dt id="pdu-floor-power-distribution-unit">PDU (floor power distribution unit)</dt><dd>a floor-standing cabinet, 300–1,000 kVA, with an input breaker, an optional transformer and branch panels; the first box after the UPS output bus. ~20 in the reference hall's Phase 1.</dd>
 <dt id="pfc-active-power-factor-correction">PFC (active power factor correction)</dt><dd>the front end of a modern server power supply that draws near-sinusoidal current at under 5% THD; why harmonics stopped being a data center problem.</dd>
+<dt id="power-supply-unit-psu">Power supply unit (PSU)</dt><dd>A server component that converts its input power into the voltages its electronics need.</dd>
 <dt id="rack-busbar">Rack busbar</dt><dd>A rigid conductor distributing electricity inside a rack, distinct from an overhead row busway.</dd>
 <dt id="rack-pdu-rpdu">Rack PDU (rPDU)</dt><dd>the 0U vertical outlet strip in a rack, typically 30–60 A at 415/240 V, that turns one branch circuit into server receptacles; per-outlet metering on it proves the A/B mapping.</dd>
+<dt id="rack-power-shelf">Rack power shelf</dt><dd>A rack-mounted converter that feeds a shared low- voltage bus instead of separate server AC inputs.</dd>
 <dt id="retail-colocation">Retail colocation</dt><dd>A service that may deliver a finished rack and ready- to-use power connections.</dd>
 <dt id="rpp-remote-power-panel">RPP (remote power panel)</dt><dd>a breaker panel on the floor near the racks, fed by cable home-runs from the PDU; cheaper than busway on day one and the reference hall's choice for Zone 1's stable 8 kW racks.</dd>
+<dt id="short-circuit">Short circuit</dt><dd>An unintended low-resistance electrical connection that can draw dangerous fault current.</dd>
+<dt id="sidecar-bay">Sidecar bay</dt><dd>Floor space and planned connections reserved beside compute racks for a possible future power cabinet.</dd>
 <dt id="sts-static-transfer-switch">STS (static transfer switch)</dt><dd>a thyristor switch that moves a load between two sources in ~4 ms; used at the rack for single-corded gear, avoided as a large central unit because it makes one failure into a row outage.</dd>
 <dt id="tap-off-box-whip">Tap-off box / whip</dt><dd>the twist-lock unit that draws a branch circuit off live busway, and the flexible cable drop from it (or from an RPP breaker) to the rack; ~$350 and owner-installed on busway.</dd>
 <dt id="three-phase-supply">Three-phase supply</dt><dd>Three coordinated alternating-current waveforms used to move substantial power efficiently.</dd>
