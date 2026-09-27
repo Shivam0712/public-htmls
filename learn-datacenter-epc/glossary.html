@@ -408,8 +408,11 @@
 <dt id="checkpoint">Checkpoint</dt><dd>a periodic save of a training job's model and optimizer state (140–420 GB for a 70 B model) so the job can restart after a fault; also the stall visible on the busway while it is written.</dd>
 <dt id="cold-plate">Cold plate</dt><dd>the liquid-cooled metal block clamped to a GPU or CPU; the point where Topic 8's heat becomes Topic 7's problem.</dd>
 <dt id="compute-tray">Compute tray</dt><dd>a slide-in unit of an NVL72 rack holding 4 GPUs and 2 Grace CPUs with cold plates and quick-disconnects; 18 per rack.</dd>
+<dt id="coolant-heat-capture-fraction">Coolant heat-capture fraction</dt><dd>The share of a rack's heat removed by its liquid loop, leaving the rest to the room's air-cooling system.</dd>
+<dt id="coolant-manifold">Coolant manifold</dt><dd>The supply and return piping inside a liquid-cooled rack that distributes coolant to its equipment.</dd>
 <dt id="das-san-nas-object-storage">DAS / SAN / NAS / object storage</dt><dd>disks inside the server / block storage over a dedicated network / file storage over IP / a scale-out HTTP object store; four tiers, each a different row in the hall.</dd>
 <dt id="data-gravity">Data gravity</dt><dd>the pull that keeps a tenant in place because moving petabytes is slow and costly.</dd>
+<dt id="design-it-load">Design IT load</dt><dd>The equipment power allowance used to plan a facility, which is not necessarily its measured draw today.</dd>
 <dt id="eia-310">EIA-310</dt><dd>the 19-inch rack standard; it fixes mounting width, U-height and hole pattern only, never depth or load rating.</dd>
 <dt id="factory-integration-rack-and-stack">Factory integration / rack-and-stack</dt><dd>a rack shipped fully populated and tested from the vendor / a rack populated server by server on site; AI pods use the first, general zones may still use the second.</dd>
 <dt id="flash-storage">Flash storage</dt><dd>Persistent electronic storage without moving disk platters.</dd>
@@ -420,14 +423,19 @@
 <dt id="hgx-node">HGX node</dt><dd>an 8-GPU server on NVIDIA's HGX baseboard, ~10–14 kW; three fill the reference 40 kW rack.</dd>
 <dt id="high-performance-computing-hpc">High-performance computing (HPC)</dt><dd>Coordinated computing used for large scientific, engineering or other calculation-heavy problems.</dd>
 <dt id="job-scheduler">Job scheduler</dt><dd>Tenant software that assigns machines to work and controls when coordinated jobs start.</dd>
+<dt id="joule-j">Joule (J)</dt><dd>A unit of energy used here to describe how much a rack's short-term smoothing capacitors can store.</dd>
+<dt id="kilogram-kg">Kilogram (kg)</dt><dd>A unit of mass; a loaded rack's kilograms matter to its floor and entire delivery route.</dd>
 <dt id="kubernetes-slurm">Kubernetes / Slurm</dt><dd>the container orchestrator that runs everything that is not training / the HPC batch scheduler that runs the training cluster on bare metal; Slinky combines them.</dd>
 <dt id="kyber-oberon">Kyber / Oberon</dt><dd>NVIDIA rack architectures; Oberon is the current NVL72 frame, Kyber the 2027 ~600 kW class on 800 VDC.</dd>
+<dt id="litres-per-minute-l-min">Litres per minute (L/min)</dt><dd>A measure of coolant flow at a rack connection, to be specified alongside coolant temperatures and heat removed.</dd>
 <dt id="network-bandwidth">Network bandwidth</dt><dd>The amount of data a connection can carry per second.</dd>
 <dt id="network-port-and-fiber-strand">Network port and fiber strand</dt><dd>A port is an equipment connection; an optical connection may use more than one physical glass strand.</dd>
+<dt id="nominal-versus-peak-rack-power">Nominal versus peak rack power</dt><dd>The stated normal operating draw versus a potentially higher short-duration draw, both of which need specified limits.</dd>
 <dt id="nvl72-rack-scale-system">NVL72 / rack-scale system</dt><dd>a factory-integrated, liquid-cooled rack whose 72 GPUs act as one accelerator over NVLink; the reference pod's rack class.</dd>
 <dt id="nvlink-nvswitch">NVLink / NVSwitch</dt><dd>NVIDIA's in-rack scale-up interconnect, 130 TB/s all-to-all on ~3.2 km of copper, no optics.</dd>
 <dt id="nvme-of-disaggregated-storage">NVMe-oF / disaggregated storage</dt><dd>flash pooled over a fabric and composed on demand (for example VAST DASE); the storage that sits in flash rows beside the pod.</dd>
 <dt id="parallel-file-system">Parallel file system</dt><dd>storage (Lustre, GPFS, WEKA, VAST) that feeds many GPUs at once at GB/s to TB/s.</dd>
+<dt id="power-cap">Power cap</dt><dd>A verified control that limits equipment's electrical draw, sometimes by reducing its computing performance.</dd>
 <dt id="power-shelf">Power shelf</dt><dd>the rack-level AC-to-DC conversion unit feeding a 48–54 V busbar; ~33 kW each, eight per NVL72; GB300 shelves carry 65 J per GPU of capacitance.</dd>
 <dt id="power-smoothing">Power smoothing</dt><dd>rack capacitors and software floors that cut the grid-facing peak of the ~1 Hz swing by ~30%; smoothing, not ride-through, so no UPS relief.</dd>
 <dt id="quick-disconnect-uqd">Quick-disconnect (UQD)</dt><dd>the dripless coolant coupling on each tray and at the rack manifold; the boundary between Topic 8 and Topic 7, and where the IT vendor's warranty stops.</dd>
@@ -435,7 +443,10 @@
 <dt id="service-envelope">Service envelope</dt><dd>The power, cooling, mass and connection limits the installed facility can actually deliver.</dd>
 <dt id="synchronization">Synchronization</dt><dd>A point where cooperating processors wait until all have finished a step before proceeding together.</dd>
 <dt id="tier-iii-class">Tier III class</dt><dd>A concurrently maintainable facility arrangement intended to allow planned maintenance without stopping IT service.</dd>
+<dt id="training-job">Training job</dt><dd>A coordinated run that teaches an AI model using data and may keep many processors working together.</dd>
 <dt id="turnkey-pod">Turnkey pod</dt><dd>A leased computing area delivered with more facility services already provided; its exact owner and tenant responsibilities depend on the contract.</dd>
+<dt id="virtual-machine">Virtual machine</dt><dd>A software-defined server that shares a physical computer with other such servers.</dd>
+<dt id="wholesale-colocation-lease">Wholesale colocation lease</dt><dd>A lease for a large tenant area whose owner and tenant equipment responsibilities must be stated explicitly.</dd>
 </dl></section>
 <section class="gloss-group"><h2>Topic 9 — Network and structured cabling</h2><dl class="gloss">
 <dt id="800g">800G</dt><dd>A link or port carrying a nominal 800 gigabits per second.</dd>
