@@ -1,11 +1,15 @@
 /* index.js — front page behaviour. No network, no dependencies. The index
    loads this instead of site.js: only the map, the read marks and the
-   progress file controls live here. Storage keys are shared with site.js
-   (dc-course:read, dc-course:quiz, dc-course:deck-pos).
+   progress file controls live here. Storage keys are shared with site.js:
+   the six dc-course:* keys (read, quiz, page-pos, page-view, read-sections,
+   deck-pos) are exported, imported and reset together.
    Copied verbatim into docs/ by scripts/build-docs.py. */
 (function () {
   'use strict';
-  var READ = 'dc-course:read', QUIZ = 'dc-course:quiz', DECK = 'dc-course:deck-pos';
+  var READ = 'dc-course:read', QUIZ = 'dc-course:quiz';
+  /* every key the site writes, and the property each one travels under in the progress file */
+  var KEYS = [['dc-course:read', 'read'], ['dc-course:quiz', 'quiz'], ['dc-course:page-pos', 'pagePos'],
+              ['dc-course:page-view', 'pageView'], ['dc-course:read-sections', 'readSections'], ['dc-course:deck-pos', 'deckPos']];
   function loadObject(key) {
     try {
       var value = JSON.parse(localStorage.getItem(key) || '{}');
@@ -57,12 +61,13 @@
   window.addEventListener('hashchange', openHash);
   window.addEventListener('popstate', openHash);
 
-  /* ---- progress file: export (read + quiz), import with validation, reset with confirm ---- */
+  /* ---- progress file: export (all six keys), import with validation, reset with confirm ---- */
   var exporter = document.querySelector('[data-export]'),
       importer = document.querySelector('input[type=file][data-import]'),
       reset = document.querySelector('[data-reset]');
   if (exporter) exporter.addEventListener('click', function () {
-    var progress = { read: loadObject(READ), quiz: loadObject(QUIZ), exported: new Date().toISOString() };
+    var progress = { exported: new Date().toISOString() };
+    KEYS.forEach(function (k) { progress[k[1]] = loadObject(k[0]); });
     var blob = new Blob([JSON.stringify(progress, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
     var link = document.createElement('a');
@@ -79,8 +84,17 @@
     reader.addEventListener('load', function () {
       try {
         var progress = JSON.parse(reader.result);
+        /* read and quiz are required (every export has had them); the paging
+           and deck keys are optional so older exports still import */
         if (!isMap(progress) || !isMap(progress.read) || !isMap(progress.quiz)) throw new Error('Invalid progress export');
-        if (!saveObject(READ, progress.read) || !saveObject(QUIZ, progress.quiz)) throw new Error('Cannot save progress');
+        KEYS.forEach(function (k) {
+          var value = progress[k[1]];
+          if (value !== undefined && !isMap(value)) throw new Error('Invalid progress export');
+        });
+        KEYS.forEach(function (k) {
+          var value = progress[k[1]];
+          if (value !== undefined && !saveObject(k[0], value)) throw new Error('Cannot save progress');
+        });
         window.location.reload();
       } catch (error) { invalid(); }
     });
@@ -88,8 +102,8 @@
     reader.readAsText(file);
   });
   if (reset) reset.addEventListener('click', function () {
-    if (!window.confirm('Clear all reading and quiz progress on this device?')) return;
-    try { localStorage.removeItem(READ); localStorage.removeItem(QUIZ); localStorage.removeItem(DECK); } catch (error) {}
+    if (!window.confirm('Clear all reading, paging and quiz progress on this device?')) return;
+    try { KEYS.forEach(function (k) { localStorage.removeItem(k[0]); }); } catch (error) {}
     window.location.reload();
   });
 })();

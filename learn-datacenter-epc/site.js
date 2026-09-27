@@ -1,248 +1,344 @@
 /* site.js — reader behaviour. No network, no dependencies.
-   Progress, quiz results and the card-deck position live in localStorage under dc-course:*.
+   Everything the reader does lives in localStorage under six dc-course:* keys:
+     read           {pageId: ISO}            a chapter read end to end
+     quiz           {"<pageId>#<q>": hit|miss} self-scored quiz and deck cards
+     page-pos       {pageId: int}            the page a chapter was left on
+     page-view      {pageId: "one"|"all"}    paged or full view per chapter
+     read-sections  {"<pageId>#<idx>": ISO}  Read marks per page of a chapter
+     deck-pos       {deckId: int}            the card a deck was left on
+   index.js exports, imports and resets the same six keys.
    Copied verbatim into docs/ by scripts/build-docs.py. */
 (function () {
   'use strict';
-  var KEY_READ = 'dc-course:read', KEY_QUIZ = 'dc-course:quiz';
-  function load(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } }
+  var KEY_READ = 'dc-course:read', KEY_QUIZ = 'dc-course:quiz', KEY_POS = 'dc-course:page-pos',
+      KEY_VIEW = 'dc-course:page-view', KEY_RS = 'dc-course:read-sections', KEY_DECK = 'dc-course:deck-pos';
+  function load(k) {
+    try { var v = JSON.parse(localStorage.getItem(k) || '{}'); return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
+    catch (e) { return {}; }
+  }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   var page = document.body.getAttribute('data-page') || '';
+  var main = document.querySelector('main');
 
-  /* ---- reading progress line (chapter pages) ---- */
-  var bar = document.querySelector('.progress'), tick = null;
-  if (bar) {
-    tick = function () {
-      if (document.querySelector('.deck[data-view=one]')) return; /* the deck sets it by card index */
-      var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
-      bar.style.width = (max > 0 ? Math.min(100, 100 * h.scrollTop / max) : 0) + '%';
-    };
-    addEventListener('scroll', tick, { passive: true }); tick();
+  /* ---- progress line: by page when paging, by card in a deck, by scroll otherwise ---- */
+  var bar = document.querySelector('.progress'), frame = 0, pager = null, deckState = null;
+  function updateBar() {
+    frame = 0;
+    if (!bar) return;
+    if (pager && pager.view === 'one') { bar.style.width = (100 * (pager.i + 1) / pager.n).toFixed(2) + '%'; return; }
+    if (deckState && deckState.view === 'one') { bar.style.width = deckState.pct.toFixed(2) + '%'; return; }
+    var root = document.documentElement, len = root.scrollHeight - root.clientHeight;
+    bar.style.width = (len > 0 ? Math.min(100, 100 * root.scrollTop / len) : 0) + '%';
   }
-
-  /* ---- mark as read ---- */
-  var mark = document.querySelector('[data-mark-read]');
-  if (mark && page) {
-    var read = load(KEY_READ);
-    var render = function () {
-      var on = !!read[page];
-      mark.textContent = on ? 'Read ✓' : 'Mark as read';
-      mark.classList.toggle('done', on);
-      mark.setAttribute('aria-pressed', on ? 'true' : 'false');
-    };
-    mark.addEventListener('click', function () {
-      if (read[page]) delete read[page]; else read[page] = new Date().toISOString();
-      save(KEY_READ, read); render();
-    });
-    render();
-  }
-
-  /* ---- expand / collapse every read-more on a chapter ---- */
-  var xa = document.querySelector('[data-expand-all]');
-  if (xa) {
-    var mores = document.querySelectorAll('details.more');
-    var paint2 = function () {
-      var allOpen = Array.prototype.every.call(mores, function (d) { return d.open; });
-      xa.textContent = allOpen ? 'Collapse all' : 'Expand all';
-      xa.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
-    };
-    xa.addEventListener('click', function () {
-      var allOpen = Array.prototype.every.call(mores, function (d) { return d.open; });
-      mores.forEach(function (d) { d.open = !allOpen; }); paint2();
-    });
-    mores.forEach(function (d) { d.addEventListener('toggle', paint2); });
-    paint2();
-  }
-
-  /* ---- quiz cards ---- */
-  var quiz = load(KEY_QUIZ);
-  document.querySelectorAll('.quiz').forEach(function (card) {
-    var id = page + '#' + card.getAttribute('data-q');
-    var res = card.querySelector('.result');
-    var paint = function () {
-      var r = quiz[id];
-      card.classList.toggle('hit', r === 'hit');
-      card.classList.toggle('miss', r === 'miss');
-      if (res) res.textContent = r === 'hit' ? 'Got it last time' : r === 'miss' ? 'Missed last time' : '';
-    };
-    card.querySelector('.reveal').addEventListener('click', function () { card.classList.add('open'); });
-    card.querySelectorAll('[data-score]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        quiz[id] = b.getAttribute('data-score'); save(KEY_QUIZ, quiz); paint();
-      });
-    });
-    paint();
+  function schedule() { if (bar && !frame) frame = requestAnimationFrame(updateBar); }
+  addEventListener('scroll', schedule, { passive: true });
+  addEventListener('resize', schedule);
+  addEventListener('load', schedule);
+  document.querySelectorAll('details.more,figure img').forEach(function (el) {
+    el.addEventListener(el.tagName === 'DETAILS' ? 'toggle' : 'load', schedule);
   });
 
-
-  /* ---- card deck (C-<slug> pages) ----
-     One state, one render(). The cards themselves are quiz cards (handled
-     above, stored under dc-course:quiz as C-<slug>#<id>); this block only
-     decides which of them are shown. view: 'one' (current card, Next /
-     Previous, arrow keys, swipe) or 'all' (the list). filter: null or the
-     list of card indices to step through (Review missed). The position is
-     remembered per deck under dc-course:deck-pos. */
-  var deck = document.querySelector('.deck');
-  if (deck) {
-    var KEY_POS = 'dc-course:deck-pos', deckId = page;
-    var cards = Array.prototype.slice.call(deck.querySelectorAll('.card'));
-    var fin = deck.querySelector('.card.fin'), last = cards.length - 1;
-    var posStore = load(KEY_POS);
-    var st = { view: 'one', i: Math.min(Math.max(parseInt(posStore[deckId], 10) || 0, 0), last), filter: null };
-    var vt = deck.querySelector('[data-view-toggle]'), dn = deck.querySelector('[data-deck-note]');
-    var bPrev = deck.querySelector('[data-prev]'), bNext = deck.querySelector('[data-next]');
-    var bMiss = deck.querySelector('[data-review-missed]'), bAll = deck.querySelector('[data-review-all]');
-    var order = function () { return st.filter || cards.map(function (_, k) { return k; }); };
-    var tally = function () {
-      var q = load(KEY_QUIZ), t = { hit: 0, miss: 0, missIdx: [] };
-      cards.forEach(function (c, k) {
-        var id = c.getAttribute('data-q'); if (!id) return;
-        var r = q[deckId + '#' + id];
-        if (r === 'hit') t.hit++; else if (r === 'miss') { t.miss++; t.missIdx.push(k); }
-      });
-      return t;
-    };
-    var renderDeck = function () {
-      var vis = order();
-      if (vis.indexOf(st.i) < 0) st.i = vis[0];
-      var k = vis.indexOf(st.i), one = st.view === 'one';
-      deck.setAttribute('data-view', st.view);
-      cards.forEach(function (c, j) {
-        c.classList.toggle('cur', j === st.i);
-        c.hidden = one ? j !== st.i : vis.indexOf(j) < 0;
-      });
-      if (vt) { vt.textContent = one ? 'Show all cards' : 'One at a time'; vt.setAttribute('aria-pressed', one ? 'false' : 'true'); }
-      if (bPrev) bPrev.disabled = k <= 0;
-      if (bNext) bNext.disabled = k >= vis.length - 1;
-      var t = tally();
-      if (fin) {
-        fin.querySelector('[data-fin-hit]').textContent = t.hit;
-        fin.querySelector('[data-fin-miss]').textContent = t.miss;
-        fin.querySelector('[data-fin-left]').textContent = last - t.hit - t.miss;
-        if (bMiss) { bMiss.disabled = t.miss === 0; bMiss.textContent = t.miss ? 'Review ' + t.miss + ' missed' : 'Nothing missed'; }
-        if (bAll) bAll.hidden = !st.filter;
-      }
-      if (dn) dn.textContent = st.filter ? 'Reviewing ' + (st.filter.length - 1) + ' missed card' + (st.filter.length === 2 ? '' : 's') : '';
-      if (bar) { if (one) bar.style.width = (100 * (k + 1) / vis.length).toFixed(2) + '%'; else if (tick) tick(); }
-      posStore[deckId] = st.i; save(KEY_POS, posStore);
-    };
-    var go = function (d) {
-      var vis = order(), k = vis.indexOf(st.i) + d;
-      if (k < 0 || k >= vis.length) return;
-      st.i = vis[k]; renderDeck();
-      var top = deck.getBoundingClientRect().top + window.scrollY - 8;
-      if (window.scrollY > top || deck.getBoundingClientRect().top < 0) window.scrollTo(0, top);
-      var h = cards[st.i].querySelector('h2');
-      if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
-    };
-    if (bPrev) bPrev.addEventListener('click', function () { go(-1); });
-    if (bNext) bNext.addEventListener('click', function () { go(1); });
-    if (vt) vt.addEventListener('click', function () { st.view = st.view === 'one' ? 'all' : 'one'; renderDeck(); });
-    if (bMiss) bMiss.addEventListener('click', function () {
-      var m = tally().missIdx; if (!m.length) return;
-      st.filter = m.concat([last]); st.i = m[0]; renderDeck();
-      if (st.view === 'one') go(0);
+  /* ---- quiz cards (chapter quiz and deck cards): reveal, self-score, per-card reset.
+     Stored under dc-course:quiz as <pageId>#<q>, or the card's data-key when a
+     page (the self-test) shows cards that belong to other decks. ---- */
+  var quizSaved = load(KEY_QUIZ), quizPaints = [];
+  function storeQuiz() { save(KEY_QUIZ, quizSaved); }
+  function quizKey(card) { return card.getAttribute('data-key') || page + '#' + card.getAttribute('data-q'); }
+  document.querySelectorAll('.quiz[data-q]').forEach(function (card) {
+    var key = quizKey(card), reveal = card.querySelector('.reveal'), answer = card.querySelector('.a'),
+        score = card.querySelector('.score'), result = card.querySelector('.result'), reset = card.querySelector('[data-reset]');
+    if (!reveal || !answer) return;
+    function paint() {
+      var v = quizSaved[key];
+      card.classList.toggle('hit', v === 'hit');
+      card.classList.toggle('miss', v === 'miss');
+      if (result) result.textContent = v === 'hit' ? 'Got it last time' : v === 'miss' ? 'Missed last time' : '';
+      card.querySelectorAll('[data-score]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-score') === v ? 'true' : 'false'); });
+    }
+    function changed() { card.dispatchEvent(new CustomEvent('dc:score', { bubbles: true })); }
+    reveal.addEventListener('click', function () {
+      var opening = answer.hidden;
+      answer.hidden = !opening;
+      if (score) score.hidden = !opening;
+      card.classList.toggle('open', opening);
+      reveal.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      reveal.textContent = opening ? 'Hide answer' : 'Show answer';
     });
-    if (bAll) bAll.addEventListener('click', function () { st.filter = null; renderDeck(); });
-    deck.addEventListener('click', function (ev) { if (ev.target.closest('[data-score]')) renderDeck(); });
+    card.querySelectorAll('[data-score]').forEach(function (b) {
+      b.addEventListener('click', function () { quizSaved[key] = b.getAttribute('data-score'); storeQuiz(); paint(); changed(); });
+    });
+    if (reset) reset.addEventListener('click', function () {
+      delete quizSaved[key]; storeQuiz(); paint();
+      if (result) result.textContent = 'Result cleared';
+      changed();
+    });
+    paint(); quizPaints.push(paint);
+  });
+  function repaintQuiz() { quizSaved = load(KEY_QUIZ); quizPaints.forEach(function (p) { p(); }); }
+  addEventListener('storage', function (ev) { if (ev.key === KEY_QUIZ) repaintQuiz(); });
+
+  /* ---- expand / collapse every read-more ---- */
+  var xa = document.querySelector('[data-expand-all]');
+  if (xa) {
+    var mores = Array.prototype.slice.call(document.querySelectorAll('details.more'));
+    var paintAll = function () {
+      var open = mores.every(function (d) { return d.open; });
+      xa.textContent = open ? 'Collapse all' : 'Expand all';
+      xa.setAttribute('aria-pressed', open ? 'true' : 'false');
+    };
+    xa.addEventListener('click', function () {
+      var open = mores.every(function (d) { return d.open; });
+      mores.forEach(function (d) { d.open = !open; }); paintAll();
+    });
+    mores.forEach(function (d) { d.addEventListener('toggle', paintAll); });
+    paintAll();
+  }
+
+  /* ---- figure viewer: one dialog per page (built by the generator when a
+     raster figure exists); the enlarge button around each image opens it,
+     the image toggles 2x, Escape / Close / backdrop close, focus returns. ---- */
+  var viewer = document.getElementById('figure-viewer');
+  if (viewer && typeof viewer.showModal === 'function') {
+    var opener = null, canvas = viewer.querySelector('.viewer-canvas'), zoom = viewer.querySelector('[data-zoom]'),
+        large = viewer.querySelector('[data-large-image]'), caption = viewer.querySelector('[data-large-caption]'),
+        closeBtn = viewer.querySelector('[data-close]');
+    document.querySelectorAll('[data-enlarge]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        opener = button;
+        var figure = button.closest('figure'), image = button.querySelector('img'), cap = figure && figure.querySelector('figcaption');
+        large.src = image.currentSrc || image.getAttribute('src'); large.alt = image.alt;
+        caption.textContent = cap ? cap.textContent.trim() : '';
+        canvas.classList.remove('zoomed'); zoom.setAttribute('aria-pressed', 'false'); zoom.setAttribute('aria-label', 'Zoom image');
+        viewer.showModal(); document.body.classList.add('viewer-open'); closeBtn.focus();
+      });
+    });
+    closeBtn.addEventListener('click', function () { viewer.close(); });
+    zoom.addEventListener('click', function () {
+      var on = canvas.classList.toggle('zoomed');
+      zoom.setAttribute('aria-pressed', on ? 'true' : 'false'); zoom.setAttribute('aria-label', on ? 'Fit image' : 'Zoom image');
+      if (!on) { canvas.scrollTop = 0; canvas.scrollLeft = 0; }
+    });
+    viewer.addEventListener('click', function (ev) { if (ev.target === viewer) viewer.close(); });
+    viewer.addEventListener('close', function () { document.body.classList.remove('viewer-open'); if (opener) opener.focus({ preventScroll: true }); });
+  }
+
+  /* ---- paged reading (chapters): intro, one page per section, quiz + foot last.
+     Activates only when .opening, .chapter-section and .quiz-area all exist
+     (L3 pages); appendix, report, archive, overview and glossary stay unpaged.
+     Position dc-course:page-pos[page]; view dc-course:page-view[page];
+     Read marks dc-course:read-sections[<page>#<idx>] (intro 0, sections 1..n-2,
+     quiz n-1); when every page is read the chapter goes into dc-course:read. ---- */
+  var hero = main && main.querySelector('.hero'), opening = main && main.querySelector('.opening'),
+      sections = main ? Array.prototype.slice.call(main.querySelectorAll('.chapter-section')) : [],
+      quizArea = main && main.querySelector('.quiz-area');
+  if (main && opening && quizArea && sections.length && page) {
+    var foot = main.querySelector('.chapter-foot');
+    var mapHref = (foot && foot.getAttribute('data-map')) || 'index.html';
+    var pages = [{ els: [hero, opening].filter(Boolean), focus: opening, idx: 0 }];
+    sections.forEach(function (s, i) { pages.push({ els: [s], focus: s.querySelector('h2'), idx: i + 1 }); });
+    pages.push({ els: [quizArea, foot].filter(Boolean), focus: quizArea, idx: sections.length + 1 });
+    var N = pages.length;
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    sections.forEach(function (s, i) { var h = s.querySelector('h2'); if (h) { h.setAttribute('data-pg', pad(i + 2)); h.setAttribute('data-pn', pad(N)); } });
+    function pidx(n) { var el = document.createElement('p'); el.className = 'pidx'; el.setAttribute('aria-hidden', 'true'); el.textContent = pad(n) + ' / ' + pad(N); return el; }
+    var introIdx = pidx(1); opening.parentNode.insertBefore(introIdx, opening); pages[0].els.push(introIdx);
+    quizArea.insertBefore(pidx(N), quizArea.firstChild);
+    var topBar = document.createElement('div'); topBar.className = 'page-bar';
+    topBar.innerHTML = '<button class="btn quiet" type="button" data-view-toggle aria-pressed="false">Show all sections</button>' +
+      '<span class="page-pos" data-page-pos aria-live="polite"></span>';
+    main.insertBefore(topBar, main.firstChild);
+    var nav = document.createElement('nav'); nav.className = 'page-nav'; nav.setAttribute('aria-label', 'Pages');
+    nav.innerHTML = '<button class="btn" type="button" data-back>Back</button><button class="btn" type="button" data-read aria-pressed="false">Read</button>' +
+      '<button class="btn reset" type="button" data-reset>Reset</button><button class="btn" type="button" data-next>Next</button>';
+    main.appendChild(nav);
+    var toggle = topBar.querySelector('[data-view-toggle]'), posLabel = topBar.querySelector('[data-page-pos]');
+    var bBack = nav.querySelector('[data-back]'), bRead = nav.querySelector('[data-read]'), bReset = nav.querySelector('[data-reset]'), bNext = nav.querySelector('[data-next]');
+    var posStore = load(KEY_POS), viewStore = load(KEY_VIEW);
+    function clamp(k) { k = parseInt(k, 10); return isNaN(k) ? 0 : Math.min(Math.max(k, 0), N - 1); }
+    pager = { i: clamp(posStore[page]), n: N, view: viewStore[page] === 'all' ? 'all' : 'one' };
+    function hashTarget() { var h = decodeURIComponent(location.hash.slice(1)); if (!h) return null; return document.getElementById(h) || document.getElementsByName(h)[0] || null; }
+    function pageOf(el) { for (var k = 0; k < N; k++) { if (pages[k].els.some(function (e) { return e.contains(el); })) return k; } return -1; }
+    function readKey(k) { return page + '#' + pages[k].idx; }
+    function render() {
+      var one = pager.view === 'one';
+      document.body.setAttribute('data-view', pager.view);
+      pages.forEach(function (p, k) { p.els.forEach(function (el) { el.hidden = one && k !== pager.i; }); });
+      posLabel.textContent = 'Page ' + (pager.i + 1) + ' of ' + N;
+      toggle.textContent = one ? 'Show all sections' : 'One page at a time';
+      toggle.setAttribute('aria-pressed', one ? 'false' : 'true');
+      bBack.disabled = pager.i === 0;
+      bNext.textContent = pager.i === N - 1 ? 'Finish' : 'Next';
+      var on = !!load(KEY_RS)[readKey(pager.i)];
+      bRead.textContent = on ? 'Read ✓' : 'Read';
+      bRead.setAttribute('aria-pressed', on ? 'true' : 'false');
+      posStore[page] = pager.i; save(KEY_POS, posStore);
+      viewStore[page] = pager.view; save(KEY_VIEW, viewStore);
+      updateBar();
+    }
+    function go(d) {
+      var k = pager.i + d; if (k < 0 || k >= N) return;
+      pager.i = k; render();
+      var top = topBar.getBoundingClientRect().top + window.scrollY - 8;
+      if (window.scrollY > top) window.scrollTo(0, Math.max(0, top));
+      var f = pages[k].focus; if (f) { f.setAttribute('tabindex', '-1'); f.focus({ preventScroll: true }); }
+    }
+    bBack.addEventListener('click', function () { go(-1); });
+    bNext.addEventListener('click', function () { if (pager.i === N - 1) location.href = mapHref; else go(1); });
+    toggle.addEventListener('click', function () { pager.view = pager.view === 'one' ? 'all' : 'one'; render(); if (pager.view === 'one') go(0); });
+    bRead.addEventListener('click', function () {
+      var rs = load(KEY_RS), key = readKey(pager.i);
+      if (!rs[key]) { rs[key] = new Date().toISOString(); save(KEY_RS, rs); }
+      if (pages.every(function (p, k) { return !!rs[readKey(k)]; })) {
+        var rd = load(KEY_READ); if (!rd[page]) { rd[page] = new Date().toISOString(); save(KEY_READ, rd); }
+      }
+      render();
+    });
+    bReset.addEventListener('click', function () {
+      if (!window.confirm('Reset this page? Its read mark and any quiz scores on it will be cleared.')) return;
+      var rs = load(KEY_RS); delete rs[readKey(pager.i)]; save(KEY_RS, rs);
+      var rd = load(KEY_READ); if (rd[page]) { delete rd[page]; save(KEY_READ, rd); }
+      var live = load(KEY_QUIZ), touched = false;
+      pages[pager.i].els.forEach(function (el) {
+        el.querySelectorAll('.quiz[data-q]').forEach(function (card) {
+          var key = quizKey(card);
+          if (key in live || key in quizSaved) { delete live[key]; delete quizSaved[key]; touched = true; }
+        });
+      });
+      if (touched) { quizSaved = live; storeQuiz(); repaintQuiz(); }
+      render();
+    });
     document.addEventListener('keydown', function (ev) {
-      if (st.view !== 'one' || ev.altKey || ev.ctrlKey || ev.metaKey) return;
-      if (/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
+      if (pager.view !== 'one' || ev.altKey || ev.ctrlKey || ev.metaKey || ev.shiftKey) return;
+      if (viewer && viewer.open) return;
+      var t = ev.target;
+      if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
+      if (t && t.closest && t.closest('.compare-wrap')) return;
       if (ev.key === 'ArrowRight') { ev.preventDefault(); go(1); }
       else if (ev.key === 'ArrowLeft') { ev.preventDefault(); go(-1); }
     });
     var tx = 0, ty = 0, touching = false;
-    deck.addEventListener('touchstart', function (ev) {
-      var t = ev.changedTouches[0]; tx = t.clientX; ty = t.clientY; touching = true;
+    main.addEventListener('touchstart', function (ev) {
+      var t = ev.changedTouches[0]; tx = t.clientX; ty = t.clientY;
+      var wrap = ev.target.closest && ev.target.closest('.compare-wrap');
+      touching = !(wrap && wrap.scrollWidth > wrap.clientWidth + 1);
     }, { passive: true });
-    deck.addEventListener('touchend', function (ev) {
+    main.addEventListener('touchend', function (ev) {
       if (!touching) return; touching = false;
-      if (st.view !== 'one') return;
+      if (pager.view !== 'one') return;
       var t = ev.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty;
       if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
     }, { passive: true });
+    function openHash() {
+      var el = hashTarget(); if (!el) return false;
+      var k = pageOf(el); if (k >= 0 && k !== pager.i) { pager.i = k; render(); }
+      el.scrollIntoView(); return true;
+    }
+    addEventListener('hashchange', openHash);
+    render();
+    if (openHash()) addEventListener('load', function () { var el = hashTarget(); if (el) el.scrollIntoView(); });
+  }
+
+  /* ---- card deck (C-<slug> pages, and the self-test): which cards show.
+     The cards themselves are quiz cards (above). view 'one' (current card,
+     Next / Previous, arrow keys, swipe) or 'all'; filter = the missed cards
+     under review; position remembered per deck under dc-course:deck-pos. ---- */
+  var deck = document.querySelector('.deck');
+  if (deck && page) {
+    var cards = Array.prototype.slice.call(deck.querySelectorAll('.card')),
+        questions = cards.filter(function (c) { return c.classList.contains('quiz'); }),
+        fin = deck.querySelector('.card.fin'), last = cards.length - 1,
+        stored = parseInt(load(KEY_DECK)[page], 10);
+    var st = { view: 'one', i: isFinite(stored) ? Math.min(Math.max(stored, 0), last) : 0, filter: null };
+    var vt = deck.querySelector('[data-view-toggle]'), dn = deck.querySelector('[data-deck-note]'),
+        dcount = deck.querySelector('[data-deck-count]'), ncount = deck.querySelector('[data-nav-count]'),
+        bPrev = deck.querySelector('[data-prev]'), bNextC = deck.querySelector('[data-next]'),
+        bMiss = deck.querySelector('[data-review-missed]'), bAll = deck.querySelector('[data-review-all]');
+    var order = function () { return st.filter || cards.map(function (_, k) { return k; }); };
+    var tally = function () {
+      var q = load(KEY_QUIZ), t = { hit: 0, miss: 0, missIdx: [] };
+      cards.forEach(function (c, k) {
+        if (!c.classList.contains('quiz')) return;
+        var r = q[quizKey(c)];
+        if (r === 'hit') t.hit++; else if (r === 'miss') { t.miss++; t.missIdx.push(k); }
+      });
+      return t;
+    };
+    var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
+    var renderDeck = function () {
+      var vis = order();
+      if (vis.indexOf(st.i) < 0) st.i = vis[0];
+      var k = vis.indexOf(st.i), one = st.view === 'one', t = tally(), nq = questions.length;
+      deck.setAttribute('data-view', st.view);
+      cards.forEach(function (c, j) { c.classList.toggle('cur', j === st.i); c.hidden = one ? j !== st.i : vis.indexOf(j) < 0; });
+      if (vt) { vt.textContent = one ? 'Show all cards' : 'One at a time'; vt.setAttribute('aria-pressed', one ? 'false' : 'true'); }
+      if (bPrev) bPrev.disabled = k <= 0;
+      if (bNextC) bNextC.disabled = k >= vis.length - 1;
+      if (fin) {
+        fin.querySelector('[data-fin-hit]').textContent = t.hit;
+        fin.querySelector('[data-fin-miss]').textContent = t.miss;
+        fin.querySelector('[data-fin-left]').textContent = nq - t.hit - t.miss;
+      }
+      if (bMiss) { bMiss.disabled = t.miss === 0; bMiss.textContent = t.miss ? 'Review ' + t.miss + ' missed' : 'Nothing missed'; }
+      if (bAll) bAll.hidden = !st.filter;
+      if (dn) dn.textContent = st.filter ? 'Reviewing ' + (vis.length - 1) + ' missed card' + (vis.length === 2 ? '' : 's') : (t.hit + t.miss) + ' of ' + nq + ' scored';
+      if (dcount) dcount.textContent = one ? (st.i === last ? 'End / ' + nq : pad2(st.i + 1) + ' / ' + nq) : 'All / ' + nq;
+      if (ncount) ncount.textContent = st.i === last ? 'End of deck' : st.filter ? 'Review ' + (k + 1) + ' / ' + (vis.length - 1) : (st.i + 1) + ' / ' + nq;
+      deckState = { view: st.view, pct: 100 * (k + 1) / vis.length };
+      updateBar();
+      var positions = load(KEY_DECK); positions[page] = st.i; save(KEY_DECK, positions);
+    };
+    var showCurrent = function () {
+      var top = deck.getBoundingClientRect().top + window.scrollY - 10;
+      window.scrollTo(0, Math.max(0, top));
+      var h = cards[st.i].querySelector('h2'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+    };
+    var move = function (d) {
+      var vis = order(), k = vis.indexOf(st.i) + d;
+      if (k < 0 || k >= vis.length) return;
+      st.i = vis[k]; renderDeck(); showCurrent();
+    };
+    if (bPrev) bPrev.addEventListener('click', function () { move(-1); });
+    if (bNextC) bNextC.addEventListener('click', function () { move(1); });
+    if (vt) vt.addEventListener('click', function () { st.view = st.view === 'one' ? 'all' : 'one'; renderDeck(); if (st.view === 'one') showCurrent(); });
+    if (bMiss) bMiss.addEventListener('click', function () {
+      var m = tally().missIdx; if (!m.length) return;
+      st.filter = m.concat([last]); st.i = m[0]; st.view = 'one'; renderDeck(); showCurrent();
+    });
+    if (bAll) bAll.addEventListener('click', function () {
+      st.filter = null; st.view = 'all'; renderDeck();
+      if (vt) vt.focus({ preventScroll: true });
+      window.scrollTo(0, Math.max(0, deck.getBoundingClientRect().top + window.scrollY - 10));
+    });
+    deck.addEventListener('dc:score', renderDeck);
+    addEventListener('storage', function (ev) { if (ev.key === KEY_QUIZ) renderDeck(); });
+    document.addEventListener('keydown', function (ev) {
+      if (st.view !== 'one' || ev.defaultPrevented || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+      var t = ev.target;
+      if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
+      if (ev.key === 'ArrowRight') { ev.preventDefault(); move(1); }
+      else if (ev.key === 'ArrowLeft') { ev.preventDefault(); move(-1); }
+    });
+    var sx = 0, sy = 0, swiping = false;
+    deck.addEventListener('touchstart', function (ev) {
+      swiping = false;
+      if (st.view !== 'one' || ev.touches.length !== 1) return;
+      var t = ev.target; if (t instanceof Element && t.closest('button,a,input,textarea,select,.compare-wrap')) return;
+      sx = ev.touches[0].clientX; sy = ev.touches[0].clientY; swiping = true;
+    }, { passive: true });
+    deck.addEventListener('touchend', function (ev) {
+      if (!swiping) return; swiping = false;
+      if (st.view !== 'one') return;
+      var t = ev.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) >= 55 && Math.abs(dx) > Math.abs(dy) * 1.25) move(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    deck.addEventListener('touchcancel', function () { swiping = false; }, { passive: true });
     renderDeck();
   }
 
-  /* ---- figure lightbox: tap a raster figure to see it at readable size ----
-     Illustration labels are about 6px tall at phone width. One overlay per
-     page, built on first use. Fit by default; tapping the image toggles 2x
-     around the tap point; the view scrolls and the browser pinch-zooms.
-     Close: button, Escape, or a tap on the backdrop; focus returns. */
-  var figImgs = document.querySelectorAll('figure.fig img');
-  if (figImgs.length) {
-    var lb = null, lbImg, lbCap, lbClose, lbView, opener = null, scrollY0 = 0, lastTap = 0;
-    var toggleZoom = function (ev) {
-      var now = Date.now(); if (now - lastTap < 300) return; lastTap = now; /* a double tap is one toggle */
-      var zoomed = !lb.classList.contains('zoomed');
-      if (zoomed) {
-        var r = lbImg.getBoundingClientRect();
-        var fx = ev ? (ev.clientX - r.left) / r.width : 0.5, fy = ev ? (ev.clientY - r.top) / r.height : 0.5;
-        lbImg.style.width = (r.width * 2) + 'px';
-        lb.classList.add('zoomed');
-        lbView.scrollLeft = fx * lbImg.clientWidth - lbView.clientWidth / 2;
-        lbView.scrollTop = fy * lbImg.clientHeight - lbView.clientHeight / 2;
-      } else { lb.classList.remove('zoomed'); lbImg.style.width = ''; }
-      lbImg.setAttribute('aria-pressed', zoomed ? 'true' : 'false');
-    };
-    var close = function () {
-      if (!lb || lb.hidden) return;
-      lb.classList.remove('open'); lb.hidden = true;
-      document.documentElement.classList.remove('lb-lock'); document.body.classList.remove('lb-lock');
-      document.body.style.top = ''; window.scrollTo(0, scrollY0);
-      if (opener) opener.focus({ preventScroll: true });
-    };
-    var build = function () {
-      lb = document.createElement('div');
-      lb.className = 'lightbox'; lb.hidden = true;
-      lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Enlarged figure');
-      lb.innerHTML = '<div class="lb-bar"><button type="button" class="lb-close" aria-label="Close">×</button></div>' +
-        '<div class="lb-view"><img alt="" tabindex="0" role="button" aria-label="Toggle zoom" aria-pressed="false"></div>' +
-        '<p class="lb-cap"></p>';
-      document.body.appendChild(lb);
-      lbImg = lb.querySelector('img'); lbCap = lb.querySelector('.lb-cap');
-      lbClose = lb.querySelector('.lb-close'); lbView = lb.querySelector('.lb-view');
-      lbClose.addEventListener('click', close);
-      lb.addEventListener('click', function (ev) { if (ev.target === lbView || ev.target === lbCap) close(); });
-      lbImg.addEventListener('click', toggleZoom);
-      lbImg.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleZoom(null); }
-      });
-      lb.addEventListener('keydown', function (ev) { /* two tab stops: close, image */
-        if (ev.key !== 'Tab') return;
-        if (ev.shiftKey && document.activeElement === lbClose) { ev.preventDefault(); lbImg.focus(); }
-        else if (!ev.shiftKey && document.activeElement === lbImg) { ev.preventDefault(); lbClose.focus(); }
-      });
-      document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && !lb.hidden) close(); });
-    };
-    var open = function (img) {
-      if (!lb) build();
-      opener = img;
-      lbImg.src = img.currentSrc || img.src; lbImg.alt = img.alt || '';
-      var cap = img.closest('figure').querySelector('figcaption');
-      lbCap.textContent = cap ? cap.textContent : '';
-      lb.classList.remove('zoomed'); lbImg.style.width = ''; lbImg.setAttribute('aria-pressed', 'false');
-      scrollY0 = window.scrollY;
-      document.body.style.top = -scrollY0 + 'px';
-      document.documentElement.classList.add('lb-lock'); document.body.classList.add('lb-lock');
-      lb.hidden = false;
-      requestAnimationFrame(function () { lb.classList.add('open'); });
-      lbClose.focus();
-    };
-    figImgs.forEach(function (img) {
-      img.setAttribute('tabindex', '0'); img.setAttribute('role', 'button'); img.setAttribute('aria-label', 'Enlarge figure');
-      img.addEventListener('click', function () { open(img); });
-      img.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(img); }
-      });
-      var hint = document.createElement('span'); hint.className = 'fig-hint aside'; hint.textContent = 'Tap to enlarge';
-      img.closest('figure').appendChild(hint);
-    });
-  }
-
-  /* ============ landing page: the density explorer ============
+  /* ============ the density explorer (explorer.html) ============
      One decision, rack density, flows down a bus and re-sizes everything.
      All numbers are rules of thumb an engineer would recognise, stated as
-     ranges; the assumptions block under the hero lists them and Topics 2,
+     ranges; the assumptions block under the box lists them and Topics 2,
      5, 7, 8 refine them. Keep the model in estimate() and nowhere else. */
   var RACKS = 1000;          // the hall we hold fixed: a room of 1,000 cabinets
   var BLOCK_MW = 2.5;        // one UPS block, commonly 2 to 3 MW (Topic 5)
@@ -280,7 +376,6 @@
 
   var TIER = ['a distribution feeder (12 to 35 kV)', 'a dedicated substation (69 to 138 kV)',
               'a transmission-fed substation (138 to 230 kV)', 'a transmission interconnect (230 to 345 kV)'];
-  var TIER_SHORT = ['distribution feeder', 'dedicated substation', 'transmission-fed substation', 'transmission interconnect'];
   var NET = ['Copper to a top-of-rack switch, a few fibre uplinks. Cabling is a trade, not a design driver.',
              'Still copper in the rack; 25G to the server, fibre uplinks. Trays begin to fill.',
              '100G to the rack, fibre everywhere above it; pathways are sized, not assumed.',
@@ -378,22 +473,22 @@
 
   var xp = document.querySelector('.explorer');
   if (xp) {
-    var STEPS = JSON.parse(xp.getAttribute('data-steps') || '[]'), N = STEPS.length; // [{kw, name}]
+    var STEPS = JSON.parse(xp.getAttribute('data-steps') || '[]'), N2 = STEPS.length; // [{kw, name}]
     var slider = xp.querySelector('input[type=range]'), out = {}, prevText = null, prevBands = null;
     xp.querySelectorAll('[data-x]').forEach(function (el) { out[el.getAttribute('data-x')] = el; });
     var pics = {}; xp.querySelectorAll('svg[data-pic]').forEach(function (el) { pics[el.getAttribute('data-pic')] = el; });
-    var bus = xp.querySelector('.ripple'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var bus = xp.querySelector('.ripple');
     var stepBtns = xp.querySelectorAll('.x-step');
     /* the fields whose flips define the steps; their labels feed the "Changed at this step" line */
     var CATEG = [['mode', 'cooling mode'], ['tier', 'grid connection'], ['fits', 'what fits'], ['floor', 'floor']];
     var set = function (k, v) { if (out[k]) out[k].textContent = v; };
-    var clampI = function (i) { return Math.max(0, Math.min(N - 1, Math.round(i))); };
+    var clampI = function (i) { return Math.max(0, Math.min(N2 - 1, Math.round(i))); };
     var stepFor = function (kw) { var b = 0; STEPS.forEach(function (s, i) { if (Math.abs(s.kw - kw) < Math.abs(STEPS[b].kw - kw)) b = i; }); return b; };
-    var render = function () {
+    var renderX = function () {
       var i = clampI(+slider.value), s = STEPS[i], e = estimate(s.kw), d = s.kw;
       slider.value = i;
-      slider.setAttribute('aria-valuetext', d + ' kilowatts per rack, step ' + (i + 1) + ' of ' + N + ': ' + s.name);
-      slider.style.setProperty('--p', (N > 1 ? 100 * i / (N - 1) : 0).toFixed(2) + '%');
+      slider.setAttribute('aria-valuetext', d + ' kilowatts per rack, step ' + (i + 1) + ' of ' + N2 + ': ' + s.name);
+      slider.style.setProperty('--p', (N2 > 1 ? 100 * i / (N2 - 1) : 0).toFixed(2) + '%');
       xp.setAttribute('data-regime', e.r);
       if (bus) bus.style.setProperty('--bus-w', (2 + 9 * e.it / 150).toFixed(1) + 'px');
       set('kw', d);
@@ -433,84 +528,22 @@
           : 'Changed at this step: the numbers only; no design threshold crossed.');
       }
       prevText = text; prevBands = bd;
-      set('step', 'Step ' + (i + 1) + ' of ' + N + ': ' + s.name);
+      set('step', 'Step ' + (i + 1) + ' of ' + N2 + ': ' + s.name);
       stepBtns.forEach(function (b) {
-        var off = +b.getAttribute('data-step') < 0 ? i === 0 : i === N - 1;
+        var off = +b.getAttribute('data-step') < 0 ? i === 0 : i === N2 - 1;
         if (off && document.activeElement === b) slider.focus();
         b.disabled = off;
       });
     };
-    slider.addEventListener('input', render);
+    slider.addEventListener('input', renderX);
     stepBtns.forEach(function (b) {
-      b.addEventListener('click', function () { slider.value = clampI(+slider.value + +b.getAttribute('data-step')); render(); });
+      b.addEventListener('click', function () { slider.value = clampI(+slider.value + +b.getAttribute('data-step')); renderX(); });
     });
     /* the threshold marks on the scale are also buttons: tap one to jump to its step */
     xp.querySelectorAll('[data-kw]').forEach(function (b) {
-      b.addEventListener('click', function () { slider.value = stepFor(+b.getAttribute('data-kw')); render(); slider.focus(); });
+      b.addEventListener('click', function () { slider.value = stepFor(+b.getAttribute('data-kw')); renderX(); slider.focus(); });
     });
-    render();
-  }
-
-  /* ---- landing page: energize the bus, show what is read ---- */
-  var landing = document.querySelector('.sld');
-  if (landing) {
-    var read2 = load(KEY_READ), n = 0;
-    document.querySelectorAll('[data-topic-page]').forEach(function (el) {
-      var p = el.getAttribute('data-topic-page');
-      if (read2[p]) { el.classList.add('read'); if (el.tagName === 'DETAILS') n++; }
-    });
-    var c = document.querySelector('[data-read-count]');
-    if (c) c.textContent = n;
-    /* one moment: the bus energizes left to right (or top to bottom) */
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      var buses = Array.prototype.filter.call(document.querySelectorAll('.sld svg .bus'), function (b) {
-        return b.getClientRects().length && !b.hasAttribute('stroke-dasharray');
-      });
-      buses.forEach(function (b) {
-        var L = b.getTotalLength(); b.style.strokeDasharray = L; b.style.strokeDashoffset = L;
-      });
-      requestAnimationFrame(function () { requestAnimationFrame(function () {
-        buses.forEach(function (b, i) {
-          b.classList.add('energize'); b.style.transitionDelay = (i * 120) + 'ms'; b.style.strokeDashoffset = 0;
-        });
-      }); });
-    }
-    /* clicking a node in the diagram opens that topic's row */
-    var openRow = function (d, smooth) {
-      d.open = true; d.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
-      d.querySelector('summary').focus({ preventScroll: true });
-    };
-    document.querySelectorAll('a[data-open]').forEach(function (a) {
-      a.addEventListener('click', function (ev) {
-        var d = document.getElementById(a.getAttribute('data-open'));
-        if (d) { ev.preventDefault(); openRow(d, true); }
-      });
-    });
-    /* arriving with #t-<slug> (from the explorer's topic chips, or a shared link) opens that row */
-    var openHash = function () {
-      var d = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
-      if (d && d.tagName === 'DETAILS') openRow(d, false);
-    };
-    openHash(); window.addEventListener('hashchange', openHash);
-    /* export / import / reset progress */
-    var ex = document.querySelector('[data-export]'), im = document.querySelector('[data-import]'),
-        rs = document.querySelector('[data-reset]');
-    if (ex) ex.addEventListener('click', function () {
-      var blob = new Blob([JSON.stringify({ read: load(KEY_READ), quiz: load(KEY_QUIZ), exported: new Date().toISOString() }, null, 2)], { type: 'application/json' });
-      var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-      a.download = 'dc-course-progress.json'; a.click(); URL.revokeObjectURL(a.href);
-    });
-    if (im) im.addEventListener('change', function () {
-      var f = im.files[0]; if (!f) return;
-      f.text().then(function (t) {
-        var d = JSON.parse(t); if (d.read) save(KEY_READ, d.read); if (d.quiz) save(KEY_QUIZ, d.quiz); location.reload();
-      }).catch(function () { alert('That file is not a progress export from this site.'); });
-    });
-    if (rs) rs.addEventListener('click', function () {
-      if (confirm('Clear all reading and quiz progress on this device?')) {
-        localStorage.removeItem(KEY_READ); localStorage.removeItem(KEY_QUIZ); localStorage.removeItem('dc-course:deck-pos'); location.reload();
-      }
-    });
+    renderX();
   }
 
   /* ---- glossary filter ---- */
@@ -528,4 +561,5 @@
       });
     });
   }
+  schedule();
 })();
