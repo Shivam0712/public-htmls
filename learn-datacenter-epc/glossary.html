@@ -64,9 +64,12 @@
 <dt id="mw">$/MW</dt><dd>construction cost per megawatt of IT load; almost always excludes the IT gear, and scope (shell-only vs all-in, land in or out) varies by source.</dd>
 <dt id="ai-factory">AI factory</dt><dd>a dense, single-workload, usually single-tenant campus built for GPU training or inference at 30–130 kW per rack, liquid-cooled.</dd>
 <dt id="ai-pod">AI pod</dt><dd>A group of high-power racks used for AI computing, often needing liquid cooling.</dd>
+<dt id="air-cooling">Air cooling</dt><dd>Moving air past computing equipment to carry its heat toward a cooling plant.</dd>
+<dt id="artificial-intelligence-ai">Artificial intelligence (AI)</dt><dd>Computing used for tasks such as prediction or generation, here run on unusually power-dense equipment.</dd>
 <dt id="backup-generator">Backup generator</dt><dd>On-site equipment that can produce electricity during a longer grid outage.</dd>
 <dt id="base-rent">Base rent</dt><dd>Payment for leased space and committed capacity before any separately billed electricity.</dd>
 <dt id="build-to-suit">Build-to-suit</dt><dd>a developer builds an entire single-tenant facility to a hyperscaler's specification, then leases it to them.</dd>
+<dt id="building-shell">Building shell</dt><dd>The roof, walls and structure before the interior systems are fully fitted out.</dd>
 <dt id="capex">Capex</dt><dd>capital expenditure, the one-off cost of building the facility.</dd>
 <dt id="cm-at-risk-cmar-and-gmp">CM at risk (CMAR) and GMP</dt><dd>the construction manager joins early to advise on design, then commits to a Guaranteed Maximum Price; overruns above it are the CM's, savings are often shared.</dd>
 <dt id="colocation-retail-vs-wholesale">Colocation (retail vs wholesale)</dt><dd>a provider rents space, power and cooling to tenants who bring their own IT. Retail sells per rack with power bundled on 1–3 year terms; wholesale sells whole halls per kW on 5–15 year leases.</dd>
@@ -75,16 +78,22 @@
 <dt id="contingency">Contingency</dt><dd>a cost buffer for the unknown; explicit and shared in a GMP, buried in the price under lump-sum contracts.</dd>
 <dt id="cooling-plant">Cooling plant</dt><dd>Facility equipment that carries computer heat away and rejects it outdoors.</dd>
 <dt id="critical-load">Critical load</dt><dd>the part of the load carried on protected, redundant (UPS and generator-backed) power; roughly IT plus critical cooling.</dd>
+<dt id="data-hall">Data hall</dt><dd>A room or building area planned to hold a group of computing racks.</dd>
+<dt id="design-load">Design load</dt><dd>The electrical demand used to size equipment, not necessarily what the site will draw on average.</dd>
 <dt id="design-bid-build">Design-bid-build</dt><dd>A delivery arrangement in which the owner hires a designer and then separately hires a builder.</dd>
 <dt id="design-build">Design-build</dt><dd>A delivery arrangement putting design and construction under one contractor.</dd>
 <dt id="design-builder">Design-builder</dt><dd>One contractor responsible for both design and construction under a design-build contract.</dd>
 <dt id="discounting">Discounting</dt><dd>Converting future payments to equivalent amounts today using an assumed annual rate.</dd>
+<dt id="dollars-per-kilowatt-per-month">Dollars per kilowatt per month</dt><dd>A monthly rent quote for each kilowatt of capacity a tenant reserves.</dd>
 <dt id="edge-data-center">Edge data center</dt><dd>a small facility (roughly 1–10 MW, down to a single rack for "micro") placed near users or data sources to cut latency.</dd>
+<dt id="electric-utility">Electric utility</dt><dd>The organization that supplies grid electricity and performs or arranges a site's grid connection.</dd>
 <dt id="electricity-pass-through">Electricity pass-through</dt><dd>A lease arrangement in which tenants reimburse the operator for some or all electricity it purchases.</dd>
 <dt id="enterprise-data-center">Enterprise data center</dt><dd>a facility owned and run by one organisation for its own IT.</dd>
 <dt id="escalation-clause">Escalation clause</dt><dd>the contract term that says who pays when materials and equipment prices rise between signing and delivery.</dd>
 <dt id="facility-load">Facility load</dt><dd>IT load plus cooling, electrical losses and ancillary loads; what the utility sees at the fence. IT load times PUE.</dd>
 <dt id="facility-operator">Facility operator</dt><dd>The team that runs, monitors and maintains the site after it opens.</dd>
+<dt id="factory-release">Factory release</dt><dd>Approval of an equipment specification that lets its maker begin the booked production lead time.</dd>
+<dt id="fiber-entry">Fiber entry</dt><dd>A point where an external fiber-optic communications cable enters the site.</dd>
 <dt id="fidic-silver-book">FIDIC Silver Book</dt><dd>the international EPC/turnkey contract form from process industries; fixed price, fixed date, maximum risk on the contractor.</dd>
 <dt id="force-majeure">Force majeure</dt><dd>the clause excusing delay caused by defined events outside either party's control.</dd>
 <dt id="full-load-and-part-load">Full load and part load</dt><dd>Full load uses the modeled IT capacity; part load uses less than that capacity.</dd>
@@ -93,6 +102,8 @@
 <dt id="handover">Handover</dt><dd>Transfer of the tested facility and its records from the building team to the operating team.</dd>
 <dt id="hyperscale">Hyperscale</dt><dd>very large (~100 MW and up) standardised facilities built or leased by cloud and platform operators such as AWS, Microsoft, Google, Meta.</dd>
 <dt id="it-load">IT load</dt><dd>the power drawn by servers, storage and network alone; the number a data center's size is quoted in.</dd>
+<dt id="kilowatt-kw">Kilowatt (kW)</dt><dd>A unit of power equal to 1,000 watts, useful for describing an individual rack.</dd>
+<dt id="kilowatt-hour-kwh">Kilowatt-hour (kWh)</dt><dd>The energy used by a one-kilowatt load running for one hour.</dd>
 <dt id="liquid-cooling">Liquid cooling</dt><dd>Moving computer heat through circulating liquid instead of relying on room air alone.</dd>
 <dt id="liquidated-damages">Liquidated damages</dt><dd>a pre-agreed sum the contractor owes per day of late completion, standing in for the owner's actual losses.</dd>
 <dt id="mep">MEP</dt><dd>mechanical, electrical and plumbing; the power and cooling systems that make up 75–80% of a data center's construction cost.</dd>
@@ -107,6 +118,7 @@
 <dt id="power-transformer">Power transformer</dt><dd>A large device that changes electrical voltage between the grid and the campus.</dd>
 <dt id="power-usage-effectiveness-pue">Power usage effectiveness (PUE)</dt><dd>Total facility power divided by IT power; a design value of 1.4 turns 40 MW IT into 56 MW total.</dd>
 <dt id="powered-shell">Powered shell</dt><dd>building, land and utility power delivered by the provider; the tenant fits out the electrical and mechanical interior.</dd>
+<dt id="precommitted-capacity">Precommitted capacity</dt><dd>Space and power reserved by customers before the facility opens.</dd>
 <dt id="present-value">Present value</dt><dd>The today-dollar equivalent of future payments after discounting.</dd>
 <dt id="rack">Rack</dt><dd>A cabinet that holds computing, storage and network equipment.</dd>
 <dt id="rack-power-density">Rack power density</dt><dd>The power drawn by one rack, used to size its electrical supply and cooling.</dd>
@@ -114,9 +126,11 @@
 <dt id="substation">Substation</dt><dd>The site's connection point for high-voltage grid power and equipment that changes or routes its voltage.</dd>
 <dt id="switchgear">Switchgear</dt><dd>Electrical equipment that routes power and isolates circuits during faults or maintenance.</dd>
 <dt id="tco">TCO</dt><dd>total cost of ownership; capex plus every year of opex and refresh over the facility's life, usually discounted to present value.</dd>
+<dt id="terawatt-hour-twh">Terawatt-hour (TWh)</dt><dd>One billion kilowatt-hours of energy, useful for reporting electricity used across a region and year.</dd>
 <dt id="tier-3-class-facility">Tier 3-class facility</dt><dd>A facility designed for concurrent maintenance of key power and cooling systems, without implying formal certification.</dd>
 <dt id="turnkey">Turnkey</dt><dd>a contract that hands over a complete, working facility for a fixed price; the usual meaning of EPC in data centers.</dd>
 <dt id="uninterruptible-power-supply-ups">Uninterruptible power supply (UPS)</dt><dd>Short-term backup that keeps protected equipment powered during a grid interruption.</dd>
+<dt id="vacancy-rate">Vacancy rate</dt><dd>The share of available rental capacity that has not been leased.</dd>
 <dt id="white-space-gray-space">White space / gray space</dt><dd>the IT floor where racks live / the support area holding UPS, switchgear, generators and cooling plant.</dd>
 </dl></section>
 <section class="gloss-group"><h2>Topic 2 — Requirements, capacity and availability</h2><dl class="gloss">
