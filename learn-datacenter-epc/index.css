@@ -135,6 +135,7 @@ details.topic summary::after{content:"";justify-self:end;width:.55rem;height:.55
 details.topic[open] summary::after{transform:rotate(225deg)}
 details.topic .body{max-width:74ch;padding:0 1rem 1.3rem 2.85rem}
 details.topic .body>p:first-child{font-size:1.035rem;line-height:1.63}
+details.topic .body>p.deck-note{margin-top:.55rem;color:var(--muted);font-size:.9rem;line-height:1.5}
 details.topic .links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.05rem}
 details.topic .links a{display:inline-flex;align-items:center;min-height:44px;padding:.35rem .65rem;
   border:1px solid var(--rule);border-radius:.25rem;background:var(--paper);color:var(--accent);
