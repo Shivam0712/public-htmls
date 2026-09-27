@@ -7,8 +7,8 @@
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F3F7F0">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#13211B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
@@ -25,12 +25,12 @@
   }
 </script>
 </head>
-<body class="chapter research" data-page="RR-building">
+<body class="chapter research" data-page="RR-building" data-phase="project">
 <div class="progress" aria-hidden="true"></div>
-<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-project">Project</a><span class="sep">▸</span><a href="L3-building.html">Building</a><span class="sep">▸</span><span class="here">Research report</span></header>
+<header class="crumb"><nav class="inner" aria-label="Breadcrumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-project">Project</a><span class="sep">▸</span><a href="L3-building.html">Building</a><span class="sep">▸</span><span class="here">Research report</span></nav></header>
 <main class="">
-  <h1>Topic 4 — The Building and Physical Infrastructure of a New-Build Data Center (2025–2026)</h1>
-  <p class="aside">The Desktop Research report for Topic 4, run 2026-09-25 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-building.html">chapter</a> and <a href="APX-building.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p><p><em>A working-knowledge chapter for the reference facility: a 1,000-rack, ~40 MW colocation campus on the outskirts of a hot US metro (Phoenix/Dallas), Tier III concurrently maintainable, design-build, four halls ultimate, Hall 1 ≈ 10 MW IT on day one. Density mix: 300 racks @ 8 kW, 300 @ 15 kW, 200 @ 40 kW, 200 @ 120 kW (liquid-cooled AI pods).</em></p>
+  <div class="hero"><h1>Topic 4 — The Building and Physical Infrastructure of a New-Build Data Center (2025–2026)</h1><p class="aside">The Desktop Research report for Topic 4, run 2026-09-25 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-building.html">chapter</a> and <a href="APX-building.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p></div>
+  <p><em>A working-knowledge chapter for the reference facility: a 1,000-rack, ~40 MW colocation campus on the outskirts of a hot US metro (Phoenix/Dallas), Tier III concurrently maintainable, design-build, four halls ultimate, Hall 1 ≈ 10 MW IT on day one. Density mix: 300 racks @ 8 kW, 300 @ 15 kW, 200 @ 40 kW, 200 @ 120 kW (liquid-cooled AI pods).</em></p>
 <blockquote><p><strong>How to read this chapter.</strong> The building is the cheap part and the slow part at the same time: it is only ~10–15% of construction cost but it sets the rhythm every other trade follows. Everything below is written so you can ask an engineer, developer or GC the right question and understand the answer. Every worked number for the reference facility is labeled <strong>indicative</strong> — they are planning-grade, not stamped design.</p></blockquote>
 <hr>
 <h2 id="s1"><a id="1-shell-and-core-building-forms-duration-who-builds-what"></a>1. Shell and Core — Building Forms, Duration, Who Builds What</h2>
@@ -123,7 +123,7 @@
 <ol><li><strong>The building is only 10–15% of cost but sets the whole schedule</strong> — the shell is cheap yet its pace governs every trade behind it.</li><li><strong>The rigging path can govern the slab more than the rack does</strong> — you design the floor for the heaviest thing that ever rolls across it, not where it ends up.</li><li><strong>A single GB200 rack (~1,360 kg on 0.64 m²) exceeds the rating of most existing raised floors</strong> — legacy halls are "structurally the wrong building," not just under-powered.</li><li><strong>Insurers (FM Global) often set the design harder than code</strong> — FM 1-28 wind runs ~15% above ASCE 7 and FM effectively bans steel roof decks in tornado country.</li><li><strong>Noise is now a project-killing permitting risk</strong> — 2026 saw a wave of nuisance class actions and 24-hour dBA limits, with Chandler AZ rejecting a data center outright after a decade of complaints.</li><li><strong>Liquid cooling saves white space but the weight and reinforcement claw much of it back</strong> — the slab, stainless pipe, CDUs and leak detection eat the footprint win.</li></ol>
   <div class="chapter-foot"><nav class="pn" aria-label="Chapter"><a href="L3-building.html"><span class="dir">Back to</span>Building &amp; Physical Infrastructure</a><a class="next" href="APX-building.html"><span class="dir">Distilled into</span>the appendix</a></nav></div>
 </main>
-<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
+<footer>Generated from the course markdown on 2026-09-26. <a href="index.html">Course map</a> <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
 <script src="./site.js" defer></script>
 </body>
 </html>

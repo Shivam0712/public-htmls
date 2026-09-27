@@ -7,8 +7,8 @@
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF4EE">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#201D1A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
@@ -25,12 +25,12 @@
   }
 </script>
 </head>
-<body class="chapter research" data-page="RR-foundations">
+<body class="chapter research" data-page="RR-foundations" data-phase="owner">
 <div class="progress" aria-hidden="true"></div>
-<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-owner">Owner</a><span class="sep">▸</span><a href="L3-foundations.html">Foundations</a><span class="sep">▸</span><span class="here">Research report</span></header>
+<header class="crumb"><nav class="inner" aria-label="Breadcrumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-owner">Owner</a><span class="sep">▸</span><a href="L3-foundations.html">Foundations</a><span class="sep">▸</span><span class="here">Research report</span></nav></header>
 <main class="">
-  <h1>Data Center Foundations, Delivery Models, and Project Economics (2025–2026)</h1>
-  <p class="aside">The Desktop Research report for Topic 1, run 2026-09-23 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-foundations.html">chapter</a> and <a href="APX-foundations.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position. The same material as cards: <a href="C-foundations.html">87 cards</a>.</p><h3 id="topic-1-of-14-the-vocabulary-and-mental-model-every-later-topic-assumes">Topic 1 of 14 — The Vocabulary and Mental Model Every Later Topic Assumes</h3>
+  <div class="hero"><h1>Data Center Foundations, Delivery Models, and Project Economics (2025–2026)</h1><p class="aside">The Desktop Research report for Topic 1, run 2026-09-23 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-foundations.html">chapter</a> and <a href="APX-foundations.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position. The same material as cards: <a href="C-foundations.html">87 cards</a>.</p></div>
+  <h3 id="topic-1-of-14-the-vocabulary-and-mental-model-every-later-topic-assumes">Topic 1 of 14 — The Vocabulary and Mental Model Every Later Topic Assumes</h3>
 <p><strong>TL;DR</strong> - A data center is a building engineered to convert electricity into computation and heat reliably; for a 40 MW IT-load colocation campus in a hot US metro (Phoenix/Dallas), expect indicative all-in construction cost of roughly <strong>$400–500 million</strong> ($10–12.5M per MW of IT load, excluding tenant IT gear), annual facility operating cost of roughly <strong>$40–60 million</strong> (electricity dominant and largely passed through to tenants), and a 15-year total cost of ownership on the order of <strong>$1.2–1.4 billion</strong>. - In 2025–26 such an owner would most likely deliver the facility as a <strong>design-build / turnkey contract with owner-furnished long-lead equipment</strong> (transformers, switchgear, generators, chillers ordered early against an owner-standard reference design), because power interconnection and equipment lead times — not construction labor — are now the binding schedule constraint, and design-build is the fastest, most schedule-reliable model with a single point of responsibility. - The market context is a demand supercycle: US data centers reached 176 TWh (4.4% of US electricity) in 2023 per LBNL; hyperscalers now hold 48% of global capacity (Synergy, Q4 2025); North American colocation vacancy hit a record-low 1.4% at year-end 2025 (CBRE), and AI/liquid-cooled builds now carry a construction premium and far higher cost-per-MW.</p>
 <hr>
 <h2 id="s1"><a id="1-what-a-data-center-is-and-the-types-that-exist"></a>1. What a Data Center Is, and the Types That Exist</h2>
@@ -112,7 +112,7 @@
 <ul><li><strong>AI cost benchmarks are not yet settled.</strong> Turner &amp; Townsend explicitly notes "extensive global benchmark data is not yet available" for AI/liquid-cooled builds; the $20–37M/MW figures circulating are early and wide.</li><li><strong>Grid-bypass and behind-the-meter power</strong> (on-site gas, nuclear SMRs, storage) are moving from fringe to mainstream as owners try to escape the interconnection queue — this could reshape both capex and the lifecycle map within a couple of years.</li><li><strong>Redundancy is being rethought for AI.</strong> Some AI training facilities accept lower power-resilience than cloud (fault-tolerant at the software/cluster level), which can <em>lower</em> cost — cutting against the assumption that denser always means more expensive per MW.</li><li><strong>Community opposition and permitting</strong> are now first-order schedule risks ($64B+ of US projects reportedly blocked/delayed since 2023), pushing developers toward power-advantaged secondary metros like Dallas and Phoenix — exactly the reference-facility geography.</li></ul>
   <div class="chapter-foot"><nav class="pn" aria-label="Chapter"><a href="L3-foundations.html"><span class="dir">Back to</span>Foundations, Delivery Models &amp; Project Economics</a><a class="next" href="APX-foundations.html"><span class="dir">Distilled into</span>the appendix</a></nav></div>
 </main>
-<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
+<footer>Generated from the course markdown on 2026-09-26. <a href="index.html">Course map</a> <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
 <script src="./site.js" defer></script>
 </body>
 </html>

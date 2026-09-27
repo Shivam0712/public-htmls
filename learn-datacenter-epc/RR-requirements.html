@@ -7,8 +7,8 @@
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF4EE">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#201D1A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
@@ -25,12 +25,12 @@
   }
 </script>
 </head>
-<body class="chapter research" data-page="RR-requirements">
+<body class="chapter research" data-page="RR-requirements" data-phase="owner">
 <div class="progress" aria-hidden="true"></div>
-<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-owner">Owner</a><span class="sep">▸</span><a href="L3-requirements.html">Requirements</a><span class="sep">▸</span><span class="here">Research report</span></header>
+<header class="crumb"><nav class="inner" aria-label="Breadcrumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-owner">Owner</a><span class="sep">▸</span><a href="L3-requirements.html">Requirements</a><span class="sep">▸</span><span class="here">Research report</span></nav></header>
 <main class="">
-  <h1>From Business Case to Design Specification: How a Data Center Owner Turns Intent Into a Buildable, Certifiable Facility (2025–2026)</h1>
-  <p class="aside">The Desktop Research report for Topic 2, run 2026-09-23 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-requirements.html">chapter</a> and <a href="APX-requirements.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p><h2 id="s1"><a id="tl-dr"></a>TL;DR</h2>
+  <div class="hero"><h1>From Business Case to Design Specification: How a Data Center Owner Turns Intent Into a Buildable, Certifiable Facility (2025–2026)</h1><p class="aside">The Desktop Research report for Topic 2, run 2026-09-23 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-requirements.html">chapter</a> and <a href="APX-requirements.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p></div>
+  <h2 id="s1"><a id="tl-dr"></a>TL;DR</h2>
 <ul><li>The owner turns a business case into a build by writing an <strong>Owner's Project Requirements (OPR)</strong> — mission, capacity, density, availability, efficiency, budget, schedule and target certifications — which the engineer answers with a <strong>Basis of Design (BOD)</strong>; ASHRAE Guideline 0-2019 and Standard 202 make the OPR the legal yardstick that commissioning later tests the finished building against, so a vague or late OPR is the single largest source of change orders and disputes.</li><li>The <strong>density decision (kW per rack) cascades through everything</strong>: it sets the power block, the cooling method, floor loading, room size, cost per MW and cost per rack. In 2025 the industry average is still single-digit-to-mid-teens kW/rack (Uptime's modal average ~8–9 kW; AFCOM ~16 kW), but AI pods now run 40–130+ kW, so planners design a <em>distribution</em> of densities, not an average — and the cooling method changes at roughly 20, 30–40 and 80+ kW thresholds that sources genuinely disagree about.</li><li><strong>Availability is a design criterion, not a marketing label</strong>: the Uptime Institute Tier system (I–IV), TIA-942-C (Rated 1–4), BICSI 002-2024 and EN 50600 / ISO/IEC 22237 (Availability Classes 1–4) all encode redundancy topology; most colo and hyperscale targets "Tier III / concurrently maintainable" (≈99.982%, ~1.6 h/yr), Tier IV adds fault tolerance (≈99.995%, ~26 min/yr) at a 25–60% capex premium, and codes (NEC/NFPA 70 Article 645, NFPA 75/76, IBC/IFC, ASHRAE 90.4) plus audit frameworks (SOC 2, ISO 27001, PCI DSS, FedRAMP/NIST 800-53, LEED, ENERGY STAR) bind the rest.</li></ul>
 <hr>
 <h2 id="s2"><a id="1-owner-s-project-requirements-and-basis-of-design"></a>1. Owner's Project Requirements and Basis of Design</h2>
@@ -141,7 +141,7 @@
 <ol><li><strong>The average rack density is genuinely low.</strong> Despite AI headlines, Uptime's 2025 survey still puts the modal average near 9 kW and finds &gt;80% of operators have <em>no</em> racks above the high-density thresholds — the installed base is far behind the leading edge, and "40 kW average" only appears in <em>new</em> designs.</li><li><strong>The OPR is deliberately kept out of the contract.</strong> ASHRAE's own HQ OPR excludes itself from the contract documents "to avoid conflicting language" — a subtle but important legal design choice that surprised me given how central the OPR is.</li><li><strong>Uptime openly documents its own gaming problem.</strong> The Institute itself describes companies achieving a design certification and then "willfully misrepresenting" it to market untested facilities — the "Tier III-like" plaque problem is acknowledged by the certifier, not just critics.</li><li><strong>"Cheap to future-proof vs expensive" is a cleaner rule than expected.</strong> Space, structure and pipe stubs cost little on day one; transformers and plant are the expensive, deferrable items — a genuinely useful heuristic that cuts through the phasing debate.</li><li><strong>Change orders cluster in the final half of the project</strong> (AIA's 892k-change-order dataset) — meaning a vague OPR doesn't bite early when it's cheap to fix, but late when the owner has the fewest options and the most leverage against them.</li><li><strong>Power, not money or land, is the real constraint in 2025–26</strong> — record-low 1.6% vacancy and utility interconnection delays now dictate phasing, inverting the traditional "build to leasing velocity" logic.</li></ol>
   <div class="chapter-foot"><nav class="pn" aria-label="Chapter"><a href="L3-requirements.html"><span class="dir">Back to</span>Design Requirements, Capacity &amp; Load Planning</a><a class="next" href="APX-requirements.html"><span class="dir">Distilled into</span>the appendix</a></nav></div>
 </main>
-<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
+<footer>Generated from the course markdown on 2026-09-26. <a href="index.html">Course map</a> <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
 <script src="./site.js" defer></script>
 </body>
 </html>

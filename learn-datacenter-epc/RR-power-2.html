@@ -7,8 +7,8 @@
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F6F2">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121B1A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
@@ -25,12 +25,12 @@
   }
 </script>
 </head>
-<body class="chapter research" data-page="RR-power-2">
+<body class="chapter research" data-page="RR-power-2" data-phase="systems">
 <div class="progress" aria-hidden="true"></div>
-<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-systems">Systems</a><span class="sep">▸</span><a href="L3-power-2.html">Power II</a><span class="sep">▸</span><span class="here">Research report</span></header>
+<header class="crumb"><nav class="inner" aria-label="Breadcrumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-systems">Systems</a><span class="sep">▸</span><a href="L3-power-2.html">Power II</a><span class="sep">▸</span><span class="here">Research report</span></nav></header>
 <main class="">
-  <h1>Power Distribution from the UPS Output to the Rack — A Working-Knowledge Chapter</h1>
-  <p class="aside">The Desktop Research report for Topic 6, run 2026-09-25 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-power-2.html">chapter</a> and <a href="APX-power-2.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p><p><em>Scope: from the UPS output bus (clean power available to distribute) to the dual-corded IT load in the rack. As of 2025–2026. Every number is <strong>indicative</strong> and carries a source and date; where sources disagree, both are given with a judgment. Sections are citable as "§2.3".</em></p>
+  <div class="hero"><h1>Power Distribution from the UPS Output to the Rack — A Working-Knowledge Chapter</h1><p class="aside">The Desktop Research report for Topic 6, run 2026-09-25 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-power-2.html">chapter</a> and <a href="APX-power-2.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p></div>
+  <p><em>Scope: from the UPS output bus (clean power available to distribute) to the dual-corded IT load in the rack. As of 2025–2026. Every number is <strong>indicative</strong> and carries a source and date; where sources disagree, both are given with a judgment. Sections are citable as "§2.3".</em></p>
 <hr>
 <h2 id="s1"><a id="tl-dr"></a>TL;DR</h2>
 <ul><li><strong>The chain is short but unforgiving:</strong> UPS output bus → PDU (transformer only if you must change voltage) → optional STS → busway or cable/RPP → whip → rack PDU → dual-corded A/B IT load. The single highest-leverage decision is <strong>voltage</strong>: distributing at 415/240 V (or 400/230 V in the EU) lets the server draw 240 V line-to-neutral with <strong>no PDU transformer</strong>, cutting a conversion stage, copper, and losses; 208 V is legacy and current-bound. (Eaton, <em>AC vs DC Power Distribution</em>; Server Technology, 2014.)</li><li><strong>Redundancy is a topology choice, not an availability number.</strong> Tier III (concurrently maintainable) is the market default; 2N strands half your capacity, distributed-redundant 3M2 strands a third, and AI/hyperscale builds are actively relaxing to N+1 on the compute blocks because GPU training tolerates checkpoint-restart. Uptime certifies the topology, <strong>not</strong> a percentage — it removed "expected downtime per year" from the Tier Standard in 2009.</li><li><strong>The floor is moving under AC.</strong> 48 V in-rack (OCP ORv3) hits a copper/current wall past ~100 kW, and the industry has converged on <strong>±400 V / 800 V DC</strong> (OCP Mt Diablo sidecar; NVIDIA 800 VDC for Kyber) with full-scale production tied to 2027 — so an owner building an AC busway hall now carries genuine stranded-asset risk in the AI pods.</li></ul>
@@ -143,7 +143,7 @@
 <ol><li><strong>Uptime doesn't sell availability numbers.</strong> The ubiquitous "Tier III = 99.982%" table was <strong>removed from the Uptime Tier Standard in 2009</strong> — the certification is about topology and operations, yet the percentages persist industry-wide as if they were certified. The whole industry cites a number Uptime disowns.</li><li><strong>The 48 V rack hit a physical wall shockingly fast.</strong> A one-megawatt rack on 54 V requires more than 18,000 A and up to 64U of power shelves — more than a full rack — leaving no room for compute. The move to 800 VDC isn't optimization; it's "run out of copper" necessity.</li><li><strong>The EPO button is a leading cause of the outages it's meant to prevent.</strong> Vendor data attributing <strong>13–26% of failures to EPO</strong> and a survey showing <strong>51% of outaged sites hit by accidental EPO/human error</strong> — plus the 2021 NYC subway control center taken down by an uncovered EPO — make the "big red button" one of the least-loved safety devices in the building. Uptime flatly does not recommend installing it unless code forces you.</li><li><strong>Removing a transformer makes the system more dangerous, not less.</strong> Going transformerless to 415 V saves copper and a conversion stage but <strong>triples available fault current at the PDU</strong> (~17.6 kA → ~56 kA in one vendor's figures), quietly shifting cost and risk into the coordination study and arc-flash labels.</li><li><strong>AI is un-learning redundancy.</strong> After decades of "dual-corded everything," the frontier is <strong>single-corded GPU racks and N+1 compute</strong> because a training job can checkpoint-restart — software fault tolerance is eating electrical fault tolerance.</li></ol>
   <div class="chapter-foot"><nav class="pn" aria-label="Chapter"><a href="L3-power-2.html"><span class="dir">Back to</span>Power Systems II — Distribution &amp; Redundancy</a><a class="next" href="APX-power-2.html"><span class="dir">Distilled into</span>the appendix</a></nav></div>
 </main>
-<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
+<footer>Generated from the course markdown on 2026-09-26. <a href="index.html">Course map</a> <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
 <script src="./site.js" defer></script>
 </body>
 </html>

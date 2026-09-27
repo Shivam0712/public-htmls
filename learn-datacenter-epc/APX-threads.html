@@ -7,8 +7,8 @@
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F9F4F3">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#241A1C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
@@ -25,12 +25,12 @@
   }
 </script>
 </head>
-<body class="chapter" data-page="APX-threads">
+<body class="chapter appendix" data-page="APX-threads" data-phase="threads">
 <div class="progress" aria-hidden="true"></div>
-<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-threads">Threads</a><span class="sep">▸</span><a href="L3-threads.html">Threads</a><span class="sep">▸</span><span class="here">Appendix</span></header>
+<header class="crumb"><nav class="inner" aria-label="Breadcrumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-threads">Threads</a><span class="sep">▸</span><a href="L3-threads.html">Threads</a><span class="sep">▸</span><span class="here">Appendix</span></nav></header>
 <main class="">
-  <h1>Appendix: Cross-Topic Threads</h1>
-  <p class="aside">Sources and fine detail behind <a href="L3-threads.html">the chapter</a>. Sections are numbered so the chapter can point at them.</p><p>The arithmetic behind the Topic 12 chapter. Topic 12 has no research dump and adds no new facts: every number below comes from one of the eleven chapters or their appendices, cited as <code>L3-&lt;slug&gt;</code> or <code>APX-&lt;slug&gt; §n</code>. Each thread is worked with the multiplication shown, so a reader who disagrees with a step can see which chapter set it. §7 registers the fifteen places where two chapters gave different numbers for the same thing, with the number the course uses and why; nothing is changed at source here, and rows worth fixing become issues for the review days. Inherited "(verify)" flags are kept and listed once in §9. All worked numbers are indicative, as they were in the chapters that supplied them.</p>
+  <div class="hero"><h1>Appendix: Cross-Topic Threads</h1><p class="aside">Sources and fine detail behind <a href="L3-threads.html">the chapter</a>. Sections are numbered so the chapter can point at them.</p></div>
+  <p>The arithmetic behind the Topic 12 chapter. Topic 12 has no research dump and adds no new facts: every number below comes from one of the eleven chapters or their appendices, cited as <code>L3-&lt;slug&gt;</code> or <code>APX-&lt;slug&gt; §n</code>. Each thread is worked with the multiplication shown, so a reader who disagrees with a step can see which chapter set it. §7 registers the fifteen places where two chapters gave different numbers for the same thing, with the number the course uses and why; nothing is changed at source here, and rows worth fixing become issues for the review days. Inherited "(verify)" flags are kept and listed once in §9. All worked numbers are indicative, as they were in the chapters that supplied them.</p>
 <h2 id="s1"><a id="follow-a-watt-worked"></a>Follow a watt, worked</h2>
 <p>Phase 1 is 10 MW of IT at design PUE 1.4, 14 MW at the fence: 10 MW of UPS-backed critical load and about 4 MW of mechanical and house load (<a class="apx" href="APX-power-1.html#s6">APX-power-1 §6</a>). Each stage's loss applies to the load that passes through it: transformers and MV gear see 14 MW; the UPS and everything below see 10 MW. Stage efficiencies are <a class="apx" href="APX-power-1.html#s5">APX-power-1 §5</a> and §9 and <a class="apx" href="APX-power-2.html#s1">APX-power-2 §1</a> and §4; the MV figure is unsourced in the research.</p>
 <table><thead><tr><th>Stage</th><th>Basis</th><th>Loss</th><th>MW</th><th>Of 14 MW</th></tr></thead><tbody><tr><td>LPTs, 138/34.5 kV, oil-filled</td><td>14 MW</td><td>0.5%</td><td>0.07</td><td>0.5%</td></tr><tr><td>MV switchgear and cable</td><td>14 MW</td><td>0.4%</td><td>0.056</td><td>0.4%</td></tr><tr><td>Unit substations, dry-type</td><td>14 MW</td><td>0.6%</td><td>0.084</td><td>0.6%</td></tr><tr><td>UPS, VFI, eco-mode off</td><td>10 MW</td><td>3–6%, 4.5% taken</td><td>0.45</td><td>3.2%</td></tr><tr><td>PDU autotransformer, busway, rack PDU</td><td>10 MW</td><td>~1%</td><td>0.10</td><td>0.7%</td></tr><tr><td><strong>Electrical losses</strong></td><td></td><td></td><td><strong>0.76</strong></td><td><strong>5.4%</strong></td></tr><tr><td>Lighting, security, controls</td><td></td><td></td><td>0.35</td><td>2.5%</td></tr><tr><td>Cooling and mechanical, by difference</td><td>14 − 10 − 0.76 − 0.35</td><td></td><td>2.89</td><td>20.6%</td></tr><tr><td>IT</td><td></td><td></td><td>10.0</td><td>71.4%</td></tr></tbody></table>
@@ -90,7 +90,7 @@
 <p><strong>Inherited verify flags, once, with origin.</strong> CDU pumps and fan walls on the UPS, assumed (<a class="apx" href="APX-cooling.html#s7">APX-cooling §7</a>); the 10–45 s no-cooling window, secondary source (<a class="apx" href="APX-cooling.html#s7">APX-cooling §7</a>); coolant flow per rack, three vendor figures (<a class="apx" href="APX-compute.html#s2">APX-compute §2</a>); cross-connect pricing, 2026 (<a class="apx" href="APX-network.html#s7">APX-network §7</a>); WUE average, two populations (<a class="apx" href="APX-cooling.html#s11">APX-cooling §11</a>, <a class="apx" href="APX-site.html#s7">APX-site §7</a>); Hall 1 white space gross against net (<a class="apx" href="APX-building.html#s8">APX-building §8</a>); Phase 1 committed capex, ~$180–230M against Topic 3's $300–400M (§6, §7(o)); the 6 MW fixed and 10 MW proportional overhead split (<a class="apx" href="APX-security-monitoring.html#s12">APX-security-monitoring §12</a>); the 56 kA PDU fault current, one vendor (<a class="apx" href="APX-power-2.html#s1">APX-power-2 §1</a>); GB300's ~90% liquid share against a third-party GB200 figure (<a class="apx" href="APX-cooling.html#s9">APX-cooling §9</a>).</p>
   <div class="chapter-foot"><nav class="pn" aria-label="Chapter"><a href="L3-threads.html"><span class="dir">Back to</span>Cross-Topic Threads</a><a class="next" href="index.html"><span class="dir">Back to</span>the course map</a></nav></div>
 </main>
-<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
+<footer>Generated from the course markdown on 2026-09-26. <a href="index.html">Course map</a> <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
 <script src="./site.js" defer></script>
 </body>
 </html>

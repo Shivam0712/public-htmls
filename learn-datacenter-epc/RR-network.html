@@ -7,8 +7,8 @@
 <!-- PWA: installable + offline. All paths relative: the site is served
      from a subdirectory of the public-htmls Pages repo. -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EEF0EA">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F171E">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F6F2">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121B1A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DC Course">
@@ -25,12 +25,12 @@
   }
 </script>
 </head>
-<body class="chapter research" data-page="RR-network">
+<body class="chapter research" data-page="RR-network" data-phase="systems">
 <div class="progress" aria-hidden="true"></div>
-<header class="crumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-systems">Systems</a><span class="sep">▸</span><a href="L3-network.html">Network</a><span class="sep">▸</span><span class="here">Research report</span></header>
+<header class="crumb"><nav class="inner" aria-label="Breadcrumb"><a href="index.html">Datacenter Course</a><span class="sep">▸</span><a href="index.html#ph-systems">Systems</a><span class="sep">▸</span><a href="L3-network.html">Network</a><span class="sep">▸</span><span class="here">Research report</span></nav></header>
 <main class="">
-  <h1>The Network of a New-Build Data Center: Logical Layer First, Physical Layer Second (2025–2026)</h1>
-  <p class="aside">The Desktop Research report for Topic 9, run 2026-09-25 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-network.html">chapter</a> and <a href="APX-network.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p><h2 id="s1"><a id="tl-dr"></a>TL;DR</h2>
+  <div class="hero"><h1>The Network of a New-Build Data Center: Logical Layer First, Physical Layer Second (2025–2026)</h1><p class="aside">The Desktop Research report for Topic 9, run 2026-09-25 from <code>briefs/</code> and published as delivered: no editing, no lint. The <a href="L3-network.html">chapter</a> and <a href="APX-network.html">appendix</a> were distilled from it; where they and this report disagree, the chapter is the course's position.</p></div>
+  <h2 id="s1"><a id="tl-dr"></a>TL;DR</h2>
 <ul><li><strong>The logical fabric decides the building.</strong> A new-build campus in 2025–26 runs a Layer-3 spine-leaf Clos on eBGP (RFC 7938), and for its AI pods a second, physically separate rail-optimized back-end fabric that dominates the switch, optics and fiber budget — for a GB300 NVL72-class cluster the network is roughly 15% of total cluster cost (SemiAnalysis, 2025), optical transceivers alone are ~60% of that network cost and ~45% of its power, and each GPU pulls roughly six optical transceivers.</li><li><strong>Copper reach is now a floor-plan rule, not a cabling detail.</strong> At 800G, passive DAC reaches only ~2 m and active copper ~5–7 m, so same-rail leaf switches must sit within a rack or two of the GPUs; everything else is optics. The physical plant should be single-mode OS2 with MPO-12/APC and MPO-16 trunks, because the cable plant lives 15–25 years while optics refresh every 3–5.</li><li><strong>Ethernet has overtaken InfiniBand for AI back-ends in 2025</strong> (Dell'Oro), the Ultra Ethernet Consortium 1.0 spec shipped June 11 2025, 51.2T (64×800G) switches are the workhorse, 1.6T/102.4T and co-packaged optics arrive in 2026, and the whole thing is delivered as Division 27 low-voltage work under an RCDD stamp — for a colo operator the meet-me room and entrance facilities are owner deliverables commissioned before day one.</li></ul>
 <hr>
 <h2 id="s2"><a id="1-the-logical-fabric"></a>1. The Logical Fabric</h2>
@@ -145,7 +145,7 @@
 <ol><li><strong>Optics are the story, not switches.</strong> That optical transceivers are ~50% of switch power and cost, ~60% of AI-network cost, and ~6 per GPU means the "network" is really an optics-and-fiber problem wearing a switching costume. It reframes the whole build.</li><li><strong>Copper reach is now architecture.</strong> The collapse of passive DAC to ~2 m at 800G quietly dictates rack adjacency and leaf placement — a physics limit reaching up to redraw the floor plan.</li><li><strong>The crossover already happened.</strong> InfiniBand went from &gt;80% of AI back-end share (late 2023) to losing the lead to Ethernet in 2025 — faster than almost anyone predicted, and largely because hyperscalers voted with Ethernet.</li><li><strong>Meta's OOB shared fate.</strong> The 2021 outage is remembered as a BGP story, but the sharper lesson is that even Meta's <em>out-of-band</em> path depended on the thing it was meant to rescue — the strongest possible argument for genuine OOB independence.</li><li><strong>Interconnection is a franchise, not a utility.</strong> That cross-connects — literally a fiber jumper priced at ~$100–$300/month — are 19% of Equinix's recurring revenue shows how much of colocation economics lives in the patch panel, not the power bill.</li></ol>
   <div class="chapter-foot"><nav class="pn" aria-label="Chapter"><a href="L3-network.html"><span class="dir">Back to</span>Network Architecture &amp; Structured Cabling</a><a class="next" href="APX-network.html"><span class="dir">Distilled into</span>the appendix</a></nav></div>
 </main>
-<footer>Generated from the course markdown on 2026-09-26. <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
+<footer>Generated from the course markdown on 2026-09-26. <a href="index.html">Course map</a> <a href="overview.html">Sixty-word overview</a> <a href="glossary.html">Glossary</a> <a href="explorer.html">Density explorer</a></footer>
 <script src="./site.js" defer></script>
 </body>
 </html>
